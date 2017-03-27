@@ -1,3 +1,3 @@
-## Lambada framework boilerplate function
+## DALN REST API
 
-This is an example project that demonstrates an example implementation of [Lambada Framework](https://github.com/lambadaframework/lambadaframework). Please refer to [Lambada Framework documentation](https://github.com/lambadaframework/lambadaframework/blob/master/README.md) for more information.
+This is the REST API for the DALN. It is handled through AWS Lambda and API Gateway.
