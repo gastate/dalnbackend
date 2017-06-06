@@ -31,6 +31,34 @@
             <version>1.0.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-cognitoidentity</artifactId>
+            <version>1.11.127</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-cognitoidp -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-cognitoidp</artifactId>
+            <version>1.11.127</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-sts</artifactId>
+            <version>1.11.127</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-ses</artifactId>
+            <version>1.11.133</version>
+        </dependency>
+
+
+
         <!--<dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk</artifactId>
@@ -40,21 +68,26 @@
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-core</artifactId>
-            <version>1.11.78</version>
+            <version>1.11.127</version>
         </dependency>
 
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-dynamodb</artifactId>
-            <version>1.11.78</version>
+            <version>1.11.127</version>
         </dependency>
 
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-simpleworkflow</artifactId>
-            <version>1.11.78</version>
+            <version>1.11.127</version>
         </dependency>
 
+        <dependency>
+            <groupId>cloud.searchfast</groupId>
+            <artifactId>cognitoauth</artifactId>
+            <version>1.0</version>
+        </dependency>
 
         <dependency>
             <groupId>commons-logging</groupId>
@@ -194,6 +227,13 @@
             <artifactId>soundcloud</artifactId>
             <version>0.2.1</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>21.0</version>
+        </dependency>
+
 
     </dependencies>
     <build>

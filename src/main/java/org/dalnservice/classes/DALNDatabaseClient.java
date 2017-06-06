@@ -4,9 +4,7 @@ package org.dalnservice.classes;
  * Created by Shakib on 2/8/2017.
  */
 import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
-import com.amazonaws.auth.SystemPropertiesCredentialsProvider;
 import com.amazonaws.services.cloudsearchdomain.AmazonCloudSearchDomainClient;
 import com.amazonaws.services.cloudsearchdomain.model.Hit;
 import com.amazonaws.services.cloudsearchdomain.model.Hits;
@@ -15,17 +13,12 @@ import com.amazonaws.services.cloudsearchdomain.model.SearchResult;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
-import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.kms.AWSKMSClient;
-import com.amazonaws.services.kms.model.DescribeKeyRequest;
-import com.amazonaws.services.kms.model.DescribeKeyResult;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
-import com.amazonaws.services.dynamodbv2.document.DynamoDB;
-import javax.ws.rs.core.MultivaluedMap;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -35,30 +28,50 @@ import java.util.*;
  */
 public class DALNDatabaseClient
 {
+    private AmazonDynamoDB dynamoDBClient;
     private AmazonCloudSearchDomainClient searchClient;
+    private DALNCloudSearchClient searchDocumentManager;
     private DynamoDBMapper mapper;
     private Table table;
+    private String tableName;
     private String title, description, dateCreated, rightsConsent, rightsRelease;
     private String postId, identifierUri, dateAccessioned, dateAvailable, dateIssued; //may not all be needed
     private List<String> contributorAuthor, contributorInterviewer, creatorGender,
             creatorRaceEthnicity, creatorClass, creatorYearOfBirth, coverageSpatial,
             coveragePeriod, coverageRegion, coverageStateProvince, coverageNationality,
             language,subject;
+    private boolean isPostNotApproved;
 
     public DALNDatabaseClient() throws IOException {
         /**Authenticate clients and mapper**/
-        //EnvironmentVariableCredentialsProvider creds = new EnvironmentVariableCredentialsProvider();
-        //AWSCredentials awsCredentials = creds.getCredentials();
-        BasicAWSCredentials awsCreds = new BasicAWSCredentials(System.getenv("AWSAccessKey"), System.getenv("AWSSecretKey"));
+        EnvironmentVariableCredentialsProvider creds = new EnvironmentVariableCredentialsProvider();
+        AWSCredentials awsCreds = creds.getCredentials();
+        //BasicAWSCredentials awsCreds = new BasicAWSCredentials(System.getenv("AWSAccessKey"), System.getenv("AWSSecretKey"));
 
-        AmazonDynamoDB dynamoDBClient = new AmazonDynamoDBClient(awsCreds);
+        dynamoDBClient = new AmazonDynamoDBClient(awsCreds);
         mapper = new DynamoDBMapper(dynamoDBClient);
+        updateTableName("DALN-Posts");
 
-        DynamoDB dynamoDB = new DynamoDB(new AmazonDynamoDBClient(awsCreds));
-        table = dynamoDB.getTable("DALN-Posts");
+        //DynamoDB dynamoDB = new DynamoDB(new AmazonDynamoDBClient(awsCreds));
+        //table = dynamoDB.getTable("DALN-Posts-Dev");
 
         searchClient = new AmazonCloudSearchDomainClient(awsCreds);
         searchClient.setEndpoint(System.getenv("searchEndpoint"));
+
+        searchDocumentManager = new DALNCloudSearchClient();
+    }
+
+    /**HELPER FUNCTIONS
+     * The following methods assist in other functions in this class and do not make direct changes to the records in the table.
+     */
+    public void updateTableName(String tableName)
+    {
+        DynamoDBMapperConfig mapperConfig =
+                new DynamoDBMapperConfig.Builder().withTableNameOverride(
+                        DynamoDBMapperConfig.TableNameOverride.withTableNameReplacement(tableName))
+                        .build();
+
+        mapper = new DynamoDBMapper(dynamoDBClient, mapperConfig);
     }
 
     private void initializeCurrentPostAttributes(Post post)
@@ -69,6 +82,7 @@ public class DALNDatabaseClient
         dateCreated = (post.getDateCreated()==null)? "" : post.getDateCreated();
         rightsRelease = (post.getRightsRelease()==null)? "" : post.getRightsRelease();
         rightsConsent = (post.getRightsConsent()==null)? "" : post.getRightsConsent();
+        isPostNotApproved = post.getIsPostNotApproved();
         contributorAuthor = (post.getContributorAuthor()==null)? new ArrayList<String>() : post.getContributorAuthor();
         contributorInterviewer = (post.getContributorInterviewer()==null)? new ArrayList<String>() : post.getContributorInterviewer();
         creatorGender = (post.getCreatorGender()==null)? new ArrayList<String>() : post.getCreatorGender();
@@ -107,34 +121,16 @@ public class DALNDatabaseClient
         if(subject.isEmpty()) subject = null;
     }
 
-    private void updatePostAttributes(Post post)
-    {
-        post.setTitle(title);
-        post.setDescription(description);
-        post.setDateCreated(dateCreated);
-        post.setRightsRelease(rightsRelease);
-        post.setRightsConsent(rightsConsent);
-        post.setContributorAuthor(contributorAuthor);
-        post.setContributorInterviewer(contributorInterviewer);
-        post.setCreatorGender(creatorGender);
-        post.setCreatorRaceEthnicity(creatorRaceEthnicity);
-        post.setCreatorClass(creatorClass);
-        post.setCreatorYearOfBirth(creatorYearOfBirth);
-        post.setCoverageSpatial(coverageSpatial);
-        post.setCoveragePeriod(coveragePeriod);
-        post.setCoverageRegion(coverageRegion);
-        post.setCoverageStateProvince(coverageStateProvince);
-        post.setCoverageNationality(coverageNationality);
-        post.setLanguage(language);
-        post.setSubject(subject);
 
-        mapper.save(post);
-    }
-
-    public String createPost(String title)
+    /**TABLE UPDATE FUNCTIONS
+     * The following functions update the table by either creating a new record or updating a current record.
+     */
+    public String createPost(String tableName, String title)
     {
+        updateTableName(tableName);
         Post post = new Post();
         post.setTitle(title);
+        post.setIsPostNotApproved(true);
 
         //Enter it into the DB
         mapper.save(post);
@@ -142,15 +138,9 @@ public class DALNDatabaseClient
         return post.getPostId(); //return the UUID generated from the insertion into DB
     }
 
-
-    public Post getPost(String postId)
+    public void updatePost(String tableName, String postID, JSONObject input)
     {
-        return mapper.load(Post.class, postId);
-    }
-
-
-    public void updatePost(String postID, JSONObject input)
-    {
+        updateTableName(tableName);
         Post post = mapper.load(Post.class, postID);
         initializeCurrentPostAttributes(post);
 
@@ -209,10 +199,34 @@ public class DALNDatabaseClient
         updatePostAttributes(post);
     }
 
-
-
-    public void uploadAsset(String postId, HashMap<String, String> assetDetails)
+    private void updatePostAttributes(Post post)
     {
+        post.setTitle(title);
+        post.setIsPostNotApproved(isPostNotApproved);
+        post.setDescription(description);
+        post.setDateCreated(dateCreated);
+        post.setRightsRelease(rightsRelease);
+        post.setRightsConsent(rightsConsent);
+        post.setContributorAuthor(contributorAuthor);
+        post.setContributorInterviewer(contributorInterviewer);
+        post.setCreatorGender(creatorGender);
+        post.setCreatorRaceEthnicity(creatorRaceEthnicity);
+        post.setCreatorClass(creatorClass);
+        post.setCreatorYearOfBirth(creatorYearOfBirth);
+        post.setCoverageSpatial(coverageSpatial);
+        post.setCoveragePeriod(coveragePeriod);
+        post.setCoverageRegion(coverageRegion);
+        post.setCoverageStateProvince(coverageStateProvince);
+        post.setCoverageNationality(coverageNationality);
+        post.setLanguage(language);
+        post.setSubject(subject);
+
+        mapper.save(post);
+    }
+
+    public void uploadAsset(String tableName,String postId, HashMap<String, String> assetDetails)
+    {
+        updateTableName(tableName);
         Post post = mapper.load(Post.class, postId);
         List<HashMap<String, String>> assetList = (post.getAssetList() == null) ? new ArrayList<HashMap<String, String>>() : post.getAssetList();
         assetList.add(assetDetails);
@@ -222,15 +236,36 @@ public class DALNDatabaseClient
 
     }
 
+    public void deletePost(String tableName, String postId)
+    {
+        updateTableName(tableName);
+        mapper.delete(mapper.load(Post.class, postId));
+    }
 
+    /**GET FUNCTIONS
+     * The following functions access the table in the DB and returns posts.
+     * **/
+    public Post getPost(String tableName, String postId)
+    {
+        updateTableName(tableName);
+        return mapper.load(Post.class, postId);
+    }
+
+
+    //from main daln table
     public List<Post> getAllPosts()
     {
 
+        updateTableName("DALN-Posts");
         return mapper.scan(Post.class, new DynamoDBScanExpression());
     }
 
+
+    //from main daln table
     public List<Post> getPostsFromDaysAgoUntilNow(int daysAgo)
     {
+        updateTableName("DALN-Posts");
+
         Date today = new Date();
         long daysAgoMilli = (new Date()).getTime() - ((long)daysAgo*24L*60L*60L*1000L);
         Date daysAgoDate = new Date();
@@ -253,8 +288,11 @@ public class DALNDatabaseClient
         return mapper.scan(Post.class, scanExpression);
     }
 
+    //from main daln table
     public List<Post> getRandomSet(int size)
     {
+        updateTableName("DALN-Posts");
+
         AttributeValue randomUUID;
 
         Map<String, AttributeValue> lastEvalKey = new HashMap<String, AttributeValue>();
@@ -282,8 +320,11 @@ public class DALNDatabaseClient
         return randomPosts;
     }
 
+    //set to delete page scan
     public List<Post> getPageScan(int pageSize, int page)
     {
+        updateTableName("DALN-Posts");
+
         DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
                 .withLimit(pageSize)
                 .withProjectionExpression("PostId");
@@ -306,26 +347,29 @@ public class DALNDatabaseClient
         return results;
     }
 
-
-    public List<String> queryByDate(String date)
+    public List<Post> getUnapprovedPosts(String tableName)
     {
-        date = date.substring(0, 4) + "-" + date.substring(4, 6) + "-" + date.substring(6);
-        //System.out.println(date);
+        updateTableName(tableName);
         Map<String, AttributeValue> eav = new HashMap<>();
-        eav.put(":v1",new AttributeValue().withS(date));
+        eav.put(":v1",new AttributeValue().withN("1"));
 
-        DynamoDBQueryExpression queryExpression = new DynamoDBQueryExpression()
-                .withKeyConditionExpression("dateCreated=:v1")
-                .withExpressionAttributeValues(eav)
-                .withConsistentRead(false);
+        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
+                .withFilterExpression("isPostNotApproved = :v1")
+                .withExpressionAttributeValues(eav);
+        List<Post> scanResult = mapper.scan(Post.class, scanExpression);
 
-        QueryResultPage queryResultPage = mapper.queryPage(Post.class, queryExpression);
-
-        return queryResultPage.getResults();
+        return scanResult;
     }
+
+
+
+    /**SEARCH FUNCTIONS
+     * The following functions utilize Amazon CloudSearch either return posts based on the query or update the search engine.
+     * **/
 
     //Simple search
     public List<Post> search(String query) throws ParseException {
+        updateTableName("DALN-Posts");
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setQuery(query);
         searchRequest.setReturn("_no_fields");
@@ -349,6 +393,8 @@ public class DALNDatabaseClient
 
     //Simple search with pagination
     public List<Post> search(String query, long pageSize, long hitStart) throws ParseException {
+        updateTableName("DALN-Posts");
+
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setQuery(query);
         searchRequest.setReturn("_no_fields");
@@ -373,6 +419,8 @@ public class DALNDatabaseClient
 
     //Sorted search with pagination
     public List<Post> search(String query, long pageSize, long hitStart, String fieldToSortBy, String order) throws ParseException {
+        updateTableName("DALN-Posts");
+
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setQuery(query);
         searchRequest.setReturn("_no_fields");
@@ -394,6 +442,20 @@ public class DALNDatabaseClient
         }
 
         return posts;
+    }
+
+    //Return the number of documents in search engine
+    public int getSearchEngineSize() throws ParseException {
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.setQuery("matchall");
+        searchRequest.setQueryParser("structured");
+
+        SearchResult searchResult = searchClient.search(searchRequest);
+
+        Hits searchHits = searchResult.getHits();
+        List<Hit> hitList = searchHits.getHit();
+
+        return hitList.size();
     }
 
     public boolean checkIfUUIDExists(String newUUID)
@@ -418,11 +480,46 @@ public class DALNDatabaseClient
         */
     }
 
-
-
-    public void destroy() {
-        com.amazonaws.http.IdleConnectionReaper.shutdown();
+    //Enter a new document into the search engine
+    public void enterPostIntoCloudSearch(String postIdToApprove, String tableName) throws IOException, ParseException {
+        updateTableName(tableName);
+        Post post = mapper.load(Post.class, postIdToApprove);
+        post.setIsPostNotApproved(false);
+        mapper.save(post);
+        JSONObject postAsSDF = searchDocumentManager.convertDynamoEntryToAddSDF(postIdToApprove, tableName);
+        searchDocumentManager.uploadSingleDocument(postAsSDF);
     }
+
+    //Remove a document from the search engine
+    public void removePostFromCloudSearch(String postIdToRemove, String tableName) throws IOException, ParseException {
+        updateTableName(tableName);
+        Post post = mapper.load(Post.class, postIdToRemove);
+        post.setIsPostNotApproved(true);
+        mapper.save(post);
+        JSONObject postAsSDF = searchDocumentManager.convertDynamoEntryToDeleteSDF(postIdToRemove);
+        searchDocumentManager.uploadSingleDocument(postAsSDF);
+    }
+
+
+    /*
+
+    public List<String> queryByDate(String date)
+    {
+        date = date.substring(0, 4) + "-" + date.substring(4, 6) + "-" + date.substring(6);
+        //System.out.println(date);
+        Map<String, AttributeValue> eav = new HashMap<>();
+        eav.put(":v1",new AttributeValue().withS(date));
+
+        DynamoDBQueryExpression queryExpression = new DynamoDBQueryExpression()
+                .withKeyConditionExpression("dateCreated=:v1")
+                .withExpressionAttributeValues(eav)
+                .withConsistentRead(false);
+
+        QueryResultPage queryResultPage = mapper.queryPage(Post.class, queryExpression);
+
+        return queryResultPage.getResults();
+    }
+*/
 
 
 
