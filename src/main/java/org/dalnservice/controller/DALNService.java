@@ -461,14 +461,31 @@ public class DALNService {
         return databaseClient.getUnapprovedPosts(input.get("tableName").toString());
     }
 
+    //submitted, approved, rejected, awaiting
     @POST
     @Path("/admin/email")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response sendEmail(JSONObject input)
     {
-        String toEmail = input.get("email").toString();
-        sesClient.sendEmail(toEmail);
+        String tableName = input.get("tableName").toString();
+        String postId = input.get("postId").toString();
+        Post post = databaseClient.getPost(tableName, postId);
 
+        String toEmail = input.get("email").toString();
+        String emailType = input.get("emailType").toString();
+        String rejectionReason = "None";
+        if (input.get("reason").toString()!= null)
+            rejectionReason = input.get("reason").toString();
+
+        switch(emailType)
+        {
+            case "submitted": sesClient.emailPostSubmitted(toEmail, post.getTitle()); break;
+            case "awaiting": sesClient.emailAdminForApproval(toEmail, post.getTitle(), postId); break;
+            case "approved": sesClient.emailPostApproved(toEmail, post.getTitle(), postId); break;
+            case "rejected": sesClient.emailPostRejected(toEmail, post.getTitle(), rejectionReason); break;
+            default:
+                return Response.ok("Email not sent. Email type must be either: submitted, awaiting, approved, rejected").build();
+        }
         return Response.ok("Email sent").build();
     }
 

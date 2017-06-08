@@ -6,10 +6,19 @@ This is the REST API for the DALN. It is handled through AWS Lambda and API Gate
 
 ### GET
 
-Title: Get a Single Post (with Path Parameter)
-URL: /posts/get/:id
+| **Title**      | Get a Single Post (with Path Parameter)        |
+| :---------:    | ------  |
+| **URL**        | /posts/get/:id |
+| **URL Params** | Required: <br> id=[string] |
+| **Description**| Supply the url with the post ID and have the individual post returned. |
+| **Example**    | /posts/get/3b983676-d935-4a2c-b537-4becd5a545b5 |
+
+
+Title: Get a Single Post (with Path Parameter) <br>
+URL: /posts/get/:id <br>
 URL Params:
-    Required: id=[string]
+* Required: id=[string]
+
 Description: Supply the url with the post ID and have the individual post returned.
 Example: /posts/get/3b983676-d935-4a2c-b537-4becd5a545b5
 
@@ -25,12 +34,13 @@ Title: Get a Random Selection of Posts
 
 Title: Get Posts with Pagination
 
-Title: Search
-URL: /posts/search/:query/:pageSize/:start/:field/:order
-URL Params:
-    Required: query=[string]
-    Optional: pageSize=[integer]
-              start=[integer]
+Title: Search <br>
+URL: /posts/search/:query/:pageSize/:start/:field/:order <br>
+URL Params: <br>
+* Required: query=[string]
+* Optional: <br>
+pageSize=[integer] <br>
+              start=[integer] <br>
               field=[string]
               order="asc"|"desc"
 Description: Search the database of posts and return the results.

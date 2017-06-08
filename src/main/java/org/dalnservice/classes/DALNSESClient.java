@@ -12,14 +12,54 @@ import com.amazonaws.regions.*;
  */
 public class DALNSESClient
 {
-    public void sendEmail(String toEmail)
-    {
-        String FROM = "daln@gsu.edu";  // Replace with your "From" address. This address must be verified.
-        String TO = toEmail; // Replace with a "To" address. If your account is still in the
-        // sandbox, this address must be verified.
-        String BODY = "This email was sent through Amazon SES by using the AWS SDK for Java.";
-        String SUBJECT = "Amazon SES test (AWS SDK for Java)";
+    final String FROM = "daln@gsu.edu";
 
+    private String BODY, SUBJECT;
+
+    public void emailPostSubmitted(String TO, String postTitle)
+    {
+        BODY = "Thank you for submitting your post titled \"" + postTitle + "\" to the DALN! It is currently being" +
+                " reviewed for approval.";
+        SUBJECT = "DALN Post Submitted";
+
+        sendEmail(TO);
+    }
+
+    public void emailAdminForApproval(String TO, String postTitle, String postId)
+    {
+        BODY = "A post titled \"" + postTitle + "\" has been submitted and is awaiting approval." +
+                " You can view the post at the following link:\n"+
+                "http://";
+        SUBJECT = "DALN Post Awaiting Approval";
+
+        sendEmail(TO);
+    }
+
+    public void emailPostApproved(String TO, String postTitle, String postId)
+    {
+        BODY = "Your post titled \"" + postTitle + "\" has been approved!" +
+                " You can view your post at the following link:\n" +
+                "http://";
+        SUBJECT = "DALN Post Approved";
+
+        sendEmail(TO);
+    }
+
+    public void emailPostRejected(String TO, String postTitle, String reason)
+    {
+        BODY = "Your post titled \"" + postTitle + "\" has been rejected" +
+                " with the following explanation:\n"
+                + reason;
+        SUBJECT = "DALN Post Rejected";
+
+        sendEmail(TO);
+    }
+
+
+
+
+    public void sendEmail(String TO)
+    {
         // Construct an object to contain the recipient address.
         Destination destination = new Destination().withToAddresses(TO);
 
@@ -60,5 +100,4 @@ public class DALNSESClient
             System.out.println("Error message: " + ex.getMessage());
         }
     }
-
 }
