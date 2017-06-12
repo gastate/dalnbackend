@@ -8,81 +8,63 @@ This is the REST API for the DALN. It is handled through AWS Lambda and API Gate
 
 | **Title**      | Get a Single Post (with Path Parameter)        |
 | :---------:    | ------  |
-| **URL**        | /posts/get/:id |
+| **URL**        | /posts/get/:postId |
 | **URL Params** | Required: <br> id=[string] |
 | **Description**| Supply the url with the post ID and have the individual post returned. |
 | **Example**    | /posts/get/3b983676-d935-4a2c-b537-4becd5a545b5 |
 
 
-Title: Get a Single Post (with Path Parameter) <br>
-URL: /posts/get/:id <br>
-URL Params:
-* Required: id=[string]
-
-Description: Supply the url with the post ID and have the individual post returned.
-Example: /posts/get/3b983676-d935-4a2c-b537-4becd5a545b5
-
 Title: Get a Single Post (with Form Parameter)
 
-Title: Get All Posts
-URL: /posts/all
-Description: Have all posts in the database returned.
 
-Title: Get Posts from Days Ago
+| **Title**      | Get All Posts        |
+| :---------:    | ------  |
+| **URL**        | /posts/all |
+| **URL Params** | None |
+| **Description**| Have all posts in the database returned. |
 
-Title: Get a Random Selection of Posts
+| **Title**      | Search        |
+| :---------:    | ------  |
+| **URL**        | /posts/search/:query |
+| **URL Params** | _Required:_ <br> query=[string] <br>
+| **Description**| Search the database of posts and return the results. If only the query is specified, the first 10 results will be returned. |
+| **Example**   | /posts/search/literacy
 
-Title: Get Posts with Pagination
+| **Title**      | Search (with Pagination)       |
+| :---------:    | ------  |
+| **URL**        | /posts/search/:query/:pageSize/:start |
+| **URL Params** | _Required:_ <br> query=[string] <br> pageSize=[integer] <br> start=[integer] 
+| **Description**| Search the database of posts and return the results with the page and page size specified. <br> "pageSize": the amount of results you want returned in each call. <br> "start": the index of the first post returned. |
+| **Example**   | /posts/search/literacy/10/0 |
 
-Title: Search <br>
-URL: /posts/search/:query/:pageSize/:start/:field/:order <br>
-URL Params: <br>
-* Required: query=[string]
-* Optional: <br>
-pageSize=[integer] <br>
-              start=[integer] <br>
-              field=[string]
-              order="asc"|"desc"
-Description: Search the database of posts and return the results.
-    If only the query is specified, all results will be returned.
-    "pageSize": the amount of results you want returned in each call.
-    "start": the index of the first post returned.
-    "field": to search within a certain field.
-    "order": to return the results in ascending or descending order
-Example: /posts/search/literacy
-         /posts/search/literacy/10/0
-         /posts/search/literacy/10/0/title/asc
+| **Title**      | Search (with Pagination and Options)       |
+| :---------:    | ------  |
+| **URL**        | /posts/search/:query/:pageSize/:start/:field/:order |
+| **URL Params** | _Required:_ <br> query=[string] <br> pageSize=[integer] <br> start=[integer] <br> field=[string] <br> order="asc"\|"desc"
+| **Description**| Search the database of posts and return the results with the page and page size specified, as well as searching within a specific field and with sorting options. <br> "pageSize": the amount of results you want returned in each call. <br> "start": the index of the first post returned. <br> "field": to search within a certain field. <br> "order": to return the results in ascending or descending order |
+| **Example**    | posts/search/literacy/10/0/title/asc
 
-Title: Get Pre-signed URL for an S3 Upload
-URL: /asset/s3upload/:key
-URL Params:
-    Required: key=[string]
-Description: Supply the url with the object key (name of the file you want to upload to S3).
-Example: /asset/s3upoad/my file.txt
+
+
+| **Title**      | Get Pre-signed URL for an S3 Upload       |
+| :---------:    | ------  |
+| **URL**        | /asset/s3upload/:key |
+| **URL Params** | Required: <br> key=[string] |
+| **Description**| Supply the url with the object key (name of the file you want to upload to S3). |
+| **Example**    | /asset/s3upload/my file.txt |
 
 ### POST
 
+| **Title**      | Create a Post    |
+| :---------:    | ------  |
+| **URL**        | /posts/create|
+| **Data Params** |`{ `<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` title=[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`description=[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`dateCreated=[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`rightsConsent=[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`rightsRelease=[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`contributorAuthor=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`contributorInterviewer=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` creatorGender=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`creatorRaceEthnicity=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`creatorClass=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`creatorYearOfBirth=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coverageSpatial=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coveragePeriod=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coverageRegion=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` coverageStateProvince=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coverageNationality=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`language=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`subject=[textarray]`<br>`}` |
+| **Description**| Create a post by supplying it with details about the literacy narrative. A post only requires the title. Once called, the post will exist in the database. |
+| **Example**    | /posts/create |
 Title: Create a Post
 URL: /posts/create
 Data Params:
-    Required: title=[string]
-    Optional: description=[string]
-              dateCreated=[string]
-              rightsConsent=[string]
-              rightsRelease=[string]
-              contributorAuthor=[textarray]
-              contributorInterviewer=[textarray]
-              creatorGender=[textarray]
-              creatorRaceEthnicity=[textarray]
-              creatorClass=[textarray]
-              creatorYearOfBirth=[textarray]
-              coverageSpatial=[textarray]
-              coveragePeriod=[textarray]
-              coverageRegion=[textarray]
-              coverageStateProvince=[textarray]
-              coverageNationality=[textarray]
-              language=[textarray]
-              subject=[textarray]
+
 Description: Create a post by supplying it with details about the literacy narrative. A post only requires the title.
 Once called, the post will exist in the database.
 Example:

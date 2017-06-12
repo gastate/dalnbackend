@@ -372,6 +372,7 @@ public class DALNDatabaseClient
         updateTableName("DALN-Posts");
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setQuery(query);
+        searchRequest.setQueryOptions("    {    \"defaultOperator\":\"or\"}" );
         searchRequest.setReturn("_no_fields");
 
         SearchResult searchResult = searchClient.search(searchRequest);
@@ -385,7 +386,12 @@ public class DALNDatabaseClient
         {
             String postID = hit.getId();
             System.out.println("search result:" + postID);
-            posts.add(mapper.load(Post.class, postID));
+            Post postResult = new Post();
+            Post fullPost = mapper.load(Post.class, postID);
+            postResult.setPostId(fullPost.getPostId());
+            postResult.setTitle(fullPost.getTitle());
+            postResult.setAssetList(fullPost.getAssetList());
+            posts.add(postResult);
         }
 
         return posts;

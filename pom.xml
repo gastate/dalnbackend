@@ -84,12 +84,6 @@
         </dependency>
 
         <dependency>
-            <groupId>cloud.searchfast</groupId>
-            <artifactId>cognitoauth</artifactId>
-            <version>1.0</version>
-        </dependency>
-
-        <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
             <version>1.1.1</version>
@@ -221,6 +215,16 @@
             <artifactId>jersey-media-json-jackson</artifactId>
             <version>2.23.2</version>
         </dependency>
+
+
+        <!--<dependency>
+            <groupId>de.voidplus</groupId>
+            <artifactId>soundcloud</artifactId>
+            <version>0.2.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/soundcloud-0.2.1-jar-with-dependencies.jar</systemPath>
+        </dependency>-->
+
 
         <dependency>
             <groupId>de.voidplus</groupId>
