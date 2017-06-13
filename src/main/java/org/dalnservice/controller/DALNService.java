@@ -5,6 +5,7 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.HttpMethod;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
+import com.amazonaws.services.cloudsearchdomain.model.Hits;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
@@ -15,6 +16,7 @@ import org.dalnservice.classes.*;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
+import javax.validation.constraints.Null;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -108,7 +110,7 @@ public class DALNService {
     @GET
     @Path("/posts/search/{query}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Post> search(@PathParam("query") String query) throws IOException, ParseException {
+    public Hits search(@PathParam("query") String query) throws IOException, ParseException {
 
         logger.debug("Performing search");
         return databaseClient.search(query);
@@ -117,7 +119,7 @@ public class DALNService {
     @GET
     @Path("/posts/search/{query}/{pageSize}/{start}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Post> paginatedSearch(@PathParam("query") String query, @PathParam("pageSize") long pageSize, @PathParam("start") long start)
+    public Hits paginatedSearch(@PathParam("query") String query, @PathParam("pageSize") long pageSize, @PathParam("start") long start)
             throws IOException, ParseException {
 
         logger.debug("Performing paginated simple search");
@@ -127,7 +129,7 @@ public class DALNService {
     @GET
     @Path("/posts/search/{query}/{pageSize}/{start}/{field}/{order}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Post> paginatedSearch(@PathParam("query") String query, @PathParam("pageSize") long pageSize, @PathParam("start") long start,
+    public Hits paginatedSearch(@PathParam("query") String query, @PathParam("pageSize") long pageSize, @PathParam("start") long start,
                                       @PathParam("field") String fieldToSortBy, @PathParam("order") String order )
             throws IOException, ParseException  {
 
@@ -138,7 +140,7 @@ public class DALNService {
     @GET
     @Path("/posts/search-engine-size")
     @Produces(MediaType.TEXT_PLAIN)
-    public int getSearchEngineSize() throws ParseException {
+    public long getSearchEngineSize() throws ParseException {
         return databaseClient.getSearchEngineSize();
     }
 
@@ -159,12 +161,20 @@ public class DALNService {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createPost(JSONObject input)
     {
-        String tableName = input.get("tableName").toString();
-        String title = input.get("title").toString();
-        String postId = databaseClient.createPost(tableName, title);
+        String tableName, title, email, license;
+        try {
+            tableName = input.get("tableName").toString();
+            title = input.get("title").toString();
+            email = input.get("email").toString();
+            license = input.get("license").toString();
+        }
+        catch(NullPointerException e)
+        {
+            return Response.status(422).entity("Values for tableName, title, email, and license are required").build();
+        }
 
+        String postId = databaseClient.createPost(tableName, title, email, license);
         databaseClient.updatePost(tableName, postId, input);
-
         return Response.status(201).entity(postId).build();
     }
 

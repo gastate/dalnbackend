@@ -34,7 +34,7 @@ public class DALNDatabaseClient
     private DynamoDBMapper mapper;
     private Table table;
     private String tableName;
-    private String title, description, dateCreated, rightsConsent, rightsRelease;
+    private String title, email, license, description, dateCreated, rightsConsent, rightsRelease;
     private String postId, identifierUri, dateAccessioned, dateAvailable, dateIssued; //may not all be needed
     private List<String> contributorAuthor, contributorInterviewer, creatorGender,
             creatorRaceEthnicity, creatorClass, creatorYearOfBirth, coverageSpatial,
@@ -78,6 +78,8 @@ public class DALNDatabaseClient
     {
         //If the post attribute is null, then create a new string/arraylist, else get the current value
         title = (post.getTitle()==null)? "" : post.getTitle();
+        email = (post.getEmail()==null)? "" : post.getEmail();
+        license = (post.getLicense()==null)? "" : post.getLicense();
         description = (post.getDescription()==null)? "" : post.getDescription();
         dateCreated = (post.getDateCreated()==null)? "" : post.getDateCreated();
         rightsRelease = (post.getRightsRelease()==null)? "" : post.getRightsRelease();
@@ -102,6 +104,8 @@ public class DALNDatabaseClient
     private void deleteEmptyAttributes()
     {
         if(title.isEmpty()) title = null;
+        if(email.isEmpty()) email = null;
+        if(license.isEmpty()) license = null;
         if(description.isEmpty()) description = null;
         if(dateCreated.isEmpty()) dateCreated = null;
         if(rightsConsent.isEmpty()) rightsConsent = null;
@@ -125,11 +129,13 @@ public class DALNDatabaseClient
     /**TABLE UPDATE FUNCTIONS
      * The following functions update the table by either creating a new record or updating a current record.
      */
-    public String createPost(String tableName, String title)
+    public String createPost(String tableName, String title, String email, String license)
     {
         updateTableName(tableName);
         Post post = new Post();
         post.setTitle(title);
+        post.setEmail(email);
+        post.setLicense(license);
         post.setIsPostNotApproved(true);
 
         //Enter it into the DB
@@ -178,6 +184,10 @@ public class DALNDatabaseClient
                 subject.addAll((ArrayList)value);
             else if (key.equals("title"))
                 title = value.toString();
+            else if (key.equals("email"))
+                email = value.toString();
+            else if (key.equals("license"))
+                license = value.toString();
             else if (key.equals("description"))
                 description = value.toString();
             else if (key.equals("rightsConsent"))
@@ -202,6 +212,8 @@ public class DALNDatabaseClient
     private void updatePostAttributes(Post post)
     {
         post.setTitle(title);
+        post.setEmail(email);
+        post.setLicense(license);
         post.setIsPostNotApproved(isPostNotApproved);
         post.setDescription(description);
         post.setDateCreated(dateCreated);
@@ -367,8 +379,10 @@ public class DALNDatabaseClient
      * The following functions utilize Amazon CloudSearch either return posts based on the query or update the search engine.
      * **/
 
-    //Simple search
-    public List<Post> search(String query) throws ParseException {
+
+    //Search returning the hits
+    public Hits search(String query) throws ParseException
+    {
         updateTableName("DALN-Posts");
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setQuery(query);
@@ -376,29 +390,12 @@ public class DALNDatabaseClient
         searchRequest.setReturn("_no_fields");
 
         SearchResult searchResult = searchClient.search(searchRequest);
-        List<Post> posts = new ArrayList<>();
 
-        Hits searchHits = searchResult.getHits();
-        List<Hit> hitList = searchHits.getHit();
-
-
-        for(Hit hit : hitList)
-        {
-            String postID = hit.getId();
-            System.out.println("search result:" + postID);
-            Post postResult = new Post();
-            Post fullPost = mapper.load(Post.class, postID);
-            postResult.setPostId(fullPost.getPostId());
-            postResult.setTitle(fullPost.getTitle());
-            postResult.setAssetList(fullPost.getAssetList());
-            posts.add(postResult);
-        }
-
-        return posts;
+        return searchResult.getHits();
     }
 
-    //Simple search with pagination
-    public List<Post> search(String query, long pageSize, long hitStart) throws ParseException {
+    //Search returning the hits
+    public Hits search(String query, long pageSize, long hitStart) throws ParseException {
         updateTableName("DALN-Posts");
 
         SearchRequest searchRequest = new SearchRequest();
@@ -408,23 +405,12 @@ public class DALNDatabaseClient
         searchRequest.setStart(hitStart);
 
         SearchResult searchResult = searchClient.search(searchRequest);
-        List<Post> posts = new ArrayList<>();
 
-        Hits searchHits = searchResult.getHits();
-        List<Hit> hitList = searchHits.getHit();
-
-
-        for(Hit hit : hitList)
-        {
-            String postID = hit.getId();
-            posts.add(mapper.load(Post.class, postID));
-        }
-
-        return posts;
+        return searchResult.getHits();
     }
 
     //Sorted search with pagination
-    public List<Post> search(String query, long pageSize, long hitStart, String fieldToSortBy, String order) throws ParseException {
+    public Hits search(String query, long pageSize, long hitStart, String fieldToSortBy, String order) throws ParseException {
         updateTableName("DALN-Posts");
 
         SearchRequest searchRequest = new SearchRequest();
@@ -435,23 +421,20 @@ public class DALNDatabaseClient
         searchRequest.setSort(fieldToSortBy + " " + order);
 
         SearchResult searchResult = searchClient.search(searchRequest);
-        List<Post> posts = new ArrayList<>();
 
-        Hits searchHits = searchResult.getHits();
-        List<Hit> hitList = searchHits.getHit();
+        return searchResult.getHits();
+        //List<Hit> hitList = searchHits.getHit();
 
 
-        for(Hit hit : hitList)
-        {
-            String postID = hit.getId();
-            posts.add(mapper.load(Post.class, postID));
-        }
-
-        return posts;
+        //for(Hit hit : hitList)
+        //{
+         //   String postID = hit.getId();
+         //   posts.add(mapper.load(Post.class, postID));
+        //}
     }
 
     //Return the number of documents in search engine
-    public int getSearchEngineSize() throws ParseException {
+    public long getSearchEngineSize() throws ParseException {
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setQuery("matchall");
         searchRequest.setQueryParser("structured");
@@ -459,9 +442,8 @@ public class DALNDatabaseClient
         SearchResult searchResult = searchClient.search(searchRequest);
 
         Hits searchHits = searchResult.getHits();
-        List<Hit> hitList = searchHits.getHit();
 
-        return hitList.size();
+        return searchHits.getFound();
     }
 
     public boolean checkIfUUIDExists(String newUUID)

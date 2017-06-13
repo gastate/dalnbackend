@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonInclude(Include.NON_EMPTY)
 @DynamoDBTable(tableName = "")
 public class Post {
-    private  String postId, title, description, identifierUri, dateAccessioned,
+    private  String postId, title, email, license, description, identifierUri, dateAccessioned,
             dateAvailable, dateCreated, dateIssued, rightsConsent, rightsRelease;
     private List<String> contributorAuthor, contributorInterviewer, creatorGender,
             creatorRaceEthnicity, creatorClass, creatorYearOfBirth, coverageSpatial,
@@ -42,6 +42,14 @@ public class Post {
     @DynamoDBAttribute(attributeName = "title")
     public String getTitle() {return title;}
     public void setTitle(String title) {this.title = title;}
+
+    @DynamoDBAttribute(attributeName = "email")
+    public String getEmail() {return email;}
+    public void setEmail(String email) {this.email = email;}
+
+    @DynamoDBAttribute(attributeName = "license")
+    public String getLicense() {return license;}
+    public void setLicense(String license) {this.license = license;}
 
     @DynamoDBAttribute(attributeName = "description")
     public String getDescription() {return description;}

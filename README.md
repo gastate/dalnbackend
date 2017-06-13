@@ -58,62 +58,11 @@ Title: Get a Single Post (with Form Parameter)
 | **Title**      | Create a Post    |
 | :---------:    | ------  |
 | **URL**        | /posts/create|
-| **Data Params** |`{ `<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` title=[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`description=[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`dateCreated=[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`rightsConsent=[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`rightsRelease=[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`contributorAuthor=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`contributorInterviewer=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` creatorGender=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`creatorRaceEthnicity=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`creatorClass=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`creatorYearOfBirth=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coverageSpatial=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coveragePeriod=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coverageRegion=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` coverageStateProvince=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coverageNationality=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`language=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`subject=[textarray]`<br>`}` |
-| **Description**| Create a post by supplying it with details about the literacy narrative. A post only requires the title. Once called, the post will exist in the database. |
-| **Example**    | /posts/create |
-Title: Create a Post
-URL: /posts/create
-Data Params:
+| **Data Params** |`{ `<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`tableName:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` title:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`email:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`license:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`description:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`dateCreated:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`rightsConsent:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`rightsRelease:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`contributorAuthor:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`contributorInterviewer:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` creatorGender:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`creatorRaceEthnicity:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`creatorClass:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`creatorYearOfBirth:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coverageSpatial:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coveragePeriod:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coverageRegion:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` coverageStateProvince:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coverageNationality:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`language:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`subject:[textarray]`<br>`}` |
+| **Description**| Create a post by supplying it with details about the literacy narrative. Once called, the post will exist in the database. <br> Required values: <br> tableName, title, email, license |
+| **Example**    | `{ `<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"tableName":"DALN-Posts-Dev",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` "title":"Shakib's Literacy Narrative",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"email":"shakib.r.ahmed@gmail.com",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"license":"Creative Commons",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"description":"This is my narrative.",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"dateCreated"="06/13/2017",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`rightsConsent=[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`rightsRelease=[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`contributorAuthor=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`contributorInterviewer=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` creatorGender=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`creatorRaceEthnicity=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`creatorClass=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`creatorYearOfBirth=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coverageSpatial=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coveragePeriod=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coverageRegion=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` coverageStateProvince=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coverageNationality=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`language=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`subject=[textarray]`<br>`}` |
 
-Description: Create a post by supplying it with details about the literacy narrative. A post only requires the title.
-Once called, the post will exist in the database.
-Example:
-    {
-    "contributorInterviewer": [
-        "Jensen, Timothy"
-      ],
-      "coverageNationality": [
-        "American"
-      ],
-      "coveragePeriod": [
-        "1980-1989",
-        "1990-1999",
-        "2000-2009"
-      ],
-      "coverageRegion": [
-        "Mid-West"
-      ],
-      "coverageSpatial": [
-        "St. Louis"
-      ],
-      "coverageStateProvince": [
-        "Ohio"
-      ],
-      "creatorClass": [
-        "middle class"
-      ],
-      "creatorGender": [
-        "Female"
-      ],
-      "creatorRaceEthnicity": [
-        "White"
-      ],
-      "creatorYearOfBirth": [
-        "1982"
-      ],
-      "dateCreated": "2008-09-14",
-      "description": "Kristin, a graphic designer and graduate student in literary studies, discusses her literacy development from childhood on.",
-      "language": [
-        "English"
-      ],
-      "rightsConsent": "adult",
-      "rightsRelease": "adult",
-      "subject": [
-        "mid-west",
-        "home-school"
-      ],
-      "title": "Timothy's Literacy Narrative"
-    }
+
 
 Title: Upload an Asset
 
