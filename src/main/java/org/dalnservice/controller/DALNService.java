@@ -13,11 +13,14 @@ import com.amazonaws.services.s3.transfer.Download;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import org.apache.log4j.Logger;
 import org.dalnservice.classes.*;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
 import javax.validation.constraints.Null;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
@@ -26,6 +29,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 

@@ -15,6 +15,8 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
@@ -387,11 +389,31 @@ public class DALNDatabaseClient
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setQuery(query);
         searchRequest.setQueryOptions("    {    \"defaultOperator\":\"or\"}" );
-        searchRequest.setReturn("_no_fields");
+        searchRequest.setReturn("_all_fields");
 
         SearchResult searchResult = searchClient.search(searchRequest);
+        Hits searchHits = searchResult.getHits();
+        /*List<Hit> listOfHits = searchHits.getHit();
 
-        return searchResult.getHits();
+        JSONObject fullSearchResponse = new JSONObject();
+        fullSearchResponse.put("found", searchHits.getFound());
+        fullSearchResponse.put("start", searchHits.getStart());
+
+        org.json.simple.JSONArray arrayOfPosts = new org.json.simple.JSONArray();
+
+        ArrayList<Post> listOfPosts = new ArrayList<>();
+
+        for(Hit result : listOfHits)
+        {
+            Post post = new Post();
+            post.setPostId(result.getId());
+            listOfPosts.add(post);
+        }
+
+        arrayOfPosts.addAll(mapper.batchLoad(listOfPosts).get("DALN-Posts"));
+        fullSearchResponse.put("posts", arrayOfPosts);*/
+
+        return searchHits;
     }
 
     //Search returning the hits
@@ -400,13 +422,14 @@ public class DALNDatabaseClient
 
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setQuery(query);
-        searchRequest.setReturn("_no_fields");
+        searchRequest.setReturn("_all_fields");
         searchRequest.setSize(pageSize);
         searchRequest.setStart(hitStart);
 
         SearchResult searchResult = searchClient.search(searchRequest);
+        Hits searchHits = searchResult.getHits();
 
-        return searchResult.getHits();
+        return searchHits;
     }
 
     //Sorted search with pagination
@@ -415,14 +438,14 @@ public class DALNDatabaseClient
 
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setQuery(query);
-        searchRequest.setReturn("_no_fields");
+        searchRequest.setReturn("_all_fields");
         searchRequest.setSize(pageSize);
         searchRequest.setStart(hitStart);
         searchRequest.setSort(fieldToSortBy + " " + order);
 
         SearchResult searchResult = searchClient.search(searchRequest);
-
-        return searchResult.getHits();
+        Hits searchHits = searchResult.getHits();
+        return searchHits;
         //List<Hit> hitList = searchHits.getHit();
 
 
