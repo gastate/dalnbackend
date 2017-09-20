@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.lambadaframework</groupId>
-    <artifactId>boilerplate</artifactId>
+    <artifactId>thedaln-development</artifactId>
     <packaging>jar</packaging>
     <version>0.0.6</version>
     <properties>
@@ -19,11 +19,17 @@
         <!-- Maximum allowed memory usage for lambda -->
         <deployment.lambdaMemorySize>1024</deployment.lambdaMemorySize>
     </properties>
+
     <dependencies>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-rs-security-cors</artifactId>
+            <version>2.6.1</version>
+        </dependency>
         <dependency>
             <groupId>org.lambadaframework</groupId>
             <artifactId>runtime</artifactId>
-            <version>${lambada.version}</version>
+            <version>0.0.6</version>
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
@@ -240,6 +246,7 @@
 
 
     </dependencies>
+
     <build>
         <plugins>
             <plugin>
@@ -320,4 +327,6 @@
             <url>s3://${deployment.bucket}/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
+
+
 </project>

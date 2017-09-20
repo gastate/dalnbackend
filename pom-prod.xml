@@ -2,18 +2,18 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.lambadaframework</groupId>
-    <artifactId>thedaln-development</artifactId>
+    <artifactId>thedaln-production</artifactId>
     <packaging>jar</packaging>
     <version>0.0.6</version>
     <properties>
         <lambada.version>0.0.6</lambada.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <deployment.bucket>daln-development</deployment.bucket>
+        <deployment.bucket>daln-prod</deployment.bucket>
         <deployment.package>org.dalnservice</deployment.package>
         <!-- Region to deploy-->
         <deployment.region>us-east-1</deployment.region>
         <!-- Stage to deploy -->
-        <deployment.stage>development</deployment.stage>
+        <deployment.stage>production</deployment.stage>
         <!-- Maximum execution time for lambda -->
         <deployment.maximumExecutionTime>10</deployment.maximumExecutionTime>
         <!-- Maximum allowed memory usage for lambda -->

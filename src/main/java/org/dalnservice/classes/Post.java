@@ -20,12 +20,12 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @DynamoDBTable(tableName = "")
 public class Post {
     private  String postId, title, email, license, description, identifierUri, dateAccessioned,
-            dateAvailable, dateCreated, dateIssued, rightsConsent, rightsRelease;
+            dateAvailable, dateCreated, dateIssued, dateSubmitted, rightsConsent, rightsRelease;
     private List<String> contributorAuthor, contributorInterviewer, creatorGender,
             creatorRaceEthnicity, creatorClass, creatorYearOfBirth, coverageSpatial,
             coveragePeriod, coverageRegion, coverageStateProvince, coverageNationality,
             language,subject;
-    private boolean isPostNotApproved;
+    private boolean isPostNotApproved, areAllFilesUploaded;
     private List<HashMap<String,String>> assetList;
 
     public Post(){}
@@ -70,6 +70,10 @@ public class Post {
     @DynamoDBAttribute(attributeName = "dateCreated")
     public String getDateCreated() {return dateCreated;}
     public void setDateCreated(String dateCreated) {this.dateCreated = dateCreated;}
+
+    @DynamoDBAttribute(attributeName = "dateSubmitted")
+    public String getDateSubmitted() {return dateSubmitted;}
+    public void setDateSubmitted(String dateSubmitted) {this.dateSubmitted = dateSubmitted;}
 
     @DynamoDBAttribute(attributeName = "dateIssued")
     public String getDateIssued() {return dateIssued;}
@@ -141,6 +145,11 @@ public class Post {
 
     @DynamoDBAttribute(attributeName = "assetList")
     public List<HashMap<String, String>> getAssetList() {return assetList;}
-    public void setAssetList(List<HashMap<String, String>> assetList) {this.assetList = assetList;
+    public void setAssetList(List<HashMap<String, String>> assetList) {this.assetList = assetList;}
+
+    @DynamoDBAttribute(attributeName = "areAllFilesUploaded")
+    public Boolean getAreAllFilesUploaded() {return areAllFilesUploaded;}
+    public void setAreAllFilesUploaded(Boolean areAllFilesUploaded) {this.areAllFilesUploaded = areAllFilesUploaded;
+
     }
 }

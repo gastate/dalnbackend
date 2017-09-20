@@ -36,8 +36,8 @@ public class DALNDatabaseClient
     private DynamoDBMapper mapper;
     private Table table;
     private String tableName;
-    private String title, email, license, description, dateCreated, rightsConsent, rightsRelease;
-    private String postId, identifierUri, dateAccessioned, dateAvailable, dateIssued; //may not all be needed
+    private String title, email, license, description, dateCreated, rightsConsent, rightsRelease, dateSubmitted, dateIssued;
+    private String postId, identifierUri, dateAccessioned, dateAvailable; //may not all be needed
     private List<String> contributorAuthor, contributorInterviewer, creatorGender,
             creatorRaceEthnicity, creatorClass, creatorYearOfBirth, coverageSpatial,
             coveragePeriod, coverageRegion, coverageStateProvince, coverageNationality,
@@ -139,6 +139,12 @@ public class DALNDatabaseClient
         post.setEmail(email);
         post.setLicense(license);
         post.setIsPostNotApproved(true);
+        post.setAreAllFilesUploaded(false);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+        Date date = new Date();
+        String dateSubmitted = dateFormat.format(date);
+        post.setDateSubmitted(dateSubmitted);
 
         //Enter it into the DB
         mapper.save(post);
@@ -375,6 +381,64 @@ public class DALNDatabaseClient
         return scanResult;
     }
 
+    public String getPostIDFromTableUsingDALNId(String dalnId)
+    {
+        Post post = new Post();
+        Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
+        eav.put(":val1", new AttributeValue().withS(dalnId));
+
+        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
+                .withFilterExpression("dalnId = :val1")
+                .withExpressionAttributeValues(eav);
+
+        List<Post> scanResults = mapper.scan(Post.class, scanExpression);
+        if(scanResults.size() == 0) //post was not found (doesn't exist)
+            return null;
+        else
+            post = scanResults.get(0);
+
+        return post.getPostId();
+    }
+
+
+
+    public void getFilesUploadedInfo(String tableName, int totalNumberOfFiles)
+    {
+        updateTableName(tableName);
+        Map<String, AttributeValue> eav = new HashMap<>();
+        eav.put(":v1",new AttributeValue().withN("0"));
+        eav.put(":v2",new AttributeValue().withN("1"));
+
+        //find posts that are not approved and not all the files are uploaded (mainly new posts)
+        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
+                .withFilterExpression("areAllFilesUploaded = :v1 and isPostNotApproved = :v2")
+                .withExpressionAttributeValues(eav);
+        List<Post> scanResult = mapper.scan(Post.class, scanExpression);
+        //look at every post and determine if all the files are uploaded for that post.
+        //if yes, then change the value of areallFilesUploaded
+        for(Post post : scanResult)
+        {
+            List<HashMap<String,String>> assetList = post.getAssetList();
+            if(assetList.size() != totalNumberOfFiles)
+            {
+                if(assetList == null || assetList.size() == 0)
+                {
+                    System.out.println("No files have been uploaded yet");
+                }
+                //not all files are uploaded, figure out how many are
+                for(HashMap<String,String> asset : assetList)
+                {
+                    System.out.println(asset.get("assetName") + " has been uploaded.");
+                }
+            }
+            else
+            {
+                System.out.println("All of this post's assets have been uploaded");
+            }
+
+        }
+    }
+
 
 
     /**SEARCH FUNCTIONS
@@ -424,6 +488,7 @@ public class DALNDatabaseClient
         searchRequest.setQuery(query);
         searchRequest.setReturn("_all_fields");
         searchRequest.setSize(pageSize);
+        searchRequest.setQueryOptions("    {    \"defaultOperator\":\"or\"}" );
         searchRequest.setStart(hitStart);
 
         SearchResult searchResult = searchClient.search(searchRequest);
@@ -438,6 +503,7 @@ public class DALNDatabaseClient
 
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setQuery(query);
+        searchRequest.setQueryOptions("    {    \"defaultOperator\":\"or\"}" );
         searchRequest.setReturn("_all_fields");
         searchRequest.setSize(pageSize);
         searchRequest.setStart(hitStart);
@@ -496,6 +562,13 @@ public class DALNDatabaseClient
         updateTableName(tableName);
         Post post = mapper.load(Post.class, postIdToApprove);
         post.setIsPostNotApproved(false);
+        post.setAreAllFilesUploaded(true);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+        Date date = new Date();
+        String dateIssued = dateFormat.format(date);
+        post.setDateIssued(dateIssued);
+
         mapper.save(post);
         JSONObject postAsSDF = searchDocumentManager.convertDynamoEntryToAddSDF(postIdToApprove, tableName);
         searchDocumentManager.uploadSingleDocument(postAsSDF);

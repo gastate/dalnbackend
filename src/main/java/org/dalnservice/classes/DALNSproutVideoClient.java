@@ -44,13 +44,14 @@ public class DALNSproutVideoClient
         httpClient = HttpClients.createDefault();
         uploadFile = new HttpPost("https://api.sproutvideo.com/v1/videos");
         uploadFile.addHeader("SproutVideo-Api-Key", System.getenv("SproutVideoApiKey"));
-        getFile =  new HttpGet("https://api.sproutvideo.com/v1/videos?order_by=created_at&order_dir=desc");
-        getFile.addHeader("SproutVideo-Api-Key", System.getenv("SproutVideoApiKey"));
+        //getFile =  new HttpGet("https://api.sproutvideo.com/v1/videos?order_by=created_at&order_dir=desc");
+        //getFile.addHeader("SproutVideo-Api-Key", System.getenv("SproutVideoApiKey"));
 
     }
 
     public void initializeAndUpload(HashMap<String, String> assetDetails, File file) throws IOException {
 
+        System.out.println("Begin SproutVideo initialize");
         fileName = assetDetails.get("assetName");
         assetID = assetDetails.get("assetId");
         String originalPostTitle = assetDetails.get("postTitle");
@@ -62,6 +63,7 @@ public class DALNSproutVideoClient
 
     private void uploadVideo(File file)
     {
+        System.out.println("Begin SproutVideo upload");
         //SproutVideo API uploads accept Multipart
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
         //For the video submission
@@ -78,6 +80,8 @@ public class DALNSproutVideoClient
        } catch (IOException e) {
             System.out.println("\n"+fileName + " could not be uploaded to SproutVideo.");
         }
+
+        System.out.println("Finished SproutVideo upload");
     }
 
     public boolean deleteVideo(String assetId) {
@@ -118,13 +122,47 @@ public class DALNSproutVideoClient
             }
     }
 
-        public String[] getSpoutVideoLocation() {
+        public String[] getSpoutVideoLocation(String assetId) throws IOException, ParseException {
         //The HTTP Response must be parsed to retrieve the location of the uploaded video
 
         String[] videoLocations = new String[2];
+            HttpGet getFileByTag = new HttpGet("https://api.sproutvideo.com/v1/videos?tag_name=" + assetId);
+            getFileByTag.addHeader("SproutVideo-Api-Key", System.getenv("SproutVideoApiKey"));
+
+            String videoId = "";
+            CloseableHttpResponse getResponse = null;
+                //find the sproutvideo id of the video with provided tag (asset id) and name
+                getResponse = httpClient.execute(getFileByTag);
+                String jsonString = EntityUtils.toString(getResponse.getEntity());
+                JSONParser parser = new JSONParser();
+                JSONObject jsonObject = (JSONObject) parser.parse(jsonString);
+                System.out.println(jsonObject);
+                JSONArray jsonArray = (JSONArray) jsonObject.get("videos");
+
+                if(jsonArray.size() == 0)
+                {
+                    System.out.println("Video not found or may have already been deleted");
+                }
+                else {
+                    JSONObject videoInfo = (JSONObject) jsonArray.get(0);
+                    String videoTitle = videoInfo.get("title").toString();
+                    if (videoTitle.equals(fullTitle)) {
+                        String videoID = videoInfo.get("id").toString();
+                        String embedCode = videoInfo.get("embed_code").toString();
+                        Element iframe = Jsoup.parse(embedCode).select("iframe").first();
+                        videoLocations[0] = "https://mwharker.vids.io/videos/"+videoID+"/"+videoTitle;
+                        videoLocations[1] = iframe.attr("src");
+
+                        System.out.println("videoLocations[0]: " + videoLocations[0]);
+                        System.out.println("videoLocations[1]: " + videoLocations[1]);
+                        return videoLocations;
+                    }
+                    videoId = videoInfo.get("id").toString();
+                }
+                //System.out.println("video id:" + videoId);
         //String uploadedVideoTitle = assetDetails.get("assetId").toString();
 
-        CloseableHttpResponse getResponse = null;
+        /*CloseableHttpResponse getResponse = null;
         //The getResponse must be parsed as a JSON to retrieve the downloaded location
         try {
             getResponse = httpClient.execute(getFile);
@@ -149,7 +187,7 @@ public class DALNSproutVideoClient
         } catch (ParseException | IOException | NullPointerException e) {
            //log.error("Problem getting video location.");
             e.printStackTrace();
-        }
+        }*/
         return videoLocations;
     }
 

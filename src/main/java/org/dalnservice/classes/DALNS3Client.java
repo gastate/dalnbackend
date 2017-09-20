@@ -5,10 +5,7 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.DeleteBucketRequest;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -48,13 +45,21 @@ public class DALNS3Client
         uploadFile();
     }
 
+    public InputStream downloadFile(String bucketName, String key)
+    {
+        S3Object s3object = s3Client.getObject(new GetObjectRequest(bucketName, key));
+
+        InputStream objectData = s3object.getObjectContent();
+        return objectData;
+    }
+
 
     private void uploadFile(){
         try {
 
             createFolder(postID, bucketName);
             //Specifying the upload location of our in S3 and set it to public read
-            s3Client.putObject(new PutObjectRequest(bucketName, "posts/" + postID + "/" + fileName, file)
+            s3Client.putObject(new PutObjectRequest(bucketName, "Posts/" + postID + "/" + fileName, file)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
 
 
@@ -70,7 +75,7 @@ public class DALNS3Client
             System.out.println("Error Message: " + ace.getMessage());
         }
     }
-    private void createFolder(String postID, String bucketName)
+    public void createFolder(String postID, String bucketName)
     {
         //data for folder
         ObjectMetadata folderMetadata = new ObjectMetadata();
@@ -79,16 +84,16 @@ public class DALNS3Client
 
         //PutObjectRequest used for creating an object to be uploaded
         PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName,
-                "posts/" + postID + "/", emptyContent, folderMetadata);
+                "Posts/" + postID + "/", emptyContent, folderMetadata);
         // send request to S3 to create folder
         s3Client.putObject(putObjectRequest);
     }
 
-    public String getS3FileLocation()
+    public String getS3FileLocation(String bucketName, String objectKey)
     {
         //String location = s3Client.getResourceUrl("daln", "daln/Posts/"+postID+"/"+fileName);
         //location = location.replace("https://daln.s3.", "https://s3-us-west-1.");
-        return s3Client.getResourceUrl(bucketName, "posts/"+postID+"/"+fileName);
+        return s3Client.getResourceUrl(bucketName, objectKey);
 
        // return "https://s3-us-west-1.amazonaws.com/daln/Posts/" + dalnId + "/" + fileName;
     }

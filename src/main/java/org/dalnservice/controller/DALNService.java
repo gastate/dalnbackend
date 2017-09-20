@@ -8,11 +8,20 @@ import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
 import com.amazonaws.services.cloudsearchdomain.model.Hits;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.Headers;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.transfer.Download;
 import com.amazonaws.services.s3.transfer.TransferManager;
+import com.amazonaws.util.IOUtils;
+import com.google.common.io.ByteSink;
+import org.apache.cxf.rs.security.cors.CrossOriginResourceSharing;
+import org.apache.http.impl.bootstrap.HttpServer;
 import org.apache.log4j.Logger;
 import org.dalnservice.classes.*;
+import org.glassfish.jersey.server.ResourceConfig;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.simple.JSONObject;
@@ -20,21 +29,25 @@ import org.json.simple.parser.ParseException;
 
 import javax.validation.constraints.Null;
 import javax.ws.rs.*;
+import javax.ws.rs.container.ContainerResponseFilter;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.Provider;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-
 @Path("/")
 public class DALNService {
+
 
     static final Logger logger = Logger.getLogger(DALNService.class);
 
@@ -46,6 +59,7 @@ public class DALNService {
     private DALNSESClient sesClient;
 
     public DALNService() throws IOException {
+
         //The constructors for the following classes authenticate their respective services
         databaseClient = new DALNDatabaseClient();
         s3Client = new DALNS3Client();
@@ -244,13 +258,120 @@ public class DALNService {
 
     }
 
+    @POST
+    @Path("/asset/s3uploader")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public String s3Upload(JSONObject input ) throws IOException {
+        EnvironmentVariableCredentialsProvider creds = new EnvironmentVariableCredentialsProvider();
+        AWSCredentials awsCredentials = creds.getCredentials();
+        AmazonS3 s3 = new AmazonS3Client(awsCredentials);
+        String bucketName = "daln-file-staging-area";
+        String objectKey = input.get("objectKey").toString();
+        String contentType = input.get("contentType").toString();
 
+        try {
+            System.out.println("Generating pre-signed URL.");
+            java.util.Date expiration = new java.util.Date();
+            long milliSeconds = expiration.getTime();
+            milliSeconds += 1000 * 60 * 60; // Add 1 hour.
+            expiration.setTime(milliSeconds);
+
+            GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucketName, objectKey);
+            generatePresignedUrlRequest.setMethod(HttpMethod.PUT);
+            generatePresignedUrlRequest.setExpiration(expiration);
+            generatePresignedUrlRequest.setContentType(contentType);
+            generatePresignedUrlRequest.addRequestParameter(
+                    Headers.S3_CANNED_ACL,
+                    CannedAccessControlList.PublicRead.toString()
+            );
+
+
+            URL url = s3.generatePresignedUrl(generatePresignedUrlRequest);
+
+            logger.debug("Pre-Signed URL = " + url.toString());
+            return url.toString();
+        } catch (AmazonServiceException exception) {
+            logger.debug("Caught an AmazonServiceException,  " +
+                    "which means your request made it " +
+                    "to Amazon S3, but was rejected with an error response " +
+                    "for some reason.");
+            logger.debug("Error Message: " + exception.getMessage());
+            logger.debug("HTTP  Code: "    + exception.getStatusCode());
+            logger.debug("AWS Error Code:" + exception.getErrorCode());
+            logger.debug("Error Type:    " + exception.getErrorType());
+            logger.debug("Request ID:    " + exception.getRequestId());
+        } catch (AmazonClientException ace) {
+            logger.debug("Caught an AmazonClientException, " +
+                    "which means the client encountered " +
+                    "an internal error while trying to communicate" +
+                    " with S3, " +
+                    "such as not being able to access the network.");
+            logger.debug("Error Message: " + ace.getMessage());
+        }
+        return "Pre-signed URL not generated";
+
+    }
+
+/*
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    @Path("/scTest")
+    public void testSoundCloud()
+    {
+        try {
+            DALNSoundCloudClient sc = new DALNSoundCloudClient();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*
+    @POST
+    @Path("/svTest")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response svTest() throws IOException, InterruptedException, ParseException {
+        System.out.println("Before sv");
+        DALNSproutVideoClient sv = new DALNSproutVideoClient();
+        System.out.println("After sv");
+        HashMap<String,String> assetDetails = new HashMap<>();
+        assetDetails.put("postTitle", "myTitle");
+        assetDetails.put("assetId", "myId");
+        assetDetails.put("assetName", "somevid.mov");
+
+        System.out.println("Before tx");
+        // Initialize TransferManager.
+        TransferManager tx = new TransferManager();
+        File tempFile = File.createTempFile("somevid", "mov");
+        // Download the Amazon S3 object to a file.
+        Download myDownload = tx.download("daln-file-staging-area", "somevid.mov", tempFile);
+        // Blocking call to wait until the download finishes.
+        myDownload.waitForCompletion();
+        // If transfer manager will not be used anymore, shut it down.
+        tx.shutdownNow();
+        //Another method to download files
+        InputStream objectData = s3Client.downloadFile("daln-file-staging-area", "somevid.mov");
+        System.out.println("download complete");
+        File tempFile = File.createTempFile("somevid", "mov");
+        tempFile.deleteOnExit();
+        byte[] bytes = IOUtils.toByteArray(objectData);
+        System.out.println("to byte array");
+        ByteSink sink = com.google.common.io.Files.asByteSink(tempFile);
+        sink.write(bytes);
+
+
+
+        System.out.println("after tx and before upload");
+
+        sv.initializeAndUpload(assetDetails, tempFile);
+        sv.getSpoutVideoLocation("myId");
+        return Response.ok("file uploaded successfully").build();
+    }*/
 
     @POST
     @Path("/asset/apiupload")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response assetUpload(JSONObject input)
-    {
+    public Response assetUpload(JSONObject input) throws ParseException {
         EnvironmentVariableCredentialsProvider creds = new EnvironmentVariableCredentialsProvider();
         AWSCredentials awsCredentials = creds.getCredentials();
         AmazonS3 s3 = new AmazonS3Client(awsCredentials);
@@ -265,7 +386,6 @@ public class DALNService {
 
 
         try {
-            System.out.println("Downloading an object");
 
             String assetName = objectKey;
             String assetNameNoExtension = assetName.substring(0, assetName.lastIndexOf('.'));
@@ -273,35 +393,32 @@ public class DALNService {
             String assetType = checkFiletype(assetName);
 
 
+            logger.info("Using TransferManager to download object from S3");
+
             // Initialize TransferManager.
             TransferManager tx = new TransferManager();
             File tempFile = File.createTempFile(assetNameNoExtension, assetExtension);
-
             // Download the Amazon S3 object to a file.
             Download myDownload = tx.download(stagingAreabucketName, objectKey, tempFile);
-
             // Blocking call to wait until the download finishes.
             myDownload.waitForCompletion();
-
             // If transfer manager will not be used anymore, shut it down.
             tx.shutdownNow();
 
+            logger.info("Object has been downloaded");
 
-            /*
+
+/*
+            System.out.println("Before download");
             //Another method to download files
-            S3Object s3object = s3.getObject(new GetObjectRequest(stagingAreabucketName, objectKey));
-
-            InputStream objectData = s3object.getObjectContent();
+            InputStream objectData = s3Client.downloadFile(stagingAreabucketName, objectKey);
             File tempFile = File.createTempFile(assetNameNoExtension, assetExtension);
-
             tempFile.deleteOnExit();
-
-
             byte[] bytes = IOUtils.toByteArray(objectData);
-
             ByteSink sink = com.google.common.io.Files.asByteSink(tempFile);
-            sink.write(bytes);*/
-
+            sink.write(bytes);
+            System.out.println("After download");
+*/
 
             //Compile details of the file being uploaded
             HashMap<String, String> assetDetails = new HashMap<>();
@@ -310,9 +427,9 @@ public class DALNService {
             String originalPostTitle = post.getTitle();
 
             String assetId;
-            do
+            //do
                 assetId = UUID.randomUUID().toString();
-            while(databaseClient.checkIfUUIDExists(assetId));
+            //while(databaseClient.checkIfUUIDExists(assetId));
             assetDetails.put("bucketName", finalBucketName);
             assetDetails.put("PostId", postId);
             assetDetails.put("postTitle", originalPostTitle);
@@ -323,21 +440,34 @@ public class DALNService {
             System.out.println("asset type:" + assetType);
             assetDetails.put("assetType", assetType);
 
+
+            //Move object from staging area to new bucket for archival
+            String fullObjectKey = "Posts/"+postId+"/"+objectKey;
+            s3Client.createFolder(postId, finalBucketName);
+            s3.copyObject(stagingAreabucketName, objectKey, finalBucketName, fullObjectKey);
+            //delete object from staging area
+            s3.deleteObject(stagingAreabucketName, objectKey);
+
+
+            //s3Client.initializeAndUpload(assetDetails, tempFile);
+            assetDetails.put("assetLocation", s3Client.getS3FileLocation(finalBucketName, fullObjectKey));
+            assetDetails.put("assetEmbedLink", s3Client.getS3FileLocation(finalBucketName, fullObjectKey));
+            assetDetails.put("assetS3Link", s3Client.getS3FileLocation(finalBucketName, fullObjectKey));
+            logger.info("File: " + objectKey + "  uploaded to s3");
+
+
             switch (assetType) {
                 case "Audio/Video":
+                    logger.info("File: " + objectKey + " will be uploaded to SproutVideo");
                     sproutVideoClient.initializeAndUpload(assetDetails, tempFile);
-                    assetDetails.put("assetLocation", sproutVideoClient.getSpoutVideoLocation()[0]);
-                    assetDetails.put("assetEmbedLink", sproutVideoClient.getSpoutVideoLocation()[1]);
+                    assetDetails.put("assetLocation", sproutVideoClient.getSpoutVideoLocation(assetId)[0]);
+                    assetDetails.put("assetEmbedLink", sproutVideoClient.getSpoutVideoLocation(assetId)[1]);
                     break;
                 case "Audio":
+                    logger.debug("File: " + objectKey + " will be uploaded to SoundCloud");
                     soundCloudClient.initializeAndUpload(assetDetails, tempFile);
                     assetDetails.put("assetLocation", soundCloudClient.getSoundLocation()[0]);
                     assetDetails.put("assetEmbedLink", soundCloudClient.getSoundLocation()[1]);
-                    break;
-                default:
-                    s3Client.initializeAndUpload(assetDetails, tempFile);
-                    assetDetails.put("assetLocation", s3Client.getS3FileLocation());
-                    assetDetails.put("assetEmbedLink", s3Client.getS3FileLocation());
                     break;
             }
 
@@ -503,6 +633,15 @@ public class DALNService {
         return Response.ok("Email sent").build();
     }
 
+
+    //To retrieve a single post
+    @GET
+    @Path("/posts/dalnold/{dalnId}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getPostWithDALNId(@PathParam("dalnId") String dalnId) throws IOException {
+        return databaseClient.getPostIDFromTableUsingDALNId(dalnId);
+    }
+
     private String checkFiletype(String fileName) {
         try {
             switch (fileName.substring(fileName.lastIndexOf('.')).toLowerCase()) {
@@ -528,6 +667,7 @@ public class DALNService {
                 case ".avi":
                 case ".wmv":
                 case ".m4v":
+                case ".mkv":
                     return "Audio/Video";
                 case ".htm":
                 case ".html":
@@ -541,6 +681,5 @@ public class DALNService {
         }
         return fileName.substring(fileName.lastIndexOf('.')+1).toUpperCase() + " File";
     }
-
 
 }

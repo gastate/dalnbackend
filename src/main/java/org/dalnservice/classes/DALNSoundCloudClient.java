@@ -29,13 +29,38 @@ public class DALNSoundCloudClient
 
     public DALNSoundCloudClient() throws IOException {
         //Connect to SoundCloud
+        boolean isSoundCloudConnected;
+        do {
+            isSoundCloudConnected = connectToSoundCloud();
+            if(!isSoundCloudConnected)
+                System.out.println("SoundCloud connection failed. Retrying..." );
+            else
+                System.out.println("SoundCloud connection successful.");
+        }
+        while(!isSoundCloudConnected);
+    }
+
+    public boolean connectToSoundCloud() throws IOException {
+        /**Connect to SoundCloud**/
+
         soundcloud = new SoundCloud(
                 System.getenv("SoundCloudClientID"),
-                System.getenv("SoundCloudClientSecret"),
+                System.getenv("SoundCloudClientSecret"));
+
+        soundcloud.login(
                 System.getenv("SoundCloudUser"),
                 System.getenv("SoundCloudPassword")
         );
-        System.out.println(soundcloud.getMe());
+
+        try {
+            if (soundcloud.getMe().toString() == null)
+                return false;
+        }
+        catch(NullPointerException e)
+        {
+            return false;
+        }
+        return true;
     }
 
     public void initializeAndUpload(HashMap<String, String> assetDetails, File file) throws IOException {
