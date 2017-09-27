@@ -11,38 +11,21 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.Headers;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.transfer.Download;
 import com.amazonaws.services.s3.transfer.TransferManager;
-import com.amazonaws.util.IOUtils;
-import com.google.common.io.ByteSink;
-import org.apache.cxf.rs.security.cors.CrossOriginResourceSharing;
-import org.apache.http.impl.bootstrap.HttpServer;
 import org.apache.log4j.Logger;
 import org.dalnservice.classes.*;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
-import javax.validation.constraints.Null;
 import javax.ws.rs.*;
-import javax.ws.rs.container.ContainerResponseFilter;
-import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.Provider;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @Path("/")
@@ -190,9 +173,23 @@ public class DALNService {
         {
             return Response.status(422).entity("Values for tableName, title, email, and license are required").build();
         }
+        String postId = "";
+        try {
+            postId = databaseClient.createPost(tableName, title, email, license);
+        }catch(Exception e)
+        {
+            logger.error("create post error");
+            e.printStackTrace();
+        }
 
-        String postId = databaseClient.createPost(tableName, title, email, license);
-        databaseClient.updatePost(tableName, postId, input);
+        try {
+            databaseClient.updatePost(tableName, postId, input);
+        }catch(Exception e)
+        {
+            logger.error("update post error");
+            e.printStackTrace();
+        }
+
         return Response.status(201).entity(postId).build();
     }
 
@@ -270,6 +267,17 @@ public class DALNService {
         String objectKey = input.get("objectKey").toString();
         String contentType = input.get("contentType").toString();
 
+        /*if(contentType.contains("audio"))
+        {
+            new Thread(() -> {
+                try {
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        }*/
+
         try {
             System.out.println("Generating pre-signed URL.");
             java.util.Date expiration = new java.util.Date();
@@ -316,14 +324,15 @@ public class DALNService {
 /*
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    @Path("/scTest")
-    public void testSoundCloud()
+    @Path("/posts/scTest")
+    public String testSoundCloud()
     {
         try {
             DALNSoundCloudClient sc = new DALNSoundCloudClient();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return "error";
     }
 
     /*
@@ -334,6 +343,7 @@ public class DALNService {
         System.out.println("Before sv");
         DALNSproutVideoClient sv = new DALNSproutVideoClient();
         System.out.println("After sv");
+        HashMap<String,String> assetDetails = new HashMap<>();
         HashMap<String,String> assetDetails = new HashMap<>();
         assetDetails.put("postTitle", "myTitle");
         assetDetails.put("assetId", "myId");
@@ -372,6 +382,7 @@ public class DALNService {
     @Path("/asset/apiupload")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response assetUpload(JSONObject input) throws ParseException {
+
         EnvironmentVariableCredentialsProvider creds = new EnvironmentVariableCredentialsProvider();
         AWSCredentials awsCredentials = creds.getCredentials();
         AmazonS3 s3 = new AmazonS3Client(awsCredentials);
@@ -381,8 +392,12 @@ public class DALNService {
         String objectKey = input.get("key").toString();
         String postId = input.get("PostId").toString();
         String assetDescription = "None";
-        if (input.get("assetDescription").toString()!= null)
+        try {
             assetDescription = input.get("assetDescription").toString();
+        }catch(NullPointerException e)
+        {
+            assetDescription = "None";
+        }
 
 
         try {
@@ -465,6 +480,7 @@ public class DALNService {
                     break;
                 case "Audio":
                     logger.debug("File: " + objectKey + " will be uploaded to SoundCloud");
+
                     soundCloudClient.initializeAndUpload(assetDetails, tempFile);
                     assetDetails.put("assetLocation", soundCloudClient.getSoundLocation()[0]);
                     assetDetails.put("assetEmbedLink", soundCloudClient.getSoundLocation()[1]);
@@ -504,7 +520,8 @@ public class DALNService {
         }
 
         //log.info("File uploaded");
-        return Response.ok("File uploaded successfully!").build();
+        return Response.status(200).entity("File uploaded successfully").build();
+        //return Response.ok("File uploaded successfully!").build();
     }
 
 
@@ -530,6 +547,9 @@ public class DALNService {
     @Path("/admin/delete")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response deletePostAndAssets(JSONObject input) throws IOException {
+
+                soundCloudClient = new DALNSoundCloudClient();
+
         String postId = input.get("PostId").toString();
         String bucketName = input.get("bucketName").toString();
         String tableName = input.get("tableName").toString();
