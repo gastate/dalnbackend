@@ -248,7 +248,36 @@ public class DALNDatabaseClient
     {
         updateTableName(tableName);
         Post post = mapper.load(Post.class, postId);
-        List<HashMap<String, String>> assetList = (post.getAssetList() == null) ? new ArrayList<HashMap<String, String>>() : post.getAssetList();
+
+        //PostId, postTitle, and bucketName attributes aren't needed as only the asset's details will be added to the database.
+        //The post id and post title already exist in the database post entry.
+        assetDetails.remove("PostId");
+        assetDetails.remove("postTitle");
+        assetDetails.remove("bucketName");
+
+        List<HashMap<String, String>> assetList = (post.getAssetList() == null) ? new ArrayList<>() : post.getAssetList();
+        boolean assetNeedsReplacement = false;
+
+        if(assetList.size() != 0) {
+            int index;
+            for (index = 0; index < assetList.size(); index++) {
+                //System.out.println("asset.assetId: " + assetList.get(index).get("assetId"));
+                //System.out.println("assetDetails.assetId: " + assetDetails.get("assetId"));
+
+                //if asset already exists
+                if (assetList.get(index).get("assetId").equals(assetDetails.get("assetId"))) {
+                    System.out.println("This file is a video or audio, so replacing assetList");
+                    //replace with new assetDetails
+                    assetNeedsReplacement = true;
+                    break;
+                }
+            }
+            if(assetNeedsReplacement)
+            {
+                assetList.remove(index);
+            }
+        }
+
         assetList.add(assetDetails);
         post.setAssetList(assetList);
 

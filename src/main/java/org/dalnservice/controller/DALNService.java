@@ -193,9 +193,9 @@ public class DALNService {
         return Response.status(201).entity(postId).build();
     }
 
-    @POST
-    @Path("/posts/update")
-    @Consumes(MediaType.APPLICATION_JSON)
+    //@POST
+    //@Path("/posts/update")
+    //@Consumes(MediaType.APPLICATION_JSON)
     public Response updatePost(JSONObject input)
     {
         String tableName = input.get("tableName").toString();
@@ -321,63 +321,6 @@ public class DALNService {
 
     }
 
-/*
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    @Path("/posts/scTest")
-    public String testSoundCloud()
-    {
-        try {
-            DALNSoundCloudClient sc = new DALNSoundCloudClient();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "error";
-    }
-
-    /*
-    @POST
-    @Path("/svTest")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response svTest() throws IOException, InterruptedException, ParseException {
-        System.out.println("Before sv");
-        DALNSproutVideoClient sv = new DALNSproutVideoClient();
-        System.out.println("After sv");
-        HashMap<String,String> assetDetails = new HashMap<>();
-        HashMap<String,String> assetDetails = new HashMap<>();
-        assetDetails.put("postTitle", "myTitle");
-        assetDetails.put("assetId", "myId");
-        assetDetails.put("assetName", "somevid.mov");
-
-        System.out.println("Before tx");
-        // Initialize TransferManager.
-        TransferManager tx = new TransferManager();
-        File tempFile = File.createTempFile("somevid", "mov");
-        // Download the Amazon S3 object to a file.
-        Download myDownload = tx.download("daln-file-staging-area", "somevid.mov", tempFile);
-        // Blocking call to wait until the download finishes.
-        myDownload.waitForCompletion();
-        // If transfer manager will not be used anymore, shut it down.
-        tx.shutdownNow();
-        //Another method to download files
-        InputStream objectData = s3Client.downloadFile("daln-file-staging-area", "somevid.mov");
-        System.out.println("download complete");
-        File tempFile = File.createTempFile("somevid", "mov");
-        tempFile.deleteOnExit();
-        byte[] bytes = IOUtils.toByteArray(objectData);
-        System.out.println("to byte array");
-        ByteSink sink = com.google.common.io.Files.asByteSink(tempFile);
-        sink.write(bytes);
-
-
-
-        System.out.println("after tx and before upload");
-
-        sv.initializeAndUpload(assetDetails, tempFile);
-        sv.getSpoutVideoLocation("myId");
-        return Response.ok("file uploaded successfully").build();
-    }*/
-
     @POST
     @Path("/asset/apiupload")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -399,14 +342,13 @@ public class DALNService {
             assetDescription = "None";
         }
 
-
         try {
 
+            //Download object from staging area to temporary file
             String assetName = objectKey;
             String assetNameNoExtension = assetName.substring(0, assetName.lastIndexOf('.'));
             String assetExtension = assetName.substring(assetName.lastIndexOf('.')).toLowerCase();
             String assetType = checkFiletype(assetName);
-
 
             logger.info("Using TransferManager to download object from S3");
 
@@ -463,7 +405,6 @@ public class DALNService {
             //delete object from staging area
             s3.deleteObject(stagingAreabucketName, objectKey);
 
-
             //s3Client.initializeAndUpload(assetDetails, tempFile);
             assetDetails.put("assetLocation", s3Client.getS3FileLocation(finalBucketName, fullObjectKey));
             assetDetails.put("assetEmbedLink", s3Client.getS3FileLocation(finalBucketName, fullObjectKey));
@@ -471,32 +412,69 @@ public class DALNService {
             logger.info("File: " + objectKey + "  uploaded to s3");
 
 
+            databaseClient.uploadAsset(tableName, postId, assetDetails);
+
+            assetDetails.put("bucketName", finalBucketName);
+            assetDetails.put("PostId", postId);
+            assetDetails.put("postTitle", originalPostTitle);
+            String assetLocation = null;
+            String assetEmbedLink = null;
+
             switch (assetType) {
                 case "Audio/Video":
                     logger.info("File: " + objectKey + " will be uploaded to SproutVideo");
-                    sproutVideoClient.initializeAndUpload(assetDetails, tempFile);
-                    assetDetails.put("assetLocation", sproutVideoClient.getSpoutVideoLocation(assetId)[0]);
-                    assetDetails.put("assetEmbedLink", sproutVideoClient.getSpoutVideoLocation(assetId)[1]);
+                    try {
+                        sproutVideoClient.initializeAndUpload(assetDetails, tempFile);
+                        assetLocation = sproutVideoClient.getSpoutVideoLocation(assetId)[0];
+                        assetEmbedLink = sproutVideoClient.getSpoutVideoLocation(assetId)[1];
+                    }
+                    catch(NullPointerException e)
+                    {
+                        logger.error("SproutVideo video location not found");
+                        assetLocation = null;
+                        assetEmbedLink = null;
+                    }
+                    catch(Exception e)
+                    {
+                        logger.error("SproutVideo Upload Error");
+                        e.printStackTrace();
+                        assetLocation = null;
+                        assetEmbedLink = null;
+                    }
+
+                    assetDetails.put("assetLocation", assetLocation);
+                    assetDetails.put("assetEmbedLink", assetEmbedLink);
+                    databaseClient.uploadAsset(tableName, postId, assetDetails);
                     break;
                 case "Audio":
                     logger.debug("File: " + objectKey + " will be uploaded to SoundCloud");
+                    try {
+                        soundCloudClient.initializeAndUpload(assetDetails, tempFile);
+                        assetLocation = soundCloudClient.getSoundLocation()[0];
+                        assetEmbedLink = soundCloudClient.getSoundLocation()[1];
+                    }
+                    catch(NullPointerException e)
+                    {
+                        logger.error("SoundCloud location not found");
+                        assetLocation = null;
+                        assetEmbedLink = null;
+                    }
+                    catch(Exception e)
+                    {
+                        logger.error("SoundCloud Upload Error");
+                        e.printStackTrace();
+                        assetLocation = null;
+                        assetEmbedLink = null;
+                    }
 
-                    soundCloudClient.initializeAndUpload(assetDetails, tempFile);
-                    assetDetails.put("assetLocation", soundCloudClient.getSoundLocation()[0]);
-                    assetDetails.put("assetEmbedLink", soundCloudClient.getSoundLocation()[1]);
+                    assetDetails.put("assetLocation", assetLocation);
+                    assetDetails.put("assetEmbedLink", assetEmbedLink);
+                    databaseClient.uploadAsset(tableName, postId, assetDetails);
                     break;
             }
-
-
-            //PostId, postTitle, and bucketName attributes aren't needed as only the asset's details will be added to the database.
-            //The post id and post title already exist in the database post entry.
-            assetDetails.remove("PostId");
-            assetDetails.remove("postTitle");
-            assetDetails.remove("bucketName");
-
-            databaseClient.uploadAsset(tableName, postId, assetDetails);
-
         } catch (AmazonServiceException ase) {
+            //databaseClient.uploadAsset(tableName, postId, assetDetails);
+
             System.out.println("Caught an AmazonServiceException, which" +
                     " means your request made it " +
                     "to Amazon S3, but was rejected with an error response" +
@@ -513,9 +491,7 @@ public class DALNService {
                     "communicate with S3, " +
                     "such as not being able to access the network.");
             System.out.println("Error Message: " + ace.getMessage());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
 

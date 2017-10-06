@@ -10,12 +10,19 @@ import com.amazonaws.services.dynamodbv2.document.Table;
 import com.soundcloud.api.*;
 import de.voidplus.soundcloud.SoundCloud;
 import de.voidplus.soundcloud.Track;
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 
 /**
@@ -34,6 +41,9 @@ public class DALNSoundCloudClient
     private Track track;
     private ApiWrapper wrapper;
     private DynamoDB dynamoDB;
+    private JSONObject uploadFileResponse;
+    private String permalinkUrl;
+    private String uri;
 
     public DALNSoundCloudClient() throws IOException {
         EnvironmentVariableCredentialsProvider creds = new EnvironmentVariableCredentialsProvider();
@@ -44,6 +54,9 @@ public class DALNSoundCloudClient
         Item key = table.getItem("key", "SoundCloudAccessToken");
         String tokenString = key.get("value").toString();
         Token token = new Token(tokenString, null, "non-expiring");
+        //uploadFileResponse = new JSONObject();
+        permalinkUrl = null;
+        uri = null;
 
         wrapper = new ApiWrapper(System.getenv("SoundCloudClientID"), System.getenv("SoundCloudClientSecret"), null, token);
         System.out.println("SoundCloud connection successful");
@@ -102,13 +115,10 @@ public class DALNSoundCloudClient
 
     public void initializeAndUpload(HashMap<String, String> assetDetails, File file) throws IOException {
 
-
-        System.out.println("initialize and upload");
         assetID = assetDetails.get("assetId");
         System.out.println("assetid: " + assetID);
 
         String fileName = assetDetails.get("assetName");
-        System.out.println("file name: " + fileName);
         String originalPostTitle = assetDetails.get("postTitle");
 
         track = new Track();
@@ -138,9 +148,21 @@ public class DALNSoundCloudClient
 
             if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED) {
                 System.out.println("\n201 Created " + resp.getFirstHeader("Location").getValue());
-
                 // dump the representation of the new track
-                System.out.println("\n" + Http.getJSON(resp).toString(4));
+                //System.out.println("\n" + Http.getJSON(resp).toString(4));
+
+                String jsonString = Http.getJSON(resp).toString(4);
+                JSONParser parser = new JSONParser();
+                org.json.simple.JSONObject respJson = null;
+                try {
+                    respJson = (org.json.simple.JSONObject) parser.parse(jsonString);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    System.out.println("Could not parse create response");
+                }
+                permalinkUrl = respJson.get("permalink_url").toString();
+                uri = resp.getFirstHeader("Location").getValue();
+
             } else {
                 System.err.println("Invalid status received: " + resp.getStatusLine());
             }
@@ -179,10 +201,26 @@ public class DALNSoundCloudClient
 
     public String[] getSoundLocation()
     {
-
         String[] soundLocations = new String[2];
-        //soundLocations[0] = track.getPermalinkUrl();
-        //soundLocations[1] = track.getUri();
+        //soundLocations[0] = uploadFileResponse.getString("permalink_url");
+        /*String trackId = uri.substring(uri.lastIndexOf('/'));
+        try {
+            HttpResponse getResponse = wrapper.get(Request.to("/tracks/" + trackId ));
+            System.out.println("\n" + Http.formatJSON(Http.getString(getResponse)));
+            //for(Header header : getResponse.getAllHeaders())
+              //  System.out.println("Header: " + header.getName() + ":" + header.getValue());
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Could not find track");
+            soundLocations[0] = null;
+        }*/
+
+        soundLocations[0] = permalinkUrl;
+        System.out.println("Sound location 0: " + soundLocations[0]);
+        //soundLocations[1] = uploadFileResponse.getString("uri");
+        soundLocations[1] = uri;
+        System.out.println("Sound location 1: " + soundLocations[1]);
+
         return soundLocations;
     }
 
