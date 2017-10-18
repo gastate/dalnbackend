@@ -10,6 +10,8 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.Headers;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.CopyObjectRequest;
+import com.amazonaws.services.s3.model.CopyObjectResult;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.transfer.Download;
 import com.amazonaws.services.s3.transfer.TransferManager;
@@ -356,7 +358,10 @@ public class DALNService {
             TransferManager tx = new TransferManager();
             File tempFile = File.createTempFile(assetNameNoExtension, assetExtension);
             // Download the Amazon S3 object to a file.
+            logger.info("stagingArea:" + stagingAreabucketName);
+            logger.info("objectKey:" + objectKey);
             Download myDownload = tx.download(stagingAreabucketName, objectKey, tempFile);
+
             // Blocking call to wait until the download finishes.
             myDownload.waitForCompletion();
             // If transfer manager will not be used anymore, shut it down.
@@ -401,9 +406,15 @@ public class DALNService {
             //Move object from staging area to new bucket for archival
             String fullObjectKey = "Posts/"+postId+"/"+objectKey;
             s3Client.createFolder(postId, finalBucketName);
-            s3.copyObject(stagingAreabucketName, objectKey, finalBucketName, fullObjectKey);
-            //delete object from staging area
-            s3.deleteObject(stagingAreabucketName, objectKey);
+            CopyObjectRequest copyObjectRequest = new CopyObjectRequest(
+                    stagingAreabucketName,
+                    objectKey,
+                    finalBucketName,
+                    fullObjectKey
+            ).withCannedAccessControlList(CannedAccessControlList.PublicRead);
+            s3.copyObject(copyObjectRequest);
+
+            //s3.copyObject(stagingAreabucketName, objectKey, finalBucketName, fullObjectKey);
 
             //s3Client.initializeAndUpload(assetDetails, tempFile);
             assetDetails.put("assetLocation", s3Client.getS3FileLocation(finalBucketName, fullObjectKey));
@@ -495,6 +506,10 @@ public class DALNService {
             e.printStackTrace();
         }
 
+
+        //delete object from staging area
+        s3.deleteObject(stagingAreabucketName, objectKey);
+
         //log.info("File uploaded");
         return Response.status(200).entity("File uploaded successfully").build();
         //return Response.ok("File uploaded successfully!").build();
@@ -508,7 +523,7 @@ public class DALNService {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response approvePost(JSONObject input) throws IOException, ParseException {
         databaseClient.enterPostIntoCloudSearch(input.get("postId").toString(), input.get("tableName").toString());
-        return Response.ok("Post added to search engine").build();
+        return Response.status(200).entity("Post added to search engine").build();
     }
 
     @POST
@@ -516,7 +531,7 @@ public class DALNService {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response deletePostFromSearch(JSONObject input) throws IOException, ParseException {
         databaseClient.removePostFromCloudSearch(input.get("postId").toString(), input.get("tableName").toString());
-        return Response.ok("Post removed from search engine").build();
+        return Response.status(200).entity("Post removed from search engine").build();
     }
 
     @POST
@@ -537,7 +552,7 @@ public class DALNService {
         logger.info("Deleting post " + postId);
         Post post = databaseClient.getPost(tableName, postId);
         if(post == null)
-            return Response.ok("Post not found").build();
+            return Response.status(200).entity("Post not found").build();
 
         //All assets must be deleted, even if they are stored in S3, SpoutVideo, or SoundCloud
         //Iterate through the assetList and delete the asset according to where it's stored
@@ -545,7 +560,7 @@ public class DALNService {
         if(assetList==null)
         {
             databaseClient.deletePost(tableName, postId);
-            return Response.ok("This post did not have any assets. Post was removed from the database.").build();
+            return Response.status(200).entity("This post did not have any assets. Post was removed from the database.").build();
         }
         boolean[] deleteCheck = new boolean[assetList.size()];
         int i = 0;
@@ -561,7 +576,7 @@ public class DALNService {
             if(assetEmbedLink.contains("s3.amazonaws.com"))
             {
                 //objectKey is location in s3
-                String objectKey = "posts/"+postId+"/"+assetName;
+                String objectKey = "Posts/"+postId+"/"+assetName;
                 logger.info("Deleting s3 object");
                 deleteCheck[i] = s3Client.deleteObject(bucketName, objectKey);
             }
@@ -581,7 +596,7 @@ public class DALNService {
             i++;
         }
         //Delete now empty s3 folder if it exists
-        s3Client.deleteObject(bucketName, "posts/" + postId + "/");
+        s3Client.deleteObject(bucketName, "Posts/" + postId + "/");
 
         //Check if all files were deleted, then delete database entry
         for(boolean flag : deleteCheck)
@@ -590,7 +605,7 @@ public class DALNService {
 
         databaseClient.deletePost(tableName, postId);
 
-        return Response.ok("Post removed from the database and its assets deleted").build();
+        return Response.status(200).entity("Post removed from the database and its assets deleted").build();
     }
 
     @POST
@@ -626,7 +641,7 @@ public class DALNService {
             default:
                 return Response.ok("Email not sent. Email type must be either: submitted, awaiting, approved, rejected").build();
         }
-        return Response.ok("Email sent").build();
+        return Response.status(200).entity("Email sent").build();
     }
 
 
