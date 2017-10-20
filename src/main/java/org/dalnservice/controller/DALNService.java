@@ -356,6 +356,8 @@ public class DALNService {
 
             // Initialize TransferManager.
             TransferManager tx = new TransferManager();
+            if(assetNameNoExtension.length() < 3)
+                assetNameNoExtension += "___";
             File tempFile = File.createTempFile(assetNameNoExtension, assetExtension);
             // Download the Amazon S3 object to a file.
             logger.info("stagingArea:" + stagingAreabucketName);
@@ -572,23 +574,24 @@ public class DALNService {
 
 
             System.out.println("Asset Name: " + assetName + " Asset Id:" + assetId);
-
+            String objectKey = "Posts/"+postId+"/"+assetName;
             if(assetEmbedLink.contains("s3.amazonaws.com"))
             {
                 //objectKey is location in s3
-                String objectKey = "Posts/"+postId+"/"+assetName;
                 logger.info("Deleting s3 object");
                 deleteCheck[i] = s3Client.deleteObject(bucketName, objectKey);
             }
             else if(assetEmbedLink.contains("videos.sproutvideo.com"))
             {
                 logger.info("Deleting video from SproutVideo");
+                deleteCheck[i] = s3Client.deleteObject(bucketName, objectKey);
                 deleteCheck[i] = sproutVideoClient.deleteVideo(assetId);
 
             }
             else if(assetEmbedLink.contains("api.soundcloud.com"))
             {
                 logger.info("Deleting audio from SoundCloud");
+                deleteCheck[i] = s3Client.deleteObject(bucketName, objectKey);
                 String trackId = assetEmbedLink.substring(assetEmbedLink.lastIndexOf('/') + 1);
                 deleteCheck[i] = soundCloudClient.deleteSound(trackId);
             }
@@ -601,7 +604,7 @@ public class DALNService {
         //Check if all files were deleted, then delete database entry
         for(boolean flag : deleteCheck)
             if(!flag) //if at least one file didn't get deleted, don't delete database entry
-                return Response.ok("Not all assets were deleted from the post, so the database entry will remain").build();
+                return Response.status(200).entity("Not all assets were deleted from the post, so the database entry will remain").build();
 
         databaseClient.deletePost(tableName, postId);
 
