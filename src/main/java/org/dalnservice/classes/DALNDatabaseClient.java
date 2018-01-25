@@ -3,6 +3,7 @@ package org.dalnservice.classes;
 /**
  * Created by Shakib on 2/8/2017.
  */
+import com.amazonaws.Response;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
 import com.amazonaws.services.cloudsearchdomain.AmazonCloudSearchDomainClient;
@@ -148,6 +149,7 @@ public class DALNDatabaseClient
 
         //Enter it into the DB
         mapper.save(post);
+        
 
         return post.getPostId(); //return the UUID generated from the insertion into DB
     }
@@ -283,6 +285,32 @@ public class DALNDatabaseClient
 
         mapper.save(post);
 
+    }
+
+    public boolean updateAssetStatus(String tableName, String postId, String assetId, String status)
+    {
+        updateTableName(tableName);
+        //Load the post from the DB and retrieve the assetList
+        Post post = mapper.load(Post.class, postId);
+        List<HashMap<String, String>> assetList = null;
+
+        if(post.getAssetList() == null)
+            return false;
+        else
+            assetList = post.getAssetList();
+
+        //Iterate through the assetList to find the asset we want to update
+        for (HashMap<String, String> asset : assetList) {
+            //found the asset we want to update
+            if (asset.get("assetId").equals(assetId)) {
+                System.out.println("Updating asset status");
+                asset.put("assetStatus", status);
+                post.setAssetList(assetList);
+                mapper.save(post);
+                return true;
+            }
+        }
+        return false;
     }
 
     public void deletePost(String tableName, String postId)

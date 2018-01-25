@@ -15,6 +15,9 @@ import com.amazonaws.services.s3.model.CopyObjectResult;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.transfer.Download;
 import com.amazonaws.services.s3.transfer.TransferManager;
+import com.amazonaws.services.sqs.AmazonSQS;
+import com.amazonaws.services.sqs.AmazonSQSClient;
+import com.amazonaws.services.sqs.model.*;
 import org.apache.log4j.Logger;
 import org.dalnservice.classes.*;
 import org.json.simple.JSONObject;
@@ -324,18 +327,39 @@ public class DALNService {
     }
 
     @POST
+    @Path("/asset/test")
+    @Consumes(MediaType.TEXT_PLAIN)
+    public void test(String input)
+    {
+        logger.info(Response.status(200).entity(input).build());
+    }
+
+    @POST
     @Path("/asset/apiupload")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response assetUpload(JSONObject input) throws ParseException {
 
+        //Verify AWS Credentials
         EnvironmentVariableCredentialsProvider creds = new EnvironmentVariableCredentialsProvider();
         AWSCredentials awsCredentials = creds.getCredentials();
         AmazonS3 s3 = new AmazonS3Client(awsCredentials);
-        String stagingAreabucketName = input.get("stagingAreaBucketName").toString();
+
+
+        AmazonSQS sqs = new AmazonSQSClient(awsCredentials);
+        sqs.setEndpoint("sqs.us-east-1.amazonaws.com");
+
+        //Store JSONinput into variables
+        String stagingAreaBucketName = input.get("stagingAreaBucketName").toString();
+        test(stagingAreaBucketName);
         String finalBucketName = input.get("finalBucketName").toString();
         String tableName = input.get("tableName").toString();
         String objectKey = input.get("key").toString();
         String postId = input.get("PostId").toString();
+        String queueName = input.get("queueName").toString();
+
+        GetQueueUrlRequest getQueueUrlRequest = new GetQueueUrlRequest(queueName);
+        String queueURL = sqs.getQueueUrl(getQueueUrlRequest).getQueueUrl();
+
         String assetDescription = "None";
         try {
             assetDescription = input.get("assetDescription").toString();
@@ -344,15 +368,47 @@ public class DALNService {
             assetDescription = "None";
         }
 
-        try {
+        //Begin upload process
+        //try {
+            //assetDetails is a hashmap that will contain all details about the asset being uploaded
+            HashMap<String, String> assetDetails = new HashMap<>();
+            assetDetails.put("bucketName", finalBucketName);
+            assetDetails.put("PostId", postId);
 
-            //Download object from staging area to temporary file
+            //Load the post that the asset belongs to
+            Post post = databaseClient.getPost(tableName,postId);
+            String originalPostTitle = post.getTitle();
+            assetDetails.put("postTitle", originalPostTitle);
+
+            //Compile metadata of the file being uploaded
             String assetName = objectKey;
             String assetNameNoExtension = assetName.substring(0, assetName.lastIndexOf('.'));
             String assetExtension = assetName.substring(assetName.lastIndexOf('.')).toLowerCase();
-            String assetType = checkFiletype(assetName);
 
+            String assetType = checkFiletype(assetName);
+            String assetId = UUID.randomUUID().toString();
+
+            assetDetails.put("assetId",assetId);
+            assetDetails.put("assetName", assetName);
+            if(assetDescription.trim().equals("")) assetDetails.put("assetDescription", "None"); else assetDetails.put("assetDescription", assetDescription);
+            assetDetails.put("assetType", assetType);
+
+            databaseClient.uploadAsset(tableName, postId, assetDetails);
+
+            JSONObject assetDetailsJSON = new JSONObject(assetDetails);
+            assetDetailsJSON.put("postId", postId);
+            assetDetailsJSON.put("tableName", tableName);
+            assetDetailsJSON.put("bucketName", finalBucketName);
+
+            SendMessageRequest sendMessageRequest = new SendMessageRequest()
+                    .withQueueUrl(queueURL)
+                    .withMessageBody(assetDetailsJSON.toJSONString());
+
+           sqs.sendMessage(sendMessageRequest);
+/*
+            //Download object from staging area to temporary file
             logger.info("Using TransferManager to download object from S3");
+            databaseClient.updateAssetStatus(tableName, postId, assetId, "Downloading");
 
             // Initialize TransferManager.
             TransferManager tx = new TransferManager();
@@ -360,9 +416,7 @@ public class DALNService {
                 assetNameNoExtension += "___";
             File tempFile = File.createTempFile(assetNameNoExtension, assetExtension);
             // Download the Amazon S3 object to a file.
-            logger.info("stagingArea:" + stagingAreabucketName);
-            logger.info("objectKey:" + objectKey);
-            Download myDownload = tx.download(stagingAreabucketName, objectKey, tempFile);
+            Download myDownload = tx.download(stagingAreaBucketName, objectKey, tempFile);
 
             // Blocking call to wait until the download finishes.
             myDownload.waitForCompletion();
@@ -372,67 +426,37 @@ public class DALNService {
             logger.info("Object has been downloaded");
 
 
-/*
-            System.out.println("Before download");
-            //Another method to download files
-            InputStream objectData = s3Client.downloadFile(stagingAreabucketName, objectKey);
-            File tempFile = File.createTempFile(assetNameNoExtension, assetExtension);
-            tempFile.deleteOnExit();
-            byte[] bytes = IOUtils.toByteArray(objectData);
-            ByteSink sink = com.google.common.io.Files.asByteSink(tempFile);
-            sink.write(bytes);
-            System.out.println("After download");
-*/
 
-            //Compile details of the file being uploaded
-            HashMap<String, String> assetDetails = new HashMap<>();
+            //Move object from staging area to post folder for archival
+            databaseClient.updateAssetStatus(tableName, postId, assetId, "Transferring");
 
-            Post post = databaseClient.getPost(tableName,postId);
-            String originalPostTitle = post.getTitle();
-
-            String assetId;
-            //do
-                assetId = UUID.randomUUID().toString();
-            //while(databaseClient.checkIfUUIDExists(assetId));
-            assetDetails.put("bucketName", finalBucketName);
-            assetDetails.put("PostId", postId);
-            assetDetails.put("postTitle", originalPostTitle);
-            assetDetails.put("assetId",assetId);
-            assetDetails.put("assetName", assetName);
-            if(assetDescription.trim().equals("")) assetDetails.put("assetDescription", "None");
-            else assetDetails.put("assetDescription", assetDescription);
-            System.out.println("asset type:" + assetType);
-            assetDetails.put("assetType", assetType);
-
-
-            //Move object from staging area to new bucket for archival
             String fullObjectKey = "Posts/"+postId+"/"+objectKey;
             s3Client.createFolder(postId, finalBucketName);
             CopyObjectRequest copyObjectRequest = new CopyObjectRequest(
-                    stagingAreabucketName,
+                    stagingAreaBucketName,
                     objectKey,
                     finalBucketName,
                     fullObjectKey
             ).withCannedAccessControlList(CannedAccessControlList.PublicRead);
             s3.copyObject(copyObjectRequest);
 
-            //s3.copyObject(stagingAreabucketName, objectKey, finalBucketName, fullObjectKey);
+            //delete object from staging area
+            s3.deleteObject(stagingAreaBucketName, objectKey);
 
-            //s3Client.initializeAndUpload(assetDetails, tempFile);
             assetDetails.put("assetLocation", s3Client.getS3FileLocation(finalBucketName, fullObjectKey));
             assetDetails.put("assetEmbedLink", s3Client.getS3FileLocation(finalBucketName, fullObjectKey));
             assetDetails.put("assetS3Link", s3Client.getS3FileLocation(finalBucketName, fullObjectKey));
             logger.info("File: " + objectKey + "  uploaded to s3");
-
-
             databaseClient.uploadAsset(tableName, postId, assetDetails);
 
-            assetDetails.put("bucketName", finalBucketName);
-            assetDetails.put("PostId", postId);
-            assetDetails.put("postTitle", originalPostTitle);
+            //ASSET STATUS 2 - AFTER S3 DOWNLOAD
+
+
+            //Split into separate endpoint from here to below
             String assetLocation = null;
             String assetEmbedLink = null;
 
+            databaseClient.updateAssetStatus(tableName, postId, assetId, "Uploading");
             switch (assetType) {
                 case "Audio/Video":
                     logger.info("File: " + objectKey + " will be uploaded to SproutVideo");
@@ -440,50 +464,50 @@ public class DALNService {
                         sproutVideoClient.initializeAndUpload(assetDetails, tempFile);
                         assetLocation = sproutVideoClient.getSpoutVideoLocation(assetId)[0];
                         assetEmbedLink = sproutVideoClient.getSpoutVideoLocation(assetId)[1];
+
+                        assetDetails.put("assetLocation", assetLocation);
+                        assetDetails.put("assetEmbedLink", assetEmbedLink);
+                        databaseClient.uploadAsset(tableName, postId, assetDetails);
+                        databaseClient.updateAssetStatus(tableName, postId, assetId, "Completed");
+                        break;
                     }
                     catch(NullPointerException e)
                     {
                         logger.error("SproutVideo video location not found");
-                        assetLocation = null;
-                        assetEmbedLink = null;
                     }
                     catch(Exception e)
                     {
                         logger.error("SproutVideo Upload Error");
                         e.printStackTrace();
-                        assetLocation = null;
-                        assetEmbedLink = null;
                     }
 
-                    assetDetails.put("assetLocation", assetLocation);
-                    assetDetails.put("assetEmbedLink", assetEmbedLink);
-                    databaseClient.uploadAsset(tableName, postId, assetDetails);
-                    break;
+
                 case "Audio":
                     logger.debug("File: " + objectKey + " will be uploaded to SoundCloud");
                     try {
                         soundCloudClient.initializeAndUpload(assetDetails, tempFile);
                         assetLocation = soundCloudClient.getSoundLocation()[0];
                         assetEmbedLink = soundCloudClient.getSoundLocation()[1];
+
+                        assetDetails.put("assetLocation", assetLocation);
+                        assetDetails.put("assetEmbedLink", assetEmbedLink);
+                        databaseClient.uploadAsset(tableName, postId, assetDetails);
+                        databaseClient.updateAssetStatus(tableName, postId, assetId, "Completed");
+                        break;
                     }
                     catch(NullPointerException e)
                     {
                         logger.error("SoundCloud location not found");
-                        assetLocation = null;
-                        assetEmbedLink = null;
                     }
                     catch(Exception e)
                     {
                         logger.error("SoundCloud Upload Error");
                         e.printStackTrace();
-                        assetLocation = null;
-                        assetEmbedLink = null;
                     }
-
-                    assetDetails.put("assetLocation", assetLocation);
-                    assetDetails.put("assetEmbedLink", assetEmbedLink);
-                    databaseClient.uploadAsset(tableName, postId, assetDetails);
+                default:
+                    databaseClient.updateAssetStatus(tableName, postId, assetId, "Completed");
                     break;
+
             }
         } catch (AmazonServiceException ase) {
             //databaseClient.uploadAsset(tableName, postId, assetDetails);
@@ -497,6 +521,7 @@ public class DALNService {
             System.out.println("AWS Error Code:   " + ase.getErrorCode());
             System.out.println("Error Type:       " + ase.getErrorType());
             System.out.println("Request ID:       " + ase.getRequestId());
+            return Response.status(404).entity("File Not Found").build();
         } catch (AmazonClientException ace) {
             System.out.println("Caught an AmazonClientException, which means"+
                     " the client encountered " +
@@ -507,15 +532,12 @@ public class DALNService {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-
-
-        //delete object from staging area
-        s3.deleteObject(stagingAreabucketName, objectKey);
-
-        //log.info("File uploaded");
-        return Response.status(200).entity("File uploaded successfully").build();
-        //return Response.ok("File uploaded successfully!").build();
+*/
+        return Response.status(200).entity("File added to queue").build();
     }
+
+
+
 
 
     /** /admin/ **/
