@@ -165,7 +165,8 @@ public class DALNService {
     @POST
     @Path("/posts/create")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createPost(JSONObject input) {
+    @Produces(MediaType.TEXT_PLAIN)
+    public String createPost(JSONObject input) {
         String tableName, title, email, license;
         try {
             tableName = input.get("tableName").toString();
@@ -173,7 +174,7 @@ public class DALNService {
             email = input.get("email").toString();
             license = input.get("license").toString();
         } catch (NullPointerException e) {
-            return Response.status(422).entity("Values for tableName, title, email, and license are required").build();
+            return "Values for tableName, title, email, and license are required";
         }
         String postId = "";
         try {
@@ -190,7 +191,7 @@ public class DALNService {
             e.printStackTrace();
         }
 
-        return Response.status(201).entity(postId).build();
+        return postId;
     }
 
     //@POST
