@@ -1,6 +1,6 @@
 package org.dalnservice.classes;
+
 import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
 import com.amazonaws.services.cloudsearchdomain.AmazonCloudSearchDomainClient;
 import com.amazonaws.services.cloudsearchdomain.model.ContentType;
@@ -9,19 +9,14 @@ import com.amazonaws.services.cloudsearchdomain.model.UploadDocumentsResult;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
-import com.amazonaws.services.dynamodbv2.document.Attribute;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.Table;
 
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.dynamodbv2.model.QueryResult;
-import com.amazonaws.services.dynamodbv2.xspec.ScanExpressionSpec;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.w3c.dom.Attr;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -31,12 +26,11 @@ import java.util.*;
 /**
  * Created by Shakib on 4/17/2017.
  */
-public class DALNCloudSearchClient
-{
+public class DALNCloudSearchClient {
     private DynamoDB dynamoDB;
     private AmazonCloudSearchDomainClient cloudSearchClient;
 
-    public DALNCloudSearchClient() throws IOException{
+    public DALNCloudSearchClient() throws IOException {
         /**Authenticate clients**/
         EnvironmentVariableCredentialsProvider creds = new EnvironmentVariableCredentialsProvider();
         AWSCredentials awsCreds = creds.getCredentials();
@@ -71,7 +65,6 @@ public class DALNCloudSearchClient
         JSONArray assetEmbedLinks = new JSONArray();
         JSONArray assetLocations = new JSONArray();
 
-
         for (int i = 0; i < assetList.size(); i++) {
             Map asset = (Map) assetList.get(i);
             assetNames.add(asset.get("assetName").toString());
@@ -99,7 +92,6 @@ public class DALNCloudSearchClient
             if (attribute.equals("assetList") || attribute.equals("isPostNotApproved"))
                 continue;
 
-
             Object value = post.get(attribute);
             if (value instanceof String) {
                 fields.put(sdfAttributeName, value.toString());
@@ -114,8 +106,7 @@ public class DALNCloudSearchClient
 
     }
 
-    public JSONObject convertDynamoEntryToDeleteSDF(String postID) throws ParseException, IOException
-    {
+    public JSONObject convertDynamoEntryToDeleteSDF(String postID) throws ParseException, IOException {
         JSONObject postAsSDF = new JSONObject();
 
         postAsSDF.put("type", "delete");
@@ -124,8 +115,7 @@ public class DALNCloudSearchClient
         return postAsSDF;
     }
 
-    public void uploadSingleDocument(JSONObject documentAsSDF)
-    {
+    public void uploadSingleDocument(JSONObject documentAsSDF) {
         JSONArray document = new JSONArray();
         document.add(documentAsSDF);
         byte[] bytes = document.toJSONString().getBytes();
@@ -143,16 +133,16 @@ public class DALNCloudSearchClient
 
     /*
     public void uploadDocumentBatch() throws IOException, ParseException {
-
+    
         int startingPostNumber = 6392;
         List<Post> allPosts = mapper.scan(Post.class, new DynamoDBScanExpression().withProjectionExpression("PostId"));
         JSONArray documentBatch = new JSONArray();
-
+    
         for(int i = startingPostNumber; i < (startingPostNumber+1000); i++) //this will upload 1000 posts at a time
         {
             if(i==(startingPostNumber+1000)) //if it's the last post, figure out where to start from next
                 System.out.println("Start from this post on next iteration:" + allPosts.get(i+1).getPostId());
-
+    
             Post post = allPosts.get(i);
             if(post.equals(allPosts.get(allPosts.size()-1))) //if the post is the last post in entire DB
             {
@@ -167,11 +157,11 @@ public class DALNCloudSearchClient
                 documentBatch.add(convertDynamoEntryToAddSDF(post.getPostId()));
             }
         }
-
+    
         //5242880 = 5mb
         byte[] bytes = documentBatch.toJSONString().getBytes();
         long contentLength = bytes.length;
-
+    
         InputStream inputStream = new ByteArrayInputStream(bytes);
         UploadDocumentsRequest uploadDocumentsRequest = new UploadDocumentsRequest();
         uploadDocumentsRequest.setDocuments(inputStream);
@@ -180,6 +170,6 @@ public class DALNCloudSearchClient
         UploadDocumentsResult uploadDocumentsResult = cloudSearchClient.uploadDocuments(uploadDocumentsRequest);
         System.out.println(uploadDocumentsResult.getStatus());
     }
-
-*/
+    
+    */
 }

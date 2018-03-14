@@ -20,3 +20,9 @@ target
 *reduced-pom.xml
 
 config.properties
+
+# VSCode
+.classpath
+.project
+.settings/
+.vscode/
