@@ -15,34 +15,34 @@
         <!-- Stage to deploy -->
         <deployment.stage>development</deployment.stage>
         <!-- Maximum execution time for lambda -->
-        <deployment.maximumExecutionTime>10</deployment.maximumExecutionTime>
+        <deployment.maximumExecutionTime>30</deployment.maximumExecutionTime>
         <!-- Maximum allowed memory usage for lambda -->
         <deployment.lambdaMemorySize>1024</deployment.lambdaMemorySize>
     </properties>
 
     <dependencies>
-
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
-            <version>2.1</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-rs-security-cors</artifactId>
-            <version>2.6.1</version>
-        </dependency>
         <dependency>
             <groupId>org.lambadaframework</groupId>
             <artifactId>runtime</artifactId>
             <version>0.0.6</version>
         </dependency>
+
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-lambda-java-log4j</artifactId>
             <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-rs-security-cors</artifactId>
+            <version>2.6.1</version>
         </dependency>
 
         <dependency>
@@ -113,19 +113,19 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.9.1</version>
+            <version>2.8.1</version>
         </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.9.1</version>
+            <version>2.8.1</version>
         </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>2.9.1</version>
+            <version>2.8.1</version>
         </dependency>
 
         <dependency>
@@ -149,19 +149,19 @@
         <dependency>
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-json-provider</artifactId>
-            <version>2.9.1</version>
+            <version>2.8.1</version>
         </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-jaxb-annotations</artifactId>
-            <version>2.9.1</version>
+            <version>2.8.1</version>
         </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-base</artifactId>
-            <version>2.9.1</version>
+            <version>2.8.1</version>
         </dependency>
 
         <dependency>
@@ -187,12 +187,6 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpmime</artifactId>
             <version>4.5.3</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-            <version>1.1.1</version>
         </dependency>
 
         <dependency>
@@ -251,13 +245,17 @@
             <artifactId>guava</artifactId>
             <version>21.0</version>
         </dependency>
-
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-sqs</artifactId>
-            <version>1.11.246</version>
+            <version>1.11.13</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-parsers</artifactId>
+            <version>1.17</version>
+        </dependency>
 
     </dependencies>
 
@@ -278,7 +276,7 @@
                 <dependencies>
                     <dependency>
                         <groupId>org.lambadaframework</groupId>
-                        <artifactId>boilerplate</artifactId>
+                        <artifactId>thedaln-development</artifactId>
                         <version>0.0.6</version>
                     </dependency>
                 </dependencies>
@@ -300,6 +298,16 @@
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>2.4.3</version>
                 <configuration>
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/*.SF</exclude>
+                                <exclude>META-INF/*.DSA</exclude>
+                                <exclude>META-INF/*.RSA</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
                     <!-- It is important to NOT to activate minimizeJar option -->
                     <minimizeJar>false</minimizeJar>
                 </configuration>
@@ -318,6 +326,9 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                    <compilerArgument>-Xlint:all</compilerArgument>
+                    <showWarnings>true</showWarnings>
+                    <showDeprecation>true</showDeprecation>
                 </configuration>
             </plugin>
         </plugins>
