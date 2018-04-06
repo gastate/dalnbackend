@@ -18,6 +18,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import javax.validation.constraints.Null;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,6 +53,7 @@ public class DALNCloudSearchClient {
         JSONParser parser = new JSONParser();
         JSONObject postAsJSON = (JSONObject) parser.parse(post.toJSON());
         JSONObject postAsSDF = new JSONObject();
+        boolean failedAsset = false;
 
         postAsSDF.put("type", "add");
         postAsSDF.put("id", postID);
@@ -65,14 +67,20 @@ public class DALNCloudSearchClient {
         JSONArray assetEmbedLinks = new JSONArray();
         JSONArray assetLocations = new JSONArray();
 
-        for (int i = 0; i < assetList.size(); i++) {
-            Map asset = (Map) assetList.get(i);
-            assetNames.add(asset.get("assetName").toString());
-            assetDescriptions.add(asset.get("assetDescription").toString());
-            assetTypes.add(asset.get("assetType").toString());
-            assetIDs.add(asset.get("assetId").toString());
-            assetEmbedLinks.add(asset.get("assetEmbedLink").toString());
-            assetLocations.add(asset.get("assetLocation").toString());
+        try {
+            for (int i = 0; i < assetList.size(); i++) {
+                Map asset = (Map) assetList.get(i);
+                assetNames.add(asset.get("assetName").toString());
+                assetDescriptions.add(asset.get("assetDescription").toString());
+                assetTypes.add(asset.get("assetType").toString());
+                assetIDs.add(asset.get("assetId").toString());
+                assetEmbedLinks.add(asset.get("assetEmbedLink").toString());
+                assetLocations.add(asset.get("assetLocation").toString());
+            }
+        }
+        catch(NullPointerException e)
+        {
+            failedAsset = true;
         }
 
         //if(post.getInt("areAllFilesUploaded") == null)
@@ -102,7 +110,10 @@ public class DALNCloudSearchClient {
 
         postAsSDF.put("fields", fields);
 
-        return postAsSDF;
+        if(failedAsset)
+            return null;
+        else
+            return postAsSDF;
 
     }
 
@@ -115,7 +126,7 @@ public class DALNCloudSearchClient {
         return postAsSDF;
     }
 
-    public void uploadSingleDocument(JSONObject documentAsSDF) {
+    public boolean uploadSingleDocument(JSONObject documentAsSDF) {
         JSONArray document = new JSONArray();
         document.add(documentAsSDF);
         byte[] bytes = document.toJSONString().getBytes();
@@ -129,6 +140,10 @@ public class DALNCloudSearchClient {
         uploadDocumentsRequest.setContentLength(contentLength);
         UploadDocumentsResult uploadDocumentsResult = cloudSearchClient.uploadDocuments(uploadDocumentsRequest);
         System.out.println("Document upload status: " + uploadDocumentsResult.getStatus());
+        if(uploadDocumentsResult.getStatus().equals("success"))
+            return true;
+        else
+            return false;
     }
 
     /*

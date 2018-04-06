@@ -569,8 +569,12 @@ public class DALNService {
     @Path("/admin/approve")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response approvePost(JSONObject input) throws IOException, ParseException {
-        databaseClient.enterPostIntoCloudSearch(input.get("postId").toString(), input.get("tableName").toString());
-        return Response.status(200).entity("Post added to search engine").build();
+        boolean status = databaseClient.enterPostIntoCloudSearch(input.get("postId").toString(), input.get("tableName").toString());
+
+        if(status)
+            return Response.status(200).entity("Post added to search engine").build();
+        else
+            return Response.status(200).entity("Post was not successfully added to search engine").build();
     }
 
     @POST

@@ -596,20 +596,30 @@ public class DALNDatabaseClient {
     }
 
     //Enter a new document into the search engine
-    public void enterPostIntoCloudSearch(String postIdToApprove, String tableName) throws IOException, ParseException {
+    public boolean enterPostIntoCloudSearch(String postIdToApprove, String tableName) throws IOException, ParseException {
         updateTableName(tableName);
         Post post = mapper.load(Post.class, postIdToApprove);
-        post.setIsPostNotApproved(false);
-        post.setAreAllFilesUploaded(true);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
         Date date = new Date();
         String dateIssued = dateFormat.format(date);
         post.setDateIssued(dateIssued);
 
-        mapper.save(post);
+
         JSONObject postAsSDF = searchDocumentManager.convertDynamoEntryToAddSDF(postIdToApprove, tableName);
-        searchDocumentManager.uploadSingleDocument(postAsSDF);
+
+        if(postAsSDF != null)
+        {
+            searchDocumentManager.uploadSingleDocument(postAsSDF);
+            post.setIsPostNotApproved(false);
+            post.setAreAllFilesUploaded(true);
+            mapper.save(post);
+            return true;
+        }
+        else
+            return false;
+
+
     }
 
     //Remove a document from the search engine
