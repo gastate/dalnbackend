@@ -10,7 +10,7 @@ and provides a Maven plugin to build and deploy the API to AWS.
 It looks for the JAX-RS annotations at build time then creates Lambda
 functions and API Gateway definitions.
 
-####Configuration
+### Configuration
 The project is built using Maven, so configuration is done in the pom files
 (pom-dev.xml and pom-prod.xml, for development and production instances respectfully).
 
