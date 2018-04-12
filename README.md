@@ -2,6 +2,43 @@
 
 This is the REST API for the DALN. It is handled through AWS Lambda and API Gateway.
 
+## Setup and Deployment
+
+This Java REST API has been migrated to a serverless architecture with the use of the Lambada Framework and AWS.
+Lambada Framework is an open source project that implements common JAX-RS annotations 
+and provides a Maven plugin to build and deploy the API to AWS.
+It looks for the JAX-RS annotations at build time then creates Lambda
+functions and API Gateway definitions.
+
+####Configuration
+The project is built using Maven, so configuration is done in the pom files
+(pom-dev.xml and pom-prod.xml, for development and production instances respectfully).
+
+
+Options that are unique to each pom:
+
+- `<artifactId>`: The name for our Lambda function and API. This property
+allows us to create separate instances for both.
+- `<deployment.bucket>`: The S3 bucket where the compiled JAR will be uploaded.
+- `<deployment.stage>`: A stage is a named reference to a deployment, which is a snapshot of the API.
+This is appended to the end of the final API endpoint. 
+
+Other configuration notes:
+- The original pom (pom.xml) is not used in the deployment process and should not be used.
+- All dependencies must be added/updated on both dev and prod pom files.
+- There is one jar file, `soundcloud-0.2.1-jar-with-dependencies.jar`, that is not
+included the pom dependencies. This jar, as well as future jars, must 
+be installed to your local Maven repository.
+- In the `maven-compiler-plugin`, the `<source>` and `<target>` properties
+ must match the Project SDK (1.8 at the time of writing).
+
+Once the configuration is set, run
+`mvn deploy -f <path-to-pom-file>`
+to build and deploy the API. The Lambda functions and the APIs can
+all be managed through the AWS Console.
+
+
+
 ## REST Functions
 
 ### GET
@@ -45,7 +82,6 @@ Title: Get a Single Post (with Form Parameter)
 | **Example**    | posts/search/literacy/10/0/title/asc
 
 
-
 | **Title**      | Get Pre-signed URL for an S3 Upload       |
 | :---------:    | ------  |
 | **URL**        | /asset/s3upload/:key |
@@ -61,7 +97,6 @@ Title: Get a Single Post (with Form Parameter)
 | **Data Params** |`{ `<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`tableName:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` title:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`email:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`license:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`description:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`dateCreated:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`rightsConsent:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`rightsRelease:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`contributorAuthor:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`contributorInterviewer:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` creatorGender:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`creatorRaceEthnicity:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`creatorClass:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`creatorYearOfBirth:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coverageSpatial:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coveragePeriod:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coverageRegion:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` coverageStateProvince:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coverageNationality:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`language:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`subject:[textarray]`<br>`}` |
 | **Description**| Create a post by supplying it with details about the literacy narrative. Once called, the post will exist in the database. <br> Required values: <br> tableName, title, email, license |
 | **Example**    | `{ `<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"tableName":"DALN-Posts-Dev",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` "title":"Shakib's Literacy Narrative",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"email":"shakib.r.ahmed@gmail.com",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"license":"Creative Commons",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"description":"This is my narrative.",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"dateCreated"="06/13/2017",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`rightsConsent=[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`rightsRelease=[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`contributorAuthor=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`contributorInterviewer=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` creatorGender=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`creatorRaceEthnicity=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`creatorClass=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`creatorYearOfBirth=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coverageSpatial=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coveragePeriod=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coverageRegion=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` coverageStateProvince=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coverageNationality=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`language=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`subject=[textarray]`<br>`}` |
-
 
 
 Title: Upload an Asset
