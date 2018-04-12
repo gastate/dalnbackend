@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 public class Post {
     private String postId, title, email, license, description, hiddenDescription, identifierUri, dateAccessioned,
             dateAvailable, dateCreated, dateIssued, dateSubmitted, rightsConsent, rightsRelease;
+    private long dateIssuedTimestamp;
     private List<String> contributorAuthor, contributorInterviewer, creatorGender, creatorRaceEthnicity, creatorClass,
             creatorYearOfBirth, coverageSpatial, coveragePeriod, coverageRegion, coverageStateProvince,
             coverageNationality, language, subject;
@@ -130,6 +131,16 @@ public class Post {
     public void setDateSubmitted(String dateSubmitted) {
         this.dateSubmitted = dateSubmitted;
     }
+
+
+    @DynamoDBAttribute(attributeName = "dateIssuedTimestamp")
+    public long getDateIssuedTimestamp() {
+        return dateIssuedTimestamp;
+    }
+    public void setDateIssuedTimestamp(long dateIssuedTimestamp) {
+        this.dateIssuedTimestamp = dateIssuedTimestamp;
+    }
+
 
     @DynamoDBAttribute(attributeName = "dateIssued")
     public String getDateIssued() {

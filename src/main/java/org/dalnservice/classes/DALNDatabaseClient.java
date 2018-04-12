@@ -603,8 +603,10 @@ public class DALNDatabaseClient {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
         Date date = new Date();
         String dateIssued = dateFormat.format(date);
-        post.setDateIssued(dateIssued);
+        long dateIssuedTimestamp = date.toInstant().toEpochMilli();
 
+        post.setDateIssuedTimestamp(dateIssuedTimestamp);
+        post.setDateIssued(dateIssued);
 
         JSONObject postAsSDF = searchDocumentManager.convertDynamoEntryToAddSDF(postIdToApprove, tableName);
 
