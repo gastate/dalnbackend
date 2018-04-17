@@ -10,7 +10,11 @@ and provides a Maven plugin to build and deploy the API to AWS.
 It looks for the JAX-RS annotations at build time then creates Lambda
 functions and API Gateway definitions.
 
+More information about the Lambada Framework can be found [here](https://aws.amazon.com/blogs/compute/migrating-a-native-java-rest-api-to-a-serverless-architecture-with-the-lambada-framework-for-aws/) 
+and [here](https://github.com/cagataygurturk/lambadaframework).
+
 ### Configuration
+
 The project is built using Maven, so configuration is done in the pom files
 (pom-dev.xml and pom-prod.xml, for development and production instances respectfully).
 
@@ -27,17 +31,56 @@ Other configuration notes:
 - The original pom (pom.xml) is not used in the deployment process and should not be used.
 - All dependencies must be added/updated on both dev and prod pom files.
 - There is one jar file, `soundcloud-0.2.1-jar-with-dependencies.jar`, that is not
-included the pom dependencies. This jar, as well as future jars, must 
+included in the pom dependencies. This jar, as well as future jars, must 
 be installed to your local Maven repository.
 - In the `maven-compiler-plugin`, the `<source>` and `<target>` properties
  must match the Project SDK (1.8 at the time of writing).
 
 Once the configuration is set, run
 `mvn deploy -f <path-to-pom-file>`
-to build and deploy the API. The Lambda functions and the APIs can
+to build and deploy the API. A link to the API will be displayed at the end of 
+ successful deployment. The Lambda functions and the APIs can
 all be managed through the AWS Console.
 
 
+### Authentication
+
+The default AWS profile installed on the system must have administator privileges,
+or at least the following IAM policy:
+
+`
+  {"Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Action": [
+                        "cloudformation:*",
+                        "s3:*",
+                        "lambda:*",
+                        "execute-api:*",
+                        "apigateway:*",
+                        "iam:*",
+                        "ec2:DescribeSecurityGroups",
+                        "ec2:DescribeVpcs",
+                        "ec2:DescribeSubnets"
+                    ],
+                    "Resource": [
+                        "*"
+                    ]
+                }
+            ]
+        }
+`
+
+To connect with any services in AWS, you must provide AWS credentials.
+You can provide credentials by either creating an AWS credentials profile file
+or setting environment variables with the access key and secret key. Detailed
+instructions can be found [here](https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/setup-credentials.html).
+
+Other credentials or configurations that are used in the application (i.e. `System.getenv()`)
+are defined as environment variables in the AWS console in the Lambda function.
+
+### Application Overview
 
 ## REST Functions
 
