@@ -82,6 +82,38 @@ are defined as environment variables in the AWS console in the Lambda function.
 
 ### Application Overview
 
+This section will detail generally how the [DALN](daln.gsu.edu) works and what components are involved.
+
+On the DALN:
+- Users can submit literacy narratives (the words "narrative" and "post" will be used interchangeably). A narrative consists of
+(1) metadata about the narrative, such as a title, description, tags, etc. and
+(2) files to be associated with their narrative, which can be of any type, but mainly
+videos, audio files, and text documents.
+- Users can search for and view existing narratives.
+- Admins can approve and unapprove posts (user-submitted posts are initially unapproved
+and must be approved before they can be searchable on the DALN).
+
+Services used:
+- Amazon S3: Each narrative has a folder in the S3 bucket. In this folder, there will
+be the files associated with this post. A post cannot exist without at least one file associated with it.
+- DynamoDB: The database in which posts are stored.
+- CloudSearch: The search engine that contains all approved posts. Unapproving a post
+removes the post from the search engine but the post will still exist in DynamoDB.
+- SimpleQueueService: When a file needs to be uploaded, a message is generated and added
+to the file upload queue. The service that handles file uploads is running on a separate
+worker on an EC2 service. Information and details about this worker can be found [here](https://github.com/gastate/daln_upload_worker).
+
+To create a post (using the REST functions):
+1. `/posts/create`: Create a post with at least the required metadata fields. A record in DynamoDB will be created for this post.
+2. `/asset/s3uploader`: Send a POST request to retrieve a pre-signed URL for the file you want to upload
+with this post. Afterwards, place a PUT request to that URL so that the file will be uploaded
+to the DALN staging area bucket. All files will initially be uploaded to this bucket.
+3. `/asset/apiupload`: Send a POST request with a message to enter a specific file (to be uploaded)
+to the SQS queue. The independent DALN upload worker will then transfer this file
+to the appropriate CDN. Videos are uploaded to SproutVideo, audios are uploaded to SoundCloud, and
+all other files remain in S3 but will be moved from the staging area to the specific post folder.
+
+
 ## REST Functions
 
 ### GET
