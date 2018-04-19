@@ -97,11 +97,13 @@ Services used:
 - Amazon S3: Each narrative has a folder in the S3 bucket. In this folder, there will
 be the files associated with this post. A post cannot exist without at least one file associated with it.
 - DynamoDB: The database in which posts are stored.
-- CloudSearch: The search engine that contains all approved posts. Unapproving a post
-removes the post from the search engine but the post will still exist in DynamoDB.
 - SimpleQueueService: When a file needs to be uploaded, a message is generated and added
 to the file upload queue. The service that handles file uploads is running on a separate
 worker on an EC2 service. Information and details about this worker can be found [here](https://github.com/gastate/daln_upload_worker).
+- CloudSearch: The search engine that contains all approved posts. Unapproving a post
+removes the post from the search engine but the post will still exist in DynamoDB.
+Note: This is the only service used where there is only **one** instance (search engine) for both
+development and production. All other services have separate instances for development and production.
 
 To create a post (using the REST functions):
 1. `/posts/create`: Create a post with at least the required metadata fields. A record in DynamoDB will be created for this post.
@@ -112,7 +114,7 @@ to the DALN staging area bucket. All files will initially be uploaded to this bu
 to the SQS queue. The independent DALN upload worker will then transfer this file
 to the appropriate CDN. Videos are uploaded to SproutVideo, audios are uploaded to SoundCloud, and
 all other files remain in S3 but will be moved from the staging area to the specific post folder.
-
+Afterwards, the DynamoDB record will be updated with the file location.
 
 ## REST Functions
 
@@ -156,14 +158,6 @@ Title: Get a Single Post (with Form Parameter)
 | **Description**| Search the database of posts and return the results with the page and page size specified, as well as searching within a specific field and with sorting options. <br> "pageSize": the amount of results you want returned in each call. <br> "start": the index of the first post returned. <br> "field": to search within a certain field. <br> "order": to return the results in ascending or descending order |
 | **Example**    | posts/search/literacy/10/0/title/asc
 
-
-| **Title**      | Get Pre-signed URL for an S3 Upload       |
-| :---------:    | ------  |
-| **URL**        | /asset/s3upload/:key |
-| **URL Params** | Required: <br> key=[string] |
-| **Description**| Supply the url with the object key (name of the file you want to upload to S3). |
-| **Example**    | /asset/s3upload/my file.txt |
-
 ### POST
 
 | **Title**      | Create a Post    |
@@ -171,11 +165,41 @@ Title: Get a Single Post (with Form Parameter)
 | **URL**        | /posts/create|
 | **Data Params** |`{ `<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`tableName:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` title:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`email:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`license:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`description:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`dateCreated:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`rightsConsent:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`rightsRelease:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`contributorAuthor:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`contributorInterviewer:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` creatorGender:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`creatorRaceEthnicity:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`creatorClass:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`creatorYearOfBirth:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coverageSpatial:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coveragePeriod:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coverageRegion:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` coverageStateProvince:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coverageNationality:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`language:[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`subject:[textarray]`<br>`}` |
 | **Description**| Create a post by supplying it with details about the literacy narrative. Once called, the post will exist in the database. <br> Required values: <br> tableName, title, email, license |
-| **Example**    | `{ `<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"tableName":"DALN-Posts-Dev",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` "title":"Shakib's Literacy Narrative",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"email":"shakib.r.ahmed@gmail.com",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"license":"Creative Commons",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"description":"This is my narrative.",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"dateCreated"="06/13/2017",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`rightsConsent=[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`rightsRelease=[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`contributorAuthor=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`contributorInterviewer=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` creatorGender=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`creatorRaceEthnicity=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`creatorClass=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`creatorYearOfBirth=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coverageSpatial=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coveragePeriod=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coverageRegion=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` coverageStateProvince=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coverageNationality=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`language=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`subject=[textarray]`<br>`}` |
+| **Example**    | `{ `<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"tableName":"DALN-Posts-Dev",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` "title":"Shakib's Literacy Narrative",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"email":"shakib.r.ahmed@gmail.com",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"license":"Creative Commons",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"description":"This is my narrative.",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"dateCreated"="06/13/2017",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`rightsConsent=adult,`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`rightsRelease=adult,`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`contributorAuthor=["Shakib Ahmed"],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`contributorInterviewer=["Wasfi Momen", "Jaro Klc"],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` creatorGender=["male"],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`creatorRaceEthnicity=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`creatorClass=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`creatorYearOfBirth=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coverageSpatial=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coveragePeriod=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coverageRegion=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;` coverageStateProvince=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`coverageNationality=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`language=[textarray],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`subject=[textarray]`<br>`}` |
 
 
-Title: Upload an Asset
+| **Title**      | Get Pre-signed URL for an S3 Upload       |
+| :---------:    | ------  |
+| **URL**        | /asset/s3uploader |
+| **Data Params** |`{ `<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`objectKey:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`contentType:[string]`<br>`}`|
+| **Description**| Supply the url with the object key (name of the file you want to upload to S3) and the content type for that file. |
+| **Example**    |`{ `<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"objectKey":"myfile.txt",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"contentType":"text-plain"`<br>`}`|
 
-Title: Approve a Post for the Search Engine
+| **Title**      | Upload an Asset      |
+| :---------:    | ------  |
+| **URL**        | /asset/apiupload |
+| **Data Params** |`{ `<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`stagingAreaBucketName:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`finalBucketName:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`tableName:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`key:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`PostId:[string],` <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`queueName:[string],`               <br>`}`|
+| **Description**| Enter the details for a file you want to upload an associate with a post. This file (which should already exist in the staging area bucket) will be sent as a message to the queue which is processed by an independent worker.|
+| **Example** |`{ `<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"stagingAreaBucketName":"daln-file-staging-area",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"finalBucketName":"daln-development",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"tableName":"DALN-Posts-Dev",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"key":"myfile.txt",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"PostId":"d7fea027-152f-43da-a0d3-dd476c7164e5",` <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"queueName":"DALNFileUploadQueueDev",`               <br>`}`|
 
-Title: Remove a Post from the Search Engine
+| **Title**      | Get Unapproved Posts |
+| :---------:    | ------  |
+| **URL**        | /admin/unapproved |
+| **Data Params** |`{ `<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`tableName:[string]`<br>`}`|
+| **Description**| Return all posts that are not approved. All newly created posts are initially not approved. |
+| **Example** |`{ `<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"tableName":"DALN-Posts-Dev"`<br>`}`|
+
+| **Title**      | Approve a Post for the Search Engine   |
+| :---------:    | ------  |
+| **URL**        | /admin/approve |
+| **Data Params** |`{ `<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`postId:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`tableName:[string]`<br>`}`|
+| **Description**| Approving a post will enter it into the search engine and will be publicly searchable. |
+| **Example**    |`{ `<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"postId":"d7fea027-152f-43da-a0d3-dd476c7164e5",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"tableName":"DALN-Posts-Dev"`<br>`}`|
+
+| **Title**      | Remove a Post for the Search Engine (Unapprove) |
+| :---------:    | ------  |
+| **URL**        | /admin/remove |
+| **Data Params** |`{ `<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`postId:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`tableName:[string]`<br>`}`|
+| **Description**| Removing/Unapproving a post will remove it into the search engine. The post will still exist as a DynamoDB record. |
+| **Example**    |`{ `<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"postId":"d7fea027-152f-43da-a0d3-dd476c7164e5",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"tableName":"DALN-Posts-Dev"`<br>`}`|
+
