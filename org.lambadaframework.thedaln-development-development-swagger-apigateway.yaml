@@ -88,9 +88,9 @@ paths:
         requestTemplates:
           application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
-            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$'))\",\n\
-            \      #foreach($elem in $input.params().keySet())\n        \"$elem\"\
-            : {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
+            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
+            \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
+            \        \"$elem\": {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
             \        \"$innerElem\": \"$util.urlDecode($input.params().get($elem).get($innerElem))\"\
             #if($foreach.hasNext),#end\n      #end\n        }#if($foreach.hasNext),#end\n\
             \      #end\n}"
@@ -204,9 +204,9 @@ paths:
         requestTemplates:
           application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
-            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$'))\",\n\
-            \      #foreach($elem in $input.params().keySet())\n        \"$elem\"\
-            : {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
+            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
+            \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
+            \        \"$elem\": {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
             \        \"$innerElem\": \"$util.urlDecode($input.params().get($elem).get($innerElem))\"\
             #if($foreach.hasNext),#end\n      #end\n        }#if($foreach.hasNext),#end\n\
             \      #end\n}"
@@ -320,9 +320,9 @@ paths:
         requestTemplates:
           application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
-            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$'))\",\n\
-            \      #foreach($elem in $input.params().keySet())\n        \"$elem\"\
-            : {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
+            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
+            \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
+            \        \"$elem\": {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
             \        \"$innerElem\": \"$util.urlDecode($input.params().get($elem).get($innerElem))\"\
             #if($foreach.hasNext),#end\n      #end\n        }#if($foreach.hasNext),#end\n\
             \      #end\n}"
@@ -436,9 +436,9 @@ paths:
         requestTemplates:
           application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
-            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$'))\",\n\
-            \      #foreach($elem in $input.params().keySet())\n        \"$elem\"\
-            : {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
+            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
+            \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
+            \        \"$elem\": {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
             \        \"$innerElem\": \"$util.urlDecode($input.params().get($elem).get($innerElem))\"\
             #if($foreach.hasNext),#end\n      #end\n        }#if($foreach.hasNext),#end\n\
             \      #end\n}"
@@ -552,9 +552,9 @@ paths:
         requestTemplates:
           application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
-            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$'))\",\n\
-            \      #foreach($elem in $input.params().keySet())\n        \"$elem\"\
-            : {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
+            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
+            \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
+            \        \"$elem\": {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
             \        \"$innerElem\": \"$util.urlDecode($input.params().get($elem).get($innerElem))\"\
             #if($foreach.hasNext),#end\n      #end\n        }#if($foreach.hasNext),#end\n\
             \      #end\n}"
@@ -668,9 +668,9 @@ paths:
         requestTemplates:
           application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
-            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$'))\",\n\
-            \      #foreach($elem in $input.params().keySet())\n        \"$elem\"\
-            : {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
+            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
+            \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
+            \        \"$elem\": {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
             \        \"$innerElem\": \"$util.urlDecode($input.params().get($elem).get($innerElem))\"\
             #if($foreach.hasNext),#end\n      #end\n        }#if($foreach.hasNext),#end\n\
             \      #end\n}"
@@ -791,9 +791,9 @@ paths:
         requestTemplates:
           application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
-            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$'))\",\n\
-            \      #foreach($elem in $input.params().keySet())\n        \"$elem\"\
-            : {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
+            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
+            \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
+            \        \"$elem\": {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
             \        \"$innerElem\": \"$util.urlDecode($input.params().get($elem).get($innerElem))\"\
             #if($foreach.hasNext),#end\n      #end\n        }#if($foreach.hasNext),#end\n\
             \      #end\n}"
@@ -914,9 +914,9 @@ paths:
         requestTemplates:
           application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
-            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$'))\",\n\
-            \      #foreach($elem in $input.params().keySet())\n        \"$elem\"\
-            : {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
+            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
+            \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
+            \        \"$elem\": {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
             \        \"$innerElem\": \"$util.urlDecode($input.params().get($elem).get($innerElem))\"\
             #if($foreach.hasNext),#end\n      #end\n        }#if($foreach.hasNext),#end\n\
             \      #end\n}"
@@ -1030,9 +1030,9 @@ paths:
         requestTemplates:
           application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
-            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$'))\",\n\
-            \      #foreach($elem in $input.params().keySet())\n        \"$elem\"\
-            : {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
+            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
+            \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
+            \        \"$elem\": {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
             \        \"$innerElem\": \"$util.urlDecode($input.params().get($elem).get($innerElem))\"\
             #if($foreach.hasNext),#end\n      #end\n        }#if($foreach.hasNext),#end\n\
             \      #end\n}"
@@ -1146,9 +1146,9 @@ paths:
         requestTemplates:
           application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
-            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$'))\",\n\
-            \      #foreach($elem in $input.params().keySet())\n        \"$elem\"\
-            : {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
+            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
+            \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
+            \        \"$elem\": {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
             \        \"$innerElem\": \"$util.urlDecode($input.params().get($elem).get($innerElem))\"\
             #if($foreach.hasNext),#end\n      #end\n        }#if($foreach.hasNext),#end\n\
             \      #end\n}"
@@ -1262,9 +1262,9 @@ paths:
         requestTemplates:
           application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
-            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$'))\",\n\
-            \      #foreach($elem in $input.params().keySet())\n        \"$elem\"\
-            : {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
+            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
+            \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
+            \        \"$elem\": {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
             \        \"$innerElem\": \"$util.urlDecode($input.params().get($elem).get($innerElem))\"\
             #if($foreach.hasNext),#end\n      #end\n        }#if($foreach.hasNext),#end\n\
             \      #end\n}"
@@ -1378,9 +1378,9 @@ paths:
         requestTemplates:
           application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
-            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$'))\",\n\
-            \      #foreach($elem in $input.params().keySet())\n        \"$elem\"\
-            : {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
+            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
+            \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
+            \        \"$elem\": {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
             \        \"$innerElem\": \"$util.urlDecode($input.params().get($elem).get($innerElem))\"\
             #if($foreach.hasNext),#end\n      #end\n        }#if($foreach.hasNext),#end\n\
             \      #end\n}"
@@ -1501,9 +1501,9 @@ paths:
         requestTemplates:
           application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
-            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$'))\",\n\
-            \      #foreach($elem in $input.params().keySet())\n        \"$elem\"\
-            : {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
+            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
+            \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
+            \        \"$elem\": {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
             \        \"$innerElem\": \"$util.urlDecode($input.params().get($elem).get($innerElem))\"\
             #if($foreach.hasNext),#end\n      #end\n        }#if($foreach.hasNext),#end\n\
             \      #end\n}"
@@ -1612,9 +1612,9 @@ paths:
         requestTemplates:
           application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
-            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$'))\",\n\
-            \      #foreach($elem in $input.params().keySet())\n        \"$elem\"\
-            : {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
+            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
+            \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
+            \        \"$elem\": {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
             \        \"$innerElem\": \"$util.urlDecode($input.params().get($elem).get($innerElem))\"\
             #if($foreach.hasNext),#end\n      #end\n        }#if($foreach.hasNext),#end\n\
             \      #end\n}"
@@ -1706,9 +1706,9 @@ paths:
         requestTemplates:
           application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
-            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$'))\",\n\
-            \      #foreach($elem in $input.params().keySet())\n        \"$elem\"\
-            : {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
+            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
+            \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
+            \        \"$elem\": {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
             \        \"$innerElem\": \"$util.urlDecode($input.params().get($elem).get($innerElem))\"\
             #if($foreach.hasNext),#end\n      #end\n        }#if($foreach.hasNext),#end\n\
             \      #end\n}"
@@ -1829,9 +1829,9 @@ paths:
         requestTemplates:
           application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
-            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$'))\",\n\
-            \      #foreach($elem in $input.params().keySet())\n        \"$elem\"\
-            : {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
+            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
+            \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
+            \        \"$elem\": {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
             \        \"$innerElem\": \"$util.urlDecode($input.params().get($elem).get($innerElem))\"\
             #if($foreach.hasNext),#end\n      #end\n        }#if($foreach.hasNext),#end\n\
             \      #end\n}"
@@ -1952,9 +1952,9 @@ paths:
         requestTemplates:
           application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
-            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$'))\",\n\
-            \      #foreach($elem in $input.params().keySet())\n        \"$elem\"\
-            : {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
+            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
+            \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
+            \        \"$elem\": {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
             \        \"$innerElem\": \"$util.urlDecode($input.params().get($elem).get($innerElem))\"\
             #if($foreach.hasNext),#end\n      #end\n        }#if($foreach.hasNext),#end\n\
             \      #end\n}"
@@ -2068,9 +2068,9 @@ paths:
         requestTemplates:
           application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
-            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$'))\",\n\
-            \      #foreach($elem in $input.params().keySet())\n        \"$elem\"\
-            : {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
+            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
+            \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
+            \        \"$elem\": {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
             \        \"$innerElem\": \"$util.urlDecode($input.params().get($elem).get($innerElem))\"\
             #if($foreach.hasNext),#end\n      #end\n        }#if($foreach.hasNext),#end\n\
             \      #end\n}"
@@ -2191,9 +2191,9 @@ paths:
         requestTemplates:
           application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
-            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$'))\",\n\
-            \      #foreach($elem in $input.params().keySet())\n        \"$elem\"\
-            : {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
+            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
+            \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
+            \        \"$elem\": {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
             \        \"$innerElem\": \"$util.urlDecode($input.params().get($elem).get($innerElem))\"\
             #if($foreach.hasNext),#end\n      #end\n        }#if($foreach.hasNext),#end\n\
             \      #end\n}"
@@ -2324,9 +2324,9 @@ paths:
         requestTemplates:
           application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
-            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$'))\",\n\
-            \      #foreach($elem in $input.params().keySet())\n        \"$elem\"\
-            : {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
+            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
+            \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
+            \        \"$elem\": {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
             \        \"$innerElem\": \"$util.urlDecode($input.params().get($elem).get($innerElem))\"\
             #if($foreach.hasNext),#end\n      #end\n        }#if($foreach.hasNext),#end\n\
             \      #end\n}"
@@ -2467,9 +2467,9 @@ paths:
         requestTemplates:
           application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
-            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$'))\",\n\
-            \      #foreach($elem in $input.params().keySet())\n        \"$elem\"\
-            : {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
+            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
+            \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
+            \        \"$elem\": {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
             \        \"$innerElem\": \"$util.urlDecode($input.params().get($elem).get($innerElem))\"\
             #if($foreach.hasNext),#end\n      #end\n        }#if($foreach.hasNext),#end\n\
             \      #end\n}"
@@ -2595,9 +2595,9 @@ paths:
         requestTemplates:
           application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
-            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$'))\",\n\
-            \      #foreach($elem in $input.params().keySet())\n        \"$elem\"\
-            : {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
+            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
+            \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
+            \        \"$elem\": {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
             \        \"$innerElem\": \"$util.urlDecode($input.params().get($elem).get($innerElem))\"\
             #if($foreach.hasNext),#end\n      #end\n        }#if($foreach.hasNext),#end\n\
             \      #end\n}"
