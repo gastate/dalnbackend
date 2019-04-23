@@ -59,7 +59,7 @@ public class DALNSSHClient {
         InputStream in = s3Client.downloadFile(bucket, PEM_LOCOTAION);
 
         final SSHClient ssh = new SSHClient();
-        Session session = ssh.startSession();
+        Session session = null;
         Expect expect = null;
         try {
             ssh.loadKnownHosts();
@@ -69,7 +69,7 @@ public class DALNSSHClient {
             ssh.addHostKeyVerifier(new PromiscuousVerifier());
             ssh.connect(EC2_HOSTNAME);
             ssh.authPublickey(EC_USER, keyProvider);
-
+            session = ssh.startSession();
             Session.Shell shell = session.startShell();
             expect = new ExpectBuilder()
                     .withOutput(shell.getOutputStream())
