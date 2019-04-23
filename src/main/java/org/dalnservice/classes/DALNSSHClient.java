@@ -69,16 +69,18 @@ public class DALNSSHClient {
             ssh.connect(EC2_HOSTNAME);
             ssh.authPublickey(EC_USER, keyProvider);
             session = ssh.startSession();
+            logger.debug("Session started");
             Session.Shell shell = session.startShell();
+            logger.debug("Shell started");
             expect = new ExpectBuilder()
                     .withOutput(shell.getOutputStream())
                     .withInputs(shell.getInputStream(), shell.getErrorStream())
-                    .withEchoInput(System.out)
-                    .withEchoOutput(System.err)
                     .withExceptionOnFailure()
                     .build();
-            expect.expect(regexp("Welcome")); // wait greeting message on login
-            // run script that will do everything
+            logger.debug("Expect created");
+            String welcome = expect.expect(regexp("Welcome")).getInput();// wait greeting message on login
+// run script that will do everything
+            logger.debug("First message "+ welcome);
             expect.sendLine("./restart_service.sh "+stage);
             logger.debug("Done restarting the service "+serviceName);
             result = "Succeeded";
