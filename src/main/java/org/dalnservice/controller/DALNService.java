@@ -49,16 +49,18 @@ public class DALNService {
     private DALNSoundCloudClient soundCloudClient;
     private DALNCloudSearchClient cloudSearchClient;
     private DALNSESClient sesClient;
+    private DALNSSHClient sshClient;
 
     public DALNService() throws IOException {
 
         //The constructors for the following classes authenticate their respective services
         databaseClient = new DALNDatabaseClient();
-        s3Client = new DALNS3Client();
+        s3Client = DALNS3Client.getInstance();
         sproutVideoClient = new DALNSproutVideoClient();
         soundCloudClient = new DALNSoundCloudClient();
         cloudSearchClient = new DALNCloudSearchClient();
         sesClient = new DALNSESClient();
+        sshClient = DALNSSHClient.getInstance();
     }
 
     /** /posts/ **/
@@ -694,6 +696,14 @@ public class DALNService {
                     .build();
         }
         return Response.status(200).entity("Email sent").build();
+    }
+
+    @GET
+    @Path("/admin/restart/{stage}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String restartWorker(@PathParam("stage") String stage) throws IOException {
+        logger.debug("Start restart "+stage);
+        return sshClient.restartWorker(stage);
     }
 
     //To retrieve a single post

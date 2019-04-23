@@ -26,12 +26,20 @@ public class DALNS3Client
     private AmazonS3Client s3Client;
     private String postID, fileName, assetID, bucketName;
     private File file;
+    private static DALNS3Client instance;
 
-    public DALNS3Client() throws IOException {
+    private DALNS3Client() throws IOException {
         EnvironmentVariableCredentialsProvider creds = new EnvironmentVariableCredentialsProvider();
         AWSCredentials awsCredentials = creds.getCredentials();
 
         s3Client = new AmazonS3Client(awsCredentials);
+    }
+
+    public static DALNS3Client getInstance() throws IOException{
+        if (instance == null){
+            instance = new DALNS3Client();
+        }
+        return instance;
     }
 
     public void initializeAndUpload(HashMap<String, String> assetDetails, File file)

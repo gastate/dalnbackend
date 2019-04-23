@@ -588,6 +588,70 @@ paths:
           application/json: "{\"statusCode\": 200}"
         passthroughBehavior: "when_no_match"
         type: "mock"
+
+  /admin/restart/{stage}:
+    get:
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "key"
+          in: "path"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+        500:
+          description: "500 Service Error"
+      x-amazon-apigateway-integration:
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-production-production-LambdaFunction-12KP9WZYWQ3E:0-0-6/invocations"
+        responses:
+          200.*:
+            statusCode: "200"
+            responseTemplates:
+              application/json: "$input.json('$.entity')"
+          500.*:
+            statusCode: "500"
+            responseTemplates:
+              application/json: "$input.json('$.entity')"
+        passthroughBehavior: "never"
+        httpMethod: "POST"
+        type: "aws"
+    options:
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "200 response"
+          schema:
+            $ref: "#/definitions/Empty"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Headers:
+              type: "string"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: "when_no_match"
+        type: "mock"
+
   /asset/apiupload:
     post:
       consumes:
