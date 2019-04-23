@@ -62,7 +62,6 @@ public class DALNSSHClient {
         Session session = null;
         Expect expect = null;
         try {
-            ssh.loadKnownHosts();
             String privateKey = convertStreamToString(in);
             logger.debug("Start of key "+privateKey.substring(0,20));
             KeyProvider keyProvider = ssh.loadKeys(privateKey,null,null);
