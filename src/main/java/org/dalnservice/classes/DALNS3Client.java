@@ -33,6 +33,7 @@ public class DALNS3Client
         AWSCredentials awsCredentials = creds.getCredentials();
 
         s3Client = new AmazonS3Client(awsCredentials);
+        s3Client.setRegion(Region.US_Standard.toAWSRegion());
     }
 
     public static DALNS3Client getInstance() throws IOException{
