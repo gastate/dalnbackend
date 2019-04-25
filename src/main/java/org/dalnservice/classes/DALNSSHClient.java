@@ -6,6 +6,7 @@ import net.schmizz.sshj.transport.verification.PromiscuousVerifier;
 import net.schmizz.sshj.userauth.keyprovider.KeyProvider;
 import net.sf.expectit.Expect;
 import net.sf.expectit.ExpectBuilder;
+import net.sf.expectit.Result;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -79,9 +80,12 @@ public class DALNSSHClient {
                     .build();
             logger.debug("Expect created");
             String welcome = expect.expect(regexp("Welcome")).getInput();// wait greeting message on login
-// run script that will do everything
+
             logger.debug("First message "+ welcome);
-            expect.sendLine("./restart_service.sh "+stage);
+            // run script that will do everything
+            expect.sendLine("./restart_worker.sh "+stage);
+            Result expect1 = expect.expect(regexp("Restart"));
+            logger.debug(expect1.getInput());
             logger.debug("Done restarting the service "+serviceName);
             result = "Succeeded";
         } finally {
