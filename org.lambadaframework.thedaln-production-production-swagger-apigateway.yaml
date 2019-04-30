@@ -589,7 +589,7 @@ paths:
         passthroughBehavior: "when_no_match"
         type: "mock"
 
-  /admin/restart/{stage}:
+  /admin/executeec2/{stage}/{command}:
     get:
       consumes:
         - "application/json"

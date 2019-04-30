@@ -7,10 +7,14 @@ import net.schmizz.sshj.userauth.keyprovider.KeyProvider;
 import net.sf.expectit.Expect;
 import net.sf.expectit.ExpectBuilder;
 import net.sf.expectit.Result;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 import static net.sf.expectit.matcher.Matchers.regexp;
@@ -46,12 +50,13 @@ public class DALNSSHClient {
     }
 
     /**
-     * Connects to EC2 instance with DALN worker and restarts it
-     * @param stage "prod" or "dev" - the stage to restart
+     * Connects to EC2 instance with DALN worker and run specified command
+     * @param stage "prod" or "dev" - the stage to get the key
+     * @param command the command to run(linux console)
      * @return completion status
      * @throws IOException
      */
-    public String restartWorker(String stage) throws IOException{
+    public String runCommand(String stage, String command) throws IOException{
 
         String result = "Failed";
         String bucket = stage.equals("prod") ? PROD_BUCKET : DEV_BUCKET;
@@ -79,15 +84,18 @@ public class DALNSSHClient {
                     .withExceptionOnFailure()
                     .build();
             logger.debug("Expect created");
-            String welcome = expect.expect(regexp("Welcome")).getInput();// wait greeting message on login
-
-            logger.debug("First message "+ welcome);
+            expect.expect(regexp("Welcome"));// wait greeting message on login
             // run script that will do everything
-            expect.sendLine("./restart_worker.sh "+stage);
-            Result expect1 = expect.expect(regexp("Restart"));
-            logger.debug(expect1.getInput());
-            logger.debug("Done restarting the service "+serviceName);
-            result = "Succeeded";
+            expect.sendLine(command+"; echo qazwsxedc");
+            Result expect1 = expect.expect(regexp("qazwsxedc"));
+            String input = expect1.getInput();
+            String[] split = input.split("\n");
+            List<String> out = new ArrayList<>(Arrays.asList(split));
+            out = out.subList(Math.max(0, out.size()-100), out.size()-1);
+            String join = StringUtils.join(out, "\n");
+            logger.debug(join);
+            logger.debug("Done executing command");
+            result = join;
         } finally {
             try {
                 if (session != null) {

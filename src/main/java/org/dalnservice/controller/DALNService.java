@@ -698,12 +698,13 @@ public class DALNService {
         return Response.status(200).entity("Email sent").build();
     }
 
+    // runs the specified command in EC2 worker. Returns last 100 lines of output
     @GET
-    @Path("/admin/restart/{stage}")
+    @Path("/admin/executeec2/{stage}/{command}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String restartWorker(@PathParam("stage") String stage) throws IOException {
+    public String runEC2Command(@PathParam("stage") String stage, @PathParam("command") String command) throws IOException {
         logger.debug("Start restart "+stage);
-        return sshClient.restartWorker(stage);
+        return sshClient.runCommand(stage, command);
     }
 
     //To retrieve a single post

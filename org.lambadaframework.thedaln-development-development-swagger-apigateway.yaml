@@ -589,7 +589,7 @@ paths:
           application/json: "{\"statusCode\": 200}"
         type: "mock"
 
-  /admin/restart/{stage}:
+  /admin/executeec2/{stage}/{command}:
     get:
       consumes:
         - "application/json"
