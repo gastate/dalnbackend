@@ -1,29 +1,31 @@
 package org.dalnservice.classes;
 
-/**
- * Created by Shakib on 2/8/2017.
- */
-import com.amazonaws.Response;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
 import com.amazonaws.services.cloudsearchdomain.AmazonCloudSearchDomainClient;
-import com.amazonaws.services.cloudsearchdomain.model.Hit;
 import com.amazonaws.services.cloudsearchdomain.model.Hits;
 import com.amazonaws.services.cloudsearchdomain.model.SearchRequest;
 import com.amazonaws.services.cloudsearchdomain.model.SearchResult;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
-import com.amazonaws.services.dynamodbv2.datamodeling.*;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
+import com.amazonaws.services.dynamodbv2.datamodeling.ScanResultPage;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import org.json.JSONArray;
-import org.json.JSONException;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
-
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * Created by Shakib on 8/4/2016.
@@ -184,33 +186,46 @@ public class DALNDatabaseClient {
             if (value == null || value.equals(""))
                 continue;
 
-            if (key.equals("contributorAuthor"))
+            if (key.equals("contributorAuthor")) {
+                contributorAuthor.removeAll((ArrayList) value);
                 contributorAuthor.addAll((ArrayList) value);
-            else if (key.equals("contributorInterviewer"))
+            } else if (key.equals("contributorInterviewer")) { 
+                contributorInterviewer.removeAll((ArrayList) value);
                 contributorInterviewer.addAll((ArrayList) value);
-            else if (key.equals("creatorGender"))
+            } else if (key.equals("creatorGender")) {
+                creatorGender.removeAll((ArrayList) value);
                 creatorGender.addAll((ArrayList) value);
-            else if (key.equals("creatorRaceEthnicity"))
+            } else if (key.equals("creatorRaceEthnicity")) {
+                creatorRaceEthnicity.removeAll((ArrayList) value);
                 creatorRaceEthnicity.addAll((ArrayList) value);
-            else if (key.equals("creatorClass"))
+            } else if (key.equals("creatorClass")) { 
+                creatorClass.removeAll((ArrayList) value);
                 creatorClass.addAll((ArrayList) value);
-            else if (key.equals("creatorYearOfBirth"))
+            } else if (key.equals("creatorYearOfBirth")) {
+                creatorYearOfBirth.removeAll((ArrayList) value);
                 creatorYearOfBirth.addAll((ArrayList) value);
-            else if (key.equals("coverageSpatial"))
+            } else if (key.equals("coverageSpatial")) {
+                coverageSpatial.removeAll((ArrayList) value);
                 coverageSpatial.addAll((ArrayList) value);
-            else if (key.equals("coveragePeriod"))
+            } else if (key.equals("coveragePeriod")) {
+                coveragePeriod.removeAll((ArrayList) value);
                 coveragePeriod.addAll((ArrayList) value);
-            else if (key.equals("coverageRegion"))
+            } else if (key.equals("coverageRegion")) {
+                coverageRegion.removeAll((ArrayList) value);
                 coverageRegion.addAll((ArrayList) value);
-            else if (key.equals("coverageStateProvince"))
+            } else if (key.equals("coverageStateProvince")) {
+                coverageStateProvince.removeAll((ArrayList) value);
                 coverageStateProvince.addAll((ArrayList) value);
-            else if (key.equals("coverageNationality"))
+            } else if (key.equals("coverageNationality")) {
+                coverageNationality.removeAll((ArrayList) value);
                 coverageNationality.addAll((ArrayList) value);
-            else if (key.equals("language"))
+            } else if (key.equals("language")) {
+                language.removeAll((ArrayList) value);
                 language.addAll((ArrayList) value);
-            else if (key.equals("subject"))
+            } else if (key.equals("subject")) {
+                subject.removeAll((ArrayList) value);
                 subject.addAll((ArrayList) value);
-            else if (key.equals("title"))
+            } else if (key.equals("title"))
                 title = value.toString();
             else if (key.equals("email"))
                 email = value.toString();
