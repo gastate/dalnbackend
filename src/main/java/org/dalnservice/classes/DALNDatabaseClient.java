@@ -75,36 +75,36 @@ public class DALNDatabaseClient {
         mapper = new DynamoDBMapper(dynamoDBClient, mapperConfig);
     }
 
-    private void initializeCurrentPostAttributes(Post post) {
+    private void initializeCurrentPostAttributes(Post post, boolean isUpdate) {
         //If the post attribute is null, then create a new string/arraylist, else get the current value
-        title = (post.getTitle() == null) ? "" : post.getTitle();
-        email = (post.getEmail() == null) ? "" : post.getEmail();
-        license = (post.getLicense() == null) ? "" : post.getLicense();
-        description = (post.getDescription() == null) ? "" : post.getDescription();
-        hiddenDescription = (post.getHiddenDescription() == null) ? "" : post.getHiddenDescription();
-        dateCreated = (post.getDateCreated() == null) ? "" : post.getDateCreated();
-        rightsRelease = (post.getRightsRelease() == null) ? "" : post.getRightsRelease();
-        rightsConsent = (post.getRightsConsent() == null) ? "" : post.getRightsConsent();
+        title = (post.getTitle() == null || isUpdate) ? "" : post.getTitle();
+        email = (post.getEmail() == null || isUpdate) ? "" : post.getEmail();
+        license = (post.getLicense() == null || isUpdate) ? "" : post.getLicense();
+        description = (post.getDescription() == null || isUpdate) ? "" : post.getDescription();
+        hiddenDescription = (post.getHiddenDescription() == null || isUpdate) ? "" : post.getHiddenDescription();
+        dateCreated = (post.getDateCreated() == null || isUpdate) ? "" : post.getDateCreated();
+        rightsRelease = (post.getRightsRelease() == null || isUpdate) ? "" : post.getRightsRelease();
+        rightsConsent = (post.getRightsConsent() == null || isUpdate) ? "" : post.getRightsConsent();
         isPostNotApproved = post.getIsPostNotApproved();
-        contributorAuthor = (post.getContributorAuthor() == null) ? new ArrayList<String>()
+        contributorAuthor = (post.getContributorAuthor() == null || isUpdate) ? new ArrayList<String>()
                 : post.getContributorAuthor();
-        contributorInterviewer = (post.getContributorInterviewer() == null) ? new ArrayList<String>()
+        contributorInterviewer = (post.getContributorInterviewer() == null || isUpdate) ? new ArrayList<String>()
                 : post.getContributorInterviewer();
-        creatorGender = (post.getCreatorGender() == null) ? new ArrayList<String>() : post.getCreatorGender();
-        creatorRaceEthnicity = (post.getCreatorRaceEthnicity() == null) ? new ArrayList<String>()
+        creatorGender = (post.getCreatorGender() == null || isUpdate) ? new ArrayList<String>() : post.getCreatorGender();
+        creatorRaceEthnicity = (post.getCreatorRaceEthnicity() == null || isUpdate) ? new ArrayList<String>()
                 : post.getCreatorRaceEthnicity();
-        creatorClass = (post.getCreatorClass() == null) ? new ArrayList<String>() : post.getCreatorClass();
-        creatorYearOfBirth = (post.getCreatorYearOfBirth() == null) ? new ArrayList<String>()
+        creatorClass = (post.getCreatorClass() == null || isUpdate) ? new ArrayList<String>() : post.getCreatorClass();
+        creatorYearOfBirth = (post.getCreatorYearOfBirth() == null || isUpdate) ? new ArrayList<String>()
                 : post.getCreatorYearOfBirth();
-        coverageSpatial = (post.getCoverageSpatial() == null) ? new ArrayList<String>() : post.getCoverageSpatial();
-        coveragePeriod = (post.getCoveragePeriod() == null) ? new ArrayList<String>() : post.getCoveragePeriod();
-        coverageRegion = (post.getCoverageRegion() == null) ? new ArrayList<String>() : post.getCoverageRegion();
-        coverageStateProvince = (post.getCoverageStateProvince() == null) ? new ArrayList<String>()
+        coverageSpatial = (post.getCoverageSpatial() == null || isUpdate) ? new ArrayList<String>() : post.getCoverageSpatial();
+        coveragePeriod = (post.getCoveragePeriod() == null || isUpdate) ? new ArrayList<String>() : post.getCoveragePeriod();
+        coverageRegion = (post.getCoverageRegion() == null || isUpdate) ? new ArrayList<String>() : post.getCoverageRegion();
+        coverageStateProvince = (post.getCoverageStateProvince() == null || isUpdate) ? new ArrayList<String>()
                 : post.getCoverageStateProvince();
-        coverageNationality = (post.getCoverageNationality() == null) ? new ArrayList<String>()
+        coverageNationality = (post.getCoverageNationality() == null || isUpdate) ? new ArrayList<String>()
                 : post.getCoverageNationality();
-        language = (post.getLanguage() == null) ? new ArrayList<String>() : post.getLanguage();
-        subject = (post.getSubject() == null) ? new ArrayList<String>() : post.getSubject();
+        language = (post.getLanguage() == null || isUpdate) ? new ArrayList<String>() : post.getLanguage();
+        subject = (post.getSubject() == null || isUpdate) ? new ArrayList<String>() : post.getSubject();
 
     }
 
@@ -176,10 +176,10 @@ public class DALNDatabaseClient {
         return post.getPostId(); //return the UUID generated from the insertion into DB
     }
 
-    public void updatePost(String tableName, String postID, JSONObject input) {
+    public void updatePost(String tableName, String postID, JSONObject input, boolean isUpdate) {
         updateTableName(tableName);
         Post post = mapper.load(Post.class, postID);
-        initializeCurrentPostAttributes(post);
+        initializeCurrentPostAttributes(post, isUpdate);
 
         for (Object key : input.keySet()) {
             Object value = input.get(key);
@@ -187,43 +187,43 @@ public class DALNDatabaseClient {
                 continue;
 
             if (key.equals("contributorAuthor")) {
-                contributorAuthor.removeAll((ArrayList) value);
+                // contributorAuthor.removeAll((ArrayList) value);
                 contributorAuthor.addAll((ArrayList) value);
             } else if (key.equals("contributorInterviewer")) { 
-                contributorInterviewer.removeAll((ArrayList) value);
+                // contributorInterviewer.removeAll((ArrayList) value);
                 contributorInterviewer.addAll((ArrayList) value);
             } else if (key.equals("creatorGender")) {
-                creatorGender.removeAll((ArrayList) value);
+                // creatorGender.removeAll((ArrayList) value);
                 creatorGender.addAll((ArrayList) value);
             } else if (key.equals("creatorRaceEthnicity")) {
-                creatorRaceEthnicity.removeAll((ArrayList) value);
+                // creatorRaceEthnicity.removeAll((ArrayList) value);
                 creatorRaceEthnicity.addAll((ArrayList) value);
             } else if (key.equals("creatorClass")) { 
-                creatorClass.removeAll((ArrayList) value);
+                // creatorClass.removeAll((ArrayList) value);
                 creatorClass.addAll((ArrayList) value);
             } else if (key.equals("creatorYearOfBirth")) {
-                creatorYearOfBirth.removeAll((ArrayList) value);
+                // creatorYearOfBirth.removeAll((ArrayList) value);
                 creatorYearOfBirth.addAll((ArrayList) value);
             } else if (key.equals("coverageSpatial")) {
-                coverageSpatial.removeAll((ArrayList) value);
+                // coverageSpatial.removeAll((ArrayList) value);
                 coverageSpatial.addAll((ArrayList) value);
             } else if (key.equals("coveragePeriod")) {
-                coveragePeriod.removeAll((ArrayList) value);
+                // coveragePeriod.removeAll((ArrayList) value);
                 coveragePeriod.addAll((ArrayList) value);
             } else if (key.equals("coverageRegion")) {
-                coverageRegion.removeAll((ArrayList) value);
+                // coverageRegion.removeAll((ArrayList) value);
                 coverageRegion.addAll((ArrayList) value);
             } else if (key.equals("coverageStateProvince")) {
-                coverageStateProvince.removeAll((ArrayList) value);
+                // coverageStateProvince.removeAll((ArrayList) value);
                 coverageStateProvince.addAll((ArrayList) value);
             } else if (key.equals("coverageNationality")) {
-                coverageNationality.removeAll((ArrayList) value);
+                // coverageNationality.removeAll((ArrayList) value);
                 coverageNationality.addAll((ArrayList) value);
             } else if (key.equals("language")) {
-                language.removeAll((ArrayList) value);
+                // language.removeAll((ArrayList) value);
                 language.addAll((ArrayList) value);
             } else if (key.equals("subject")) {
-                subject.removeAll((ArrayList) value);
+                // subject.removeAll((ArrayList) value);
                 subject.addAll((ArrayList) value);
             } else if (key.equals("title"))
                 title = value.toString();

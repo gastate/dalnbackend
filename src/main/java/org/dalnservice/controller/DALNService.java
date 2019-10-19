@@ -199,7 +199,7 @@ public class DALNService {
         }
 
         try {
-            databaseClient.updatePost(tableName, postId, input);
+            databaseClient.updatePost(tableName, postId, input, false);
         } catch (Exception e) {
             logger.error("update post error");
             e.printStackTrace();
@@ -584,12 +584,10 @@ public class DALNService {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updatePost(JSONObject input) {
 
-        logger.info("you are in /admin/updatePost");
-        System.out.println("you are in using /admin/updatePost/ System.out.println");
         String tableName = input.get("tableName").toString();
         String postId = input.get("postId").toString();  
 
-        databaseClient.updatePost(tableName, postId, input);
+        databaseClient.updatePost(tableName, postId, input, true);
 
         return Response.status(201).entity("Post updated").build();
     }
