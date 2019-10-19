@@ -187,43 +187,30 @@ public class DALNDatabaseClient {
                 continue;
 
             if (key.equals("contributorAuthor")) {
-                // contributorAuthor.removeAll((ArrayList) value);
                 contributorAuthor.addAll((ArrayList) value);
             } else if (key.equals("contributorInterviewer")) { 
-                // contributorInterviewer.removeAll((ArrayList) value);
                 contributorInterviewer.addAll((ArrayList) value);
             } else if (key.equals("creatorGender")) {
-                // creatorGender.removeAll((ArrayList) value);
                 creatorGender.addAll((ArrayList) value);
             } else if (key.equals("creatorRaceEthnicity")) {
-                // creatorRaceEthnicity.removeAll((ArrayList) value);
                 creatorRaceEthnicity.addAll((ArrayList) value);
             } else if (key.equals("creatorClass")) { 
-                // creatorClass.removeAll((ArrayList) value);
                 creatorClass.addAll((ArrayList) value);
             } else if (key.equals("creatorYearOfBirth")) {
-                // creatorYearOfBirth.removeAll((ArrayList) value);
                 creatorYearOfBirth.addAll((ArrayList) value);
             } else if (key.equals("coverageSpatial")) {
-                // coverageSpatial.removeAll((ArrayList) value);
                 coverageSpatial.addAll((ArrayList) value);
             } else if (key.equals("coveragePeriod")) {
-                // coveragePeriod.removeAll((ArrayList) value);
                 coveragePeriod.addAll((ArrayList) value);
             } else if (key.equals("coverageRegion")) {
-                // coverageRegion.removeAll((ArrayList) value);
                 coverageRegion.addAll((ArrayList) value);
             } else if (key.equals("coverageStateProvince")) {
-                // coverageStateProvince.removeAll((ArrayList) value);
                 coverageStateProvince.addAll((ArrayList) value);
             } else if (key.equals("coverageNationality")) {
-                // coverageNationality.removeAll((ArrayList) value);
                 coverageNationality.addAll((ArrayList) value);
             } else if (key.equals("language")) {
-                // language.removeAll((ArrayList) value);
                 language.addAll((ArrayList) value);
             } else if (key.equals("subject")) {
-                // subject.removeAll((ArrayList) value);
                 subject.addAll((ArrayList) value);
             } else if (key.equals("title"))
                 title = value.toString();
