@@ -597,6 +597,9 @@ paths:
       responses:
         200:
           description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         201:
           description: "201 response"
         400:
