@@ -607,7 +607,7 @@ public class DALNService {
         String postId = input.get("postId").toString();  
 
         databaseClient.rejectPost(tableName, postId);
-
+        System.out.println("admin reject endpoint is called!");
         return Response.status(200).entity("Post rejected").build();
     }
 

@@ -248,6 +248,7 @@ public class DALNDatabaseClient {
         post.setEmail(email);
         post.setLicense(license);
         post.setIsPostNotApproved(isPostNotApproved);
+        post.setIsPostRejected(isPostRejected);
         post.setDescription(description);
         post.setHiddenDescription(hiddenDescription);
         post.setDateCreated(dateCreated);
@@ -634,6 +635,7 @@ public class DALNDatabaseClient {
         {
             searchDocumentManager.uploadSingleDocument(postAsSDF);
             post.setIsPostNotApproved(false);
+            post.setIsPostRejected(false);
             post.setAreAllFilesUploaded(true);
             mapper.save(post);
             return true;
