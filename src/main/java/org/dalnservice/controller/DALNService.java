@@ -606,11 +606,21 @@ public class DALNService {
         String tableName = input.get("tableName").toString();
         String postId = input.get("postId").toString();  
 
-        // databaseClient.updatePost(tableName, postId, input, true);
-
-        System.out.println("post going to be rejected>>tableName: " + tableName + ", postId: " + postId);
+        databaseClient.rejectPost(tableName, postId);
 
         return Response.status(200).entity("Post rejected").build();
+    }
+
+    @POST
+    @Path("/admin/unreject")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response unreject(JSONObject input) throws IOException, ParseException {
+        String tableName = input.get("tableName").toString();
+        String postId = input.get("postId").toString();
+
+        databaseClient.unrejectPost(tableName, postId);
+
+        return Response.status(200).entity("Post is now waiting for approval").build();
     }
 
     @POST

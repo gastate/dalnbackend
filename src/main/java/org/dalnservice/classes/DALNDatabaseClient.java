@@ -44,6 +44,7 @@ public class DALNDatabaseClient {
             creatorYearOfBirth, coverageSpatial, coveragePeriod, coverageRegion, coverageStateProvince,
             coverageNationality, language, subject;
     private boolean isPostNotApproved;
+    private boolean isPostRejected;
 
     public DALNDatabaseClient() throws IOException {
         /**Authenticate clients and mapper**/
@@ -86,6 +87,7 @@ public class DALNDatabaseClient {
         rightsRelease = (post.getRightsRelease() == null) ? "" : post.getRightsRelease();
         rightsConsent = (post.getRightsConsent() == null) ? "" : post.getRightsConsent();
         isPostNotApproved = post.getIsPostNotApproved();
+        isPostRejected = post.getIsPostRejected();
         contributorAuthor = (post.getContributorAuthor() == null) ? new ArrayList<String>()
                 : post.getContributorAuthor();
         contributorInterviewer = (post.getContributorInterviewer() == null) ? new ArrayList<String>()
@@ -163,8 +165,9 @@ public class DALNDatabaseClient {
         post.setEmail(email);
         post.setLicense(license);
         post.setIsPostNotApproved(true);
+        post.setIsPostRejected(false);
         post.setAreAllFilesUploaded(false);
-
+        
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
         Date date = new Date();
         String dateSubmitted = dateFormat.format(date);
@@ -264,6 +267,21 @@ public class DALNDatabaseClient {
         post.setLanguage(language);
         post.setSubject(subject);
 
+        mapper.save(post);
+    }
+
+    public void rejectPost(String tableName, String postId){
+        updateTableName(tableName);
+        Post post = mapper.load(Post.class, postId);
+        post.setIsPostRejected(true);
+        mapper.save(post);
+    }
+
+    // "unreject" = turn a rejected narrative back to waiting for approval
+    public void unrejectPost(String tableName, String postId){
+        updateTableName(tableName);
+        Post post = mapper.load(Post.class, postId);
+        post.setIsPostRejected(false);
         mapper.save(post);
     }
 
