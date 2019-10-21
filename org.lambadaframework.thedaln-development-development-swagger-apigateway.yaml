@@ -3,17 +3,17 @@ swagger: "2.0"
 info:
   version: "2018-04-10T15:18:02Z"
   title: "org.lambadaframework.thedaln-development"
-host: "5odt95uhfg.execute-api.us-east-1.amazonaws.com"
+host: "h10w14u1wd.execute-api.us-east-1.amazonaws.com"
 basePath: "/development"
 schemes:
-- "https"
+  - "https"
 paths:
   /admin/approve:
     post:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -39,7 +39,7 @@ paths:
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
@@ -86,7 +86,8 @@ paths:
         passthroughBehavior: "never"
         httpMethod: "POST"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -97,9 +98,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -122,14 +123,14 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         passthroughBehavior: "when_no_match"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         type: "mock"
   /admin/delete:
     post:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -155,7 +156,7 @@ paths:
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
@@ -202,7 +203,8 @@ paths:
         passthroughBehavior: "never"
         httpMethod: "POST"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -213,9 +215,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -238,14 +240,14 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         passthroughBehavior: "when_no_match"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         type: "mock"
   /admin/email:
     post:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -271,7 +273,7 @@ paths:
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
@@ -318,7 +320,8 @@ paths:
         passthroughBehavior: "never"
         httpMethod: "POST"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -329,9 +332,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -354,14 +357,14 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         passthroughBehavior: "when_no_match"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         type: "mock"
   /admin/remove:
     post:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -387,7 +390,7 @@ paths:
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
@@ -434,7 +437,8 @@ paths:
         passthroughBehavior: "never"
         httpMethod: "POST"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -445,9 +449,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -470,14 +474,14 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         passthroughBehavior: "when_no_match"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         type: "mock"
   /admin/unapproved:
     post:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -503,7 +507,7 @@ paths:
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
@@ -550,7 +554,8 @@ paths:
         passthroughBehavior: "never"
         httpMethod: "POST"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -561,9 +566,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -586,7 +591,7 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         passthroughBehavior: "when_no_match"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         type: "mock"
 
   /admin/executeec2/{stage}/{command}:
@@ -609,7 +614,7 @@ paths:
         500:
           description: "500 Service Error"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
         responses:
           default:
             statusCode: "200"
@@ -622,14 +627,15 @@ paths:
             responseTemplates:
               application/json: "$input.json('$.entity')"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
-                    \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
-                    ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
-                    \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
-                    \        \"$elem\": {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
-                    \        \"$innerElem\": \"$util.urlDecode($input.params().get($elem).get($innerElem))\"\
-                    #if($foreach.hasNext),#end\n      #end\n        }#if($foreach.hasNext),#end\n\
-                    \      #end\n}"
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
+            \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
+            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
+            \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
+            \        \"$elem\": {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
+            \        \"$innerElem\": \"$util.urlDecode($input.params().get($elem).get($innerElem))\"\
+            #if($foreach.hasNext),#end\n      #end\n        }#if($foreach.hasNext),#end\n\
+            \      #end\n}"
         passthroughBehavior: "never"
         httpMethod: "POST"
         type: "aws"
@@ -659,16 +665,16 @@ paths:
               method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
               method.response.header.Access-Control-Allow-Origin: "'*'"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         passthroughBehavior: "when_no_match"
         type: "mock"
 
   /asset/apiupload:
     post:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -694,7 +700,7 @@ paths:
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
@@ -741,7 +747,8 @@ paths:
         passthroughBehavior: "never"
         httpMethod: "POST"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -752,9 +759,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -777,19 +784,19 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         passthroughBehavior: "when_no_match"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         type: "mock"
   /asset/read/{key}:
     get:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "key"
-        in: "path"
-        required: true
-        type: "string"
+        - name: "key"
+          in: "path"
+          required: true
+          type: "string"
       responses:
         200:
           description: "200 response"
@@ -815,7 +822,7 @@ paths:
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
@@ -864,7 +871,8 @@ paths:
         passthroughBehavior: "never"
         httpMethod: "POST"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -875,9 +883,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -900,19 +908,19 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         passthroughBehavior: "when_no_match"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         type: "mock"
   /asset/s3upload/{key}:
     get:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "key"
-        in: "path"
-        required: true
-        type: "string"
+        - name: "key"
+          in: "path"
+          required: true
+          type: "string"
       responses:
         200:
           description: "200 response"
@@ -938,7 +946,7 @@ paths:
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
@@ -987,7 +995,8 @@ paths:
         passthroughBehavior: "never"
         httpMethod: "POST"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -998,9 +1007,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -1023,14 +1032,14 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         passthroughBehavior: "when_no_match"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         type: "mock"
   /asset/s3uploader:
     post:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -1056,7 +1065,7 @@ paths:
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
@@ -1103,7 +1112,8 @@ paths:
         passthroughBehavior: "never"
         httpMethod: "POST"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -1114,9 +1124,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -1139,14 +1149,14 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         passthroughBehavior: "when_no_match"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         type: "mock"
   /asset/test:
     post:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -1172,7 +1182,7 @@ paths:
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
@@ -1219,7 +1229,8 @@ paths:
         passthroughBehavior: "never"
         httpMethod: "POST"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -1230,9 +1241,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -1255,14 +1266,14 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         passthroughBehavior: "when_no_match"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         type: "mock"
   /posts/all:
     get:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -1288,7 +1299,7 @@ paths:
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
@@ -1335,7 +1346,8 @@ paths:
         passthroughBehavior: "never"
         httpMethod: "POST"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -1346,9 +1358,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -1371,14 +1383,14 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         passthroughBehavior: "when_no_match"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         type: "mock"
   /posts/create:
     post:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -1404,7 +1416,7 @@ paths:
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
@@ -1451,7 +1463,8 @@ paths:
         passthroughBehavior: "never"
         httpMethod: "POST"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -1462,9 +1475,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -1487,19 +1500,19 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         passthroughBehavior: "when_no_match"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         type: "mock"
   /posts/dalnold/{dalnId}:
     get:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "dalnId"
-        in: "path"
-        required: true
-        type: "string"
+        - name: "dalnId"
+          in: "path"
+          required: true
+          type: "string"
       responses:
         200:
           description: "200 response"
@@ -1525,7 +1538,7 @@ paths:
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
@@ -1574,7 +1587,8 @@ paths:
         passthroughBehavior: "never"
         httpMethod: "POST"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -1585,9 +1599,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -1610,14 +1624,14 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         passthroughBehavior: "when_no_match"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         type: "mock"
   /posts/get:
     post:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -1640,7 +1654,7 @@ paths:
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
@@ -1685,7 +1699,8 @@ paths:
         passthroughBehavior: "never"
         httpMethod: "POST"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -1697,14 +1712,14 @@ paths:
   /posts/get/{postId}:
     get:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "postId"
-        in: "path"
-        required: true
-        type: "string"
+        - name: "postId"
+          in: "path"
+          required: true
+          type: "string"
       responses:
         200:
           description: "200 response"
@@ -1730,7 +1745,7 @@ paths:
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
@@ -1779,7 +1794,8 @@ paths:
         passthroughBehavior: "never"
         httpMethod: "POST"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -1790,9 +1806,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -1815,19 +1831,19 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         passthroughBehavior: "when_no_match"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         type: "mock"
   /posts/getdev/{postId}:
     get:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "postId"
-        in: "path"
-        required: true
-        type: "string"
+        - name: "postId"
+          in: "path"
+          required: true
+          type: "string"
       responses:
         200:
           description: "200 response"
@@ -1853,7 +1869,7 @@ paths:
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
@@ -1902,7 +1918,8 @@ paths:
         passthroughBehavior: "never"
         httpMethod: "POST"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -1913,9 +1930,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -1938,19 +1955,19 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         passthroughBehavior: "when_no_match"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         type: "mock"
   /posts/random/{size}:
     get:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "size"
-        in: "path"
-        required: true
-        type: "string"
+        - name: "size"
+          in: "path"
+          required: true
+          type: "string"
       responses:
         200:
           description: "200 response"
@@ -1976,7 +1993,7 @@ paths:
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
@@ -2025,7 +2042,8 @@ paths:
         passthroughBehavior: "never"
         httpMethod: "POST"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -2036,9 +2054,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -2061,14 +2079,14 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         passthroughBehavior: "when_no_match"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         type: "mock"
   /posts/search-engine-size:
     get:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -2094,7 +2112,7 @@ paths:
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
@@ -2141,7 +2159,8 @@ paths:
         passthroughBehavior: "never"
         httpMethod: "POST"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -2152,9 +2171,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -2177,19 +2196,19 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         passthroughBehavior: "when_no_match"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         type: "mock"
   /posts/search/{query}:
     get:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "query"
-        in: "path"
-        required: true
-        type: "string"
+        - name: "query"
+          in: "path"
+          required: true
+          type: "string"
       responses:
         200:
           description: "200 response"
@@ -2215,7 +2234,7 @@ paths:
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
@@ -2264,7 +2283,8 @@ paths:
         passthroughBehavior: "never"
         httpMethod: "POST"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -2275,9 +2295,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -2300,27 +2320,27 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         passthroughBehavior: "when_no_match"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         type: "mock"
   /posts/search/{query}/{pageSize}/{start}:
     get:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "query"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "start"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "pageSize"
-        in: "path"
-        required: true
-        type: "string"
+        - name: "query"
+          in: "path"
+          required: true
+          type: "string"
+        - name: "start"
+          in: "path"
+          required: true
+          type: "string"
+        - name: "pageSize"
+          in: "path"
+          required: true
+          type: "string"
       responses:
         200:
           description: "200 response"
@@ -2346,7 +2366,7 @@ paths:
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
@@ -2397,7 +2417,8 @@ paths:
         passthroughBehavior: "never"
         httpMethod: "POST"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -2408,9 +2429,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -2433,35 +2454,35 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         passthroughBehavior: "when_no_match"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         type: "mock"
   /posts/search/{query}/{pageSize}/{start}/{field}/{order}:
     get:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "query"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "start"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "field"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "order"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "pageSize"
-        in: "path"
-        required: true
-        type: "string"
+        - name: "query"
+          in: "path"
+          required: true
+          type: "string"
+        - name: "start"
+          in: "path"
+          required: true
+          type: "string"
+        - name: "field"
+          in: "path"
+          required: true
+          type: "string"
+        - name: "order"
+          in: "path"
+          required: true
+          type: "string"
+        - name: "pageSize"
+          in: "path"
+          required: true
+          type: "string"
       responses:
         200:
           description: "200 response"
@@ -2487,7 +2508,7 @@ paths:
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
@@ -2540,7 +2561,8 @@ paths:
         passthroughBehavior: "never"
         httpMethod: "POST"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -2551,9 +2573,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -2576,23 +2598,23 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         passthroughBehavior: "when_no_match"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         type: "mock"
   /posts/size/{pageSize}/page/{page}:
     get:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "page"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "pageSize"
-        in: "path"
-        required: true
-        type: "string"
+        - name: "page"
+          in: "path"
+          required: true
+          type: "string"
+        - name: "pageSize"
+          in: "path"
+          required: true
+          type: "string"
       responses:
         200:
           description: "200 response"
@@ -2618,7 +2640,7 @@ paths:
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-development-development-LambdaFunction-RQEHOHIA452T:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
@@ -2668,7 +2690,8 @@ paths:
         passthroughBehavior: "never"
         httpMethod: "POST"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -2679,9 +2702,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -2704,7 +2727,7 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         passthroughBehavior: "when_no_match"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         type: "mock"
 definitions:
   Empty:
