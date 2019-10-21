@@ -76,37 +76,37 @@ public class DALNDatabaseClient {
         mapper = new DynamoDBMapper(dynamoDBClient, mapperConfig);
     }
 
-    private void initializeCurrentPostAttributes(Post post) {
+    private void initializeCurrentPostAttributes(Post post, boolean isUpdate) {
         //If the post attribute is null, then create a new string/arraylist, else get the current value
-        title = (post.getTitle() == null) ? "" : post.getTitle();
-        email = (post.getEmail() == null) ? "" : post.getEmail();
-        license = (post.getLicense() == null) ? "" : post.getLicense();
-        description = (post.getDescription() == null) ? "" : post.getDescription();
-        hiddenDescription = (post.getHiddenDescription() == null) ? "" : post.getHiddenDescription();
-        dateCreated = (post.getDateCreated() == null) ? "" : post.getDateCreated();
-        rightsRelease = (post.getRightsRelease() == null) ? "" : post.getRightsRelease();
-        rightsConsent = (post.getRightsConsent() == null) ? "" : post.getRightsConsent();
+        title = (post.getTitle() == null || isUpdate) ? "" : post.getTitle();
+        email = (post.getEmail() == null || isUpdate) ? "" : post.getEmail();
+        license = (post.getLicense() == null || isUpdate) ? "" : post.getLicense();
+        description = (post.getDescription() == null || isUpdate) ? "" : post.getDescription();
+        hiddenDescription = (post.getHiddenDescription() == null || isUpdate) ? "" : post.getHiddenDescription();
+        dateCreated = (post.getDateCreated() == null || isUpdate) ? "" : post.getDateCreated();
+        rightsRelease = (post.getRightsRelease() == null || isUpdate) ? "" : post.getRightsRelease();
+        rightsConsent = (post.getRightsConsent() == null || isUpdate) ? "" : post.getRightsConsent();
         isPostNotApproved = post.getIsPostNotApproved();
         isPostRejected = post.getIsPostRejected();
-        contributorAuthor = (post.getContributorAuthor() == null) ? new ArrayList<String>()
+        contributorAuthor = (post.getContributorAuthor() == null || isUpdate) ? new ArrayList<String>()
                 : post.getContributorAuthor();
-        contributorInterviewer = (post.getContributorInterviewer() == null) ? new ArrayList<String>()
+        contributorInterviewer = (post.getContributorInterviewer() == null || isUpdate) ? new ArrayList<String>()
                 : post.getContributorInterviewer();
-        creatorGender = (post.getCreatorGender() == null) ? new ArrayList<String>() : post.getCreatorGender();
-        creatorRaceEthnicity = (post.getCreatorRaceEthnicity() == null) ? new ArrayList<String>()
+        creatorGender = (post.getCreatorGender() == null || isUpdate) ? new ArrayList<String>() : post.getCreatorGender();
+        creatorRaceEthnicity = (post.getCreatorRaceEthnicity() == null || isUpdate) ? new ArrayList<String>()
                 : post.getCreatorRaceEthnicity();
-        creatorClass = (post.getCreatorClass() == null) ? new ArrayList<String>() : post.getCreatorClass();
-        creatorYearOfBirth = (post.getCreatorYearOfBirth() == null) ? new ArrayList<String>()
+        creatorClass = (post.getCreatorClass() == null || isUpdate) ? new ArrayList<String>() : post.getCreatorClass();
+        creatorYearOfBirth = (post.getCreatorYearOfBirth() == null || isUpdate) ? new ArrayList<String>()
                 : post.getCreatorYearOfBirth();
-        coverageSpatial = (post.getCoverageSpatial() == null) ? new ArrayList<String>() : post.getCoverageSpatial();
-        coveragePeriod = (post.getCoveragePeriod() == null) ? new ArrayList<String>() : post.getCoveragePeriod();
-        coverageRegion = (post.getCoverageRegion() == null) ? new ArrayList<String>() : post.getCoverageRegion();
-        coverageStateProvince = (post.getCoverageStateProvince() == null) ? new ArrayList<String>()
+        coverageSpatial = (post.getCoverageSpatial() == null || isUpdate) ? new ArrayList<String>() : post.getCoverageSpatial();
+        coveragePeriod = (post.getCoveragePeriod() == null || isUpdate) ? new ArrayList<String>() : post.getCoveragePeriod();
+        coverageRegion = (post.getCoverageRegion() == null || isUpdate) ? new ArrayList<String>() : post.getCoverageRegion();
+        coverageStateProvince = (post.getCoverageStateProvince() == null || isUpdate) ? new ArrayList<String>()
                 : post.getCoverageStateProvince();
-        coverageNationality = (post.getCoverageNationality() == null) ? new ArrayList<String>()
+        coverageNationality = (post.getCoverageNationality() == null || isUpdate) ? new ArrayList<String>()
                 : post.getCoverageNationality();
-        language = (post.getLanguage() == null) ? new ArrayList<String>() : post.getLanguage();
-        subject = (post.getSubject() == null) ? new ArrayList<String>() : post.getSubject();
+        language = (post.getLanguage() == null || isUpdate) ? new ArrayList<String>() : post.getLanguage();
+        subject = (post.getSubject() == null || isUpdate) ? new ArrayList<String>() : post.getSubject();
 
     }
 
@@ -179,43 +179,43 @@ public class DALNDatabaseClient {
         return post.getPostId(); //return the UUID generated from the insertion into DB
     }
 
-    public void updatePost(String tableName, String postID, JSONObject input) {
+    public void updatePost(String tableName, String postID, JSONObject input, boolean isUpdate) {
         updateTableName(tableName);
         Post post = mapper.load(Post.class, postID);
-        initializeCurrentPostAttributes(post);
+        initializeCurrentPostAttributes(post, isUpdate);
 
         for (Object key : input.keySet()) {
             Object value = input.get(key);
             if (value == null || value.equals(""))
                 continue;
 
-            if (key.equals("contributorAuthor"))
+            if (key.equals("contributorAuthor")) {
                 contributorAuthor.addAll((ArrayList) value);
-            else if (key.equals("contributorInterviewer"))
+            } else if (key.equals("contributorInterviewer")) { 
                 contributorInterviewer.addAll((ArrayList) value);
-            else if (key.equals("creatorGender"))
+            } else if (key.equals("creatorGender")) {
                 creatorGender.addAll((ArrayList) value);
-            else if (key.equals("creatorRaceEthnicity"))
+            } else if (key.equals("creatorRaceEthnicity")) {
                 creatorRaceEthnicity.addAll((ArrayList) value);
-            else if (key.equals("creatorClass"))
+            } else if (key.equals("creatorClass")) { 
                 creatorClass.addAll((ArrayList) value);
-            else if (key.equals("creatorYearOfBirth"))
+            } else if (key.equals("creatorYearOfBirth")) {
                 creatorYearOfBirth.addAll((ArrayList) value);
-            else if (key.equals("coverageSpatial"))
+            } else if (key.equals("coverageSpatial")) {
                 coverageSpatial.addAll((ArrayList) value);
-            else if (key.equals("coveragePeriod"))
+            } else if (key.equals("coveragePeriod")) {
                 coveragePeriod.addAll((ArrayList) value);
-            else if (key.equals("coverageRegion"))
+            } else if (key.equals("coverageRegion")) {
                 coverageRegion.addAll((ArrayList) value);
-            else if (key.equals("coverageStateProvince"))
+            } else if (key.equals("coverageStateProvince")) {
                 coverageStateProvince.addAll((ArrayList) value);
-            else if (key.equals("coverageNationality"))
+            } else if (key.equals("coverageNationality")) {
                 coverageNationality.addAll((ArrayList) value);
-            else if (key.equals("language"))
+            } else if (key.equals("language")) {
                 language.addAll((ArrayList) value);
-            else if (key.equals("subject"))
+            } else if (key.equals("subject")) {
                 subject.addAll((ArrayList) value);
-            else if (key.equals("title"))
+            } else if (key.equals("title"))
                 title = value.toString();
             else if (key.equals("email"))
                 email = value.toString();

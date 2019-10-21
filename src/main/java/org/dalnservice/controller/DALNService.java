@@ -199,25 +199,13 @@ public class DALNService {
         }
 
         try {
-            databaseClient.updatePost(tableName, postId, input);
+            databaseClient.updatePost(tableName, postId, input, false);
         } catch (Exception e) {
             logger.error("update post error");
             e.printStackTrace();
         }
 
         return postId;
-    }
-
-    //@POST
-    //@Path("/posts/update")
-    //@Consumes(MediaType.APPLICATION_JSON)
-    public Response updatePost(JSONObject input) {
-        String tableName = input.get("tableName").toString();
-        String postId = input.get("PostId").toString();
-
-        databaseClient.updatePost(tableName, postId, input);
-
-        return Response.status(201).entity("Post updated").build();
     }
 
     /** /asset/ **/
@@ -589,6 +577,19 @@ public class DALNService {
             return Response.status(200).entity("Post added to search engine").build();
         else
             return Response.status(200).entity("Post was not successfully added to search engine").build();
+    }
+
+    @POST
+    @Path("/admin/updatePost")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updatePost(JSONObject input) {
+
+        String tableName = input.get("tableName").toString();
+        String postId = input.get("postId").toString();  
+
+        databaseClient.updatePost(tableName, postId, input, true);
+
+        return Response.status(201).entity("Post updated").build();
     }
 
     @POST
