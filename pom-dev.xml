@@ -8,7 +8,7 @@
     <properties>
         <lambada.version>0.0.6</lambada.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <deployment.bucket>daln-development-sb</deployment.bucket>
+        <deployment.bucket>daln-development-sb.us-east-1.amazonaws.com</deployment.bucket>
         <deployment.package>org.dalnservice</deployment.package>
         <!-- Region to deploy-->
         <deployment.region>US</deployment.region>
