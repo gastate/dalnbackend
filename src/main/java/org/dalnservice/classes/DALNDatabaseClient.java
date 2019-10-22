@@ -512,7 +512,7 @@ public class DALNDatabaseClient {
         updateTableName("DALN-Posts");
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setQuery(query);
-        searchRequest.setQueryOptions("    {    \"defaultOperator\":\"or\"}");
+        searchRequest.setQueryOptions("    {    \"defaultOperator\":\"and\"}");
         searchRequest.setReturn("_all_fields");
 
         SearchResult searchResult = searchClient.search(searchRequest);
@@ -548,7 +548,7 @@ public class DALNDatabaseClient {
         searchRequest.setQuery(query);
         searchRequest.setReturn("_all_fields");
         searchRequest.setSize(pageSize);
-        searchRequest.setQueryOptions("    {    \"defaultOperator\":\"or\"}");
+        searchRequest.setQueryOptions("    {    \"defaultOperator\":\"and\"}");
         searchRequest.setStart(hitStart);
 
         SearchResult searchResult = searchClient.search(searchRequest);
@@ -564,7 +564,7 @@ public class DALNDatabaseClient {
 
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setQuery(query);
-        searchRequest.setQueryOptions("    {    \"defaultOperator\":\"or\"}");
+        searchRequest.setQueryOptions("    {    \"defaultOperator\":\"and\"}");
         searchRequest.setReturn("_all_fields");
         searchRequest.setSize(pageSize);
         searchRequest.setStart(hitStart);
