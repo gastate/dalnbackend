@@ -11,7 +11,7 @@
         <deployment.bucket>daln-development-sb</deployment.bucket>
         <deployment.package>org.dalnservice</deployment.package>
         <!-- Region to deploy-->
-        <deployment.region>us-east-1</deployment.region>
+        <deployment.region>US</deployment.region>
         <!-- Stage to deploy -->
         <deployment.stage>development</deployment.stage>
         <!-- Maximum execution time for lambda -->
