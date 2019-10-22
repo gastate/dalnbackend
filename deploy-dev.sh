@@ -1,4 +1,4 @@
-mvn deploy -f ./pom-dev.xml
+mvn deploy -f ./pom-dev.xml -X
 
 sleep 10
 aws apigateway put-rest-api --rest-api-id h10w14u1wd --mode overwrite --body "file://./org.lambadaframework.thedaln-development-development-swagger-apigateway.yaml"
