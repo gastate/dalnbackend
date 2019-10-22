@@ -700,6 +700,13 @@ public class DALNService {
         return databaseClient.getUnapprovedPosts(input.get("tableName").toString());
     }
 
+    @POST
+    @Path("/admin/rejected")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<Post> getRejectedPosts(JSONObject input) {
+        return databaseClient.getRejectedPosts(input.get("tableName").toString());
+    }
+
     //submitted, approved, rejected, awaiting
     @POST
     @Path("/admin/email")
