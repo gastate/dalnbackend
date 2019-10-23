@@ -449,8 +449,27 @@ public class DALNDatabaseClient {
         Map<String, AttributeValue> eav = new HashMap<>();
         eav.put(":v1", new AttributeValue().withN("1"));
 
+        // fetch all the posts with isPostNotApproved=true
         DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
                 .withFilterExpression("isPostNotApproved = :v1").withExpressionAttributeValues(eav);
+        List<Post> scanResult = mapper.scan(Post.class, scanExpression);
+
+        // this is a list of posts with isPostRejected=false OR isPostRejected is not even set
+        List<Post> res = new ArrayList<>();
+        for (Post p : scanResult) {
+            if (!p.getIsPostRejected()) res.add(p);
+        }
+
+        return res;
+    }
+
+    public List<Post> getRejectedPosts(String tableName) {
+        updateTableName(tableName);
+        Map<String, AttributeValue> eav = new HashMap<>();
+        eav.put(":v1", new AttributeValue().withN("1"));
+
+        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
+                .withFilterExpression("isPostRejected = :v1").withExpressionAttributeValues(eav);
         List<Post> scanResult = mapper.scan(Post.class, scanExpression);
 
         return scanResult;
