@@ -1,5 +1,22 @@
 package org.dalnservice.controller;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.HttpMethod;
@@ -10,33 +27,28 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.Headers;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.CopyObjectRequest;
-import com.amazonaws.services.s3.model.CopyObjectResult;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.transfer.Download;
-import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClient;
-import com.amazonaws.services.sqs.model.*;
+import com.amazonaws.services.sqs.model.GetQueueUrlRequest;
+import com.amazonaws.services.sqs.model.SendMessageRequest;
+
 import org.apache.log4j.Logger;
 import org.apache.tika.exception.TikaException;
-import org.dalnservice.classes.*;
+import org.dalnservice.classes.DALNCloudSearchClient;
+import org.dalnservice.classes.DALNDatabaseClient;
+import org.dalnservice.classes.DALNS3Client;
+import org.dalnservice.classes.DALNSESClient;
+import org.dalnservice.classes.DALNSSHClient;
+import org.dalnservice.classes.DALNSoundCloudClient;
+import org.dalnservice.classes.DALNSproutVideoClient;
+import org.dalnservice.classes.DocumentReader;
+import org.dalnservice.classes.Post;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.xml.sax.SAXException;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
 
 @Path("/")
 public class DALNService {
@@ -49,16 +61,18 @@ public class DALNService {
     private DALNSoundCloudClient soundCloudClient;
     private DALNCloudSearchClient cloudSearchClient;
     private DALNSESClient sesClient;
+    private DALNSSHClient sshClient;
 
     public DALNService() throws IOException {
 
         //The constructors for the following classes authenticate their respective services
         databaseClient = new DALNDatabaseClient();
-        s3Client = new DALNS3Client();
+        s3Client = DALNS3Client.getInstance();
         sproutVideoClient = new DALNSproutVideoClient();
         soundCloudClient = new DALNSoundCloudClient();
         cloudSearchClient = new DALNCloudSearchClient();
         sesClient = new DALNSESClient();
+        sshClient = DALNSSHClient.getInstance();
     }
 
     /** /posts/ **/
@@ -185,25 +199,13 @@ public class DALNService {
         }
 
         try {
-            databaseClient.updatePost(tableName, postId, input);
+            databaseClient.updatePost(tableName, postId, input, false);
         } catch (Exception e) {
             logger.error("update post error");
             e.printStackTrace();
         }
 
         return postId;
-    }
-
-    //@POST
-    //@Path("/posts/update")
-    //@Consumes(MediaType.APPLICATION_JSON)
-    public Response updatePost(JSONObject input) {
-        String tableName = input.get("tableName").toString();
-        String postId = input.get("PostId").toString();
-
-        databaseClient.updatePost(tableName, postId, input);
-
-        return Response.status(201).entity("Post updated").build();
     }
 
     /** /asset/ **/
@@ -578,11 +580,48 @@ public class DALNService {
     }
 
     @POST
+    @Path("/admin/updatePost")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updatePost(JSONObject input) {
+
+        String tableName = input.get("tableName").toString();
+        String postId = input.get("postId").toString();  
+
+        databaseClient.updatePost(tableName, postId, input, true);
+
+        return Response.status(201).entity("Post updated").build();
+    }
+
+    @POST
     @Path("/admin/remove")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response deletePostFromSearch(JSONObject input) throws IOException, ParseException {
         databaseClient.removePostFromCloudSearch(input.get("postId").toString(), input.get("tableName").toString());
         return Response.status(200).entity("Post removed from search engine").build();
+    }
+
+    @POST
+    @Path("/admin/reject")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response reject(JSONObject input) throws IOException, ParseException {
+        String tableName = input.get("tableName").toString();
+        String postId = input.get("postId").toString();  
+
+        databaseClient.rejectPost(tableName, postId);
+        System.out.println("admin reject endpoint is called!");
+        return Response.status(200).entity("Post rejected").build();
+    }
+
+    @POST
+    @Path("/admin/unreject")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response unreject(JSONObject input) throws IOException, ParseException {
+        String tableName = input.get("tableName").toString();
+        String postId = input.get("postId").toString();
+
+        databaseClient.unrejectPost(tableName, postId);
+
+        return Response.status(200).entity("Post is now waiting for approval").build();
     }
 
     @POST
@@ -661,6 +700,13 @@ public class DALNService {
         return databaseClient.getUnapprovedPosts(input.get("tableName").toString());
     }
 
+    @POST
+    @Path("/admin/rejected")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<Post> getRejectedPosts(JSONObject input) {
+        return databaseClient.getRejectedPosts(input.get("tableName").toString());
+    }
+
     //submitted, approved, rejected, awaiting
     @POST
     @Path("/admin/email")
@@ -694,6 +740,15 @@ public class DALNService {
                     .build();
         }
         return Response.status(200).entity("Email sent").build();
+    }
+
+    // runs the specified command in EC2 worker. Returns last 100 lines of output
+    @GET
+    @Path("/admin/executeec2/{stage}/{command}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String runEC2Command(@PathParam("stage") String stage, @PathParam("command") String command) throws IOException {
+        logger.debug("Start restart "+stage);
+        return sshClient.runCommand(stage, command);
     }
 
     //To retrieve a single post
