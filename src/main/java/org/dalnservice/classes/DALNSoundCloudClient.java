@@ -71,12 +71,13 @@ public class DALNSoundCloudClient {
 
     public boolean generateSoundCloudToken() {
         Table table = dynamoDB.getTable("DALN-Keys");
-        ParamStoreClient params = new ParamStoreClient();
-        HashMap<String, String> info = params.getSoundCloudClientInfo();
-        ApiWrapper wrapper = new ApiWrapper(info.get("SoundCloudClientID"), info.get("SoundCloudClientSecret"), null,
-                null);
+
         Token token = null;
         try {
+            ParamStoreClient params = new ParamStoreClient();
+            HashMap<String, String> info = params.getSoundCloudClientInfo();
+            ApiWrapper wrapper = new ApiWrapper(info.get("SoundCloudClientID"), info.get("SoundCloudClientSecret"),
+                    null, null);
             token = wrapper.login(info.get("SoundCloudUser"), info.get("SoundCloudPassword"));
         } catch (IOException e) {
             return false;
