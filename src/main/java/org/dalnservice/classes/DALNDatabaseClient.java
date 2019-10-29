@@ -3,21 +3,17 @@ package org.dalnservice.classes;
 /**
  * Created by Shakib on 2/8/2017.
  */
-import com.amazonaws.Response;
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
-import com.amazonaws.services.cloudsearchdomain.AmazonCloudSearchDomainClient;
-import com.amazonaws.services.cloudsearchdomain.model.Hit;
+import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.services.cloudsearchdomain.AmazonCloudSearchDomain;
+import com.amazonaws.services.cloudsearchdomain.AmazonCloudSearchDomainClientBuilder;
 import com.amazonaws.services.cloudsearchdomain.model.Hits;
 import com.amazonaws.services.cloudsearchdomain.model.SearchRequest;
 import com.amazonaws.services.cloudsearchdomain.model.SearchResult;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
@@ -30,40 +26,39 @@ import java.util.*;
  */
 public class DALNDatabaseClient {
     private AmazonDynamoDB dynamoDBClient;
-    private AmazonCloudSearchDomainClient searchClient;
+    private AmazonCloudSearchDomain searchClient;
     private DALNCloudSearchClient searchDocumentManager;
     private DynamoDBMapper mapper;
     private Table table;
     private String tableName;
     private String title, email, license, description, hiddenDescription, dateCreated, rightsConsent, rightsRelease,
             dateSubmitted, dateIssued;
-    private String postId, identifierUri, dateAccessioned, dateAvailable; //may not all be needed
+    private String postId, identifierUri, dateAccessioned, dateAvailable; // may not all be needed
     private List<String> contributorAuthor, contributorInterviewer, creatorGender, creatorRaceEthnicity, creatorClass,
             creatorYearOfBirth, coverageSpatial, coveragePeriod, coverageRegion, coverageStateProvince,
             coverageNationality, language, subject;
     private boolean isPostNotApproved;
 
     public DALNDatabaseClient() throws IOException {
-        /**Authenticate clients and mapper**/
-        EnvironmentVariableCredentialsProvider creds = new EnvironmentVariableCredentialsProvider();
-        AWSCredentials awsCreds = creds.getCredentials();
-        //BasicAWSCredentials awsCreds = new BasicAWSCredentials(System.getenv("AWSAccessKey"), System.getenv("AWSSecretKey"));
+        /** Authenticate clients and mapper **/
+        dynamoDBClient = AmazonDynamoDBClientBuilder.standard().build();
 
-        dynamoDBClient = new AmazonDynamoDBClient(awsCreds);
         mapper = new DynamoDBMapper(dynamoDBClient);
         updateTableName("DALN-Posts");
 
-        //DynamoDB dynamoDB = new DynamoDB(new AmazonDynamoDBClient(awsCreds));
-        //table = dynamoDB.getTable("DALN-Posts-Dev");
+        // DynamoDB dynamoDB = new DynamoDB(new AmazonDynamoDBClient(awsCreds));
+        // table = dynamoDB.getTable("DALN-Posts-Dev");
 
-        searchClient = new AmazonCloudSearchDomainClient(awsCreds);
-        searchClient.setEndpoint(System.getenv("searchEndpoint"));
-
+        searchClient = AmazonCloudSearchDomainClientBuilder.standard()
+                .withEndpointConfiguration(
+                        new AwsClientBuilder.EndpointConfiguration(System.getenv("searchEndpoint"), "us-east-1"))
+                .build();
         searchDocumentManager = new DALNCloudSearchClient();
     }
 
-    /**HELPER FUNCTIONS
-     * The following methods assist in other functions in this class and do not make direct changes to the records in the table.
+    /**
+     * HELPER FUNCTIONS The following methods assist in other functions in this
+     * class and do not make direct changes to the records in the table.
      */
     public void updateTableName(String tableName) {
         DynamoDBMapperConfig mapperConfig = new DynamoDBMapperConfig.Builder()
@@ -74,7 +69,8 @@ public class DALNDatabaseClient {
     }
 
     private void initializeCurrentPostAttributes(Post post) {
-        //If the post attribute is null, then create a new string/arraylist, else get the current value
+        // If the post attribute is null, then create a new string/arraylist, else get
+        // the current value
         title = (post.getTitle() == null) ? "" : post.getTitle();
         email = (post.getEmail() == null) ? "" : post.getEmail();
         license = (post.getLicense() == null) ? "" : post.getLicense();
@@ -151,8 +147,9 @@ public class DALNDatabaseClient {
             subject = null;
     }
 
-    /**TABLE UPDATE FUNCTIONS
-     * The following functions update the table by either creating a new record or updating a current record.
+    /**
+     * TABLE UPDATE FUNCTIONS The following functions update the table by either
+     * creating a new record or updating a current record.
      */
     public String createPost(String tableName, String title, String email, String license) {
         updateTableName(tableName);
@@ -168,10 +165,10 @@ public class DALNDatabaseClient {
         String dateSubmitted = dateFormat.format(date);
         post.setDateSubmitted(dateSubmitted);
 
-        //Enter it into the DB
+        // Enter it into the DB
         mapper.save(post);
 
-        return post.getPostId(); //return the UUID generated from the insertion into DB
+        return post.getPostId(); // return the UUID generated from the insertion into DB
     }
 
     public void updatePost(String tableName, String postID, JSONObject input) {
@@ -269,8 +266,9 @@ public class DALNDatabaseClient {
         updateTableName(tableName);
         Post post = mapper.load(Post.class, postId);
 
-        //PostId, postTitle, and bucketName attributes aren't needed as only the asset's details will be added to the database.
-        //The post id and post title already exist in the database post entry.
+        // PostId, postTitle, and bucketName attributes aren't needed as only the
+        // asset's details will be added to the database.
+        // The post id and post title already exist in the database post entry.
         assetDetails.remove("PostId");
         assetDetails.remove("postTitle");
         assetDetails.remove("bucketName");
@@ -282,13 +280,13 @@ public class DALNDatabaseClient {
         if (assetList.size() != 0) {
             int index;
             for (index = 0; index < assetList.size(); index++) {
-                //System.out.println("asset.assetId: " + assetList.get(index).get("assetId"));
-                //System.out.println("assetDetails.assetId: " + assetDetails.get("assetId"));
+                // System.out.println("asset.assetId: " + assetList.get(index).get("assetId"));
+                // System.out.println("assetDetails.assetId: " + assetDetails.get("assetId"));
 
-                //if asset already exists
+                // if asset already exists
                 if (assetList.get(index).get("assetId").equals(assetDetails.get("assetId"))) {
                     System.out.println("This file is a video or audio, so replacing assetList");
-                    //replace with new assetDetails
+                    // replace with new assetDetails
                     assetNeedsReplacement = true;
                     break;
                 }
@@ -307,7 +305,7 @@ public class DALNDatabaseClient {
 
     public boolean updateAssetStatus(String tableName, String postId, String assetId, String status) {
         updateTableName(tableName);
-        //Load the post from the DB and retrieve the assetList
+        // Load the post from the DB and retrieve the assetList
         Post post = mapper.load(Post.class, postId);
         List<HashMap<String, String>> assetList = null;
 
@@ -316,9 +314,9 @@ public class DALNDatabaseClient {
         else
             assetList = post.getAssetList();
 
-        //Iterate through the assetList to find the asset we want to update
+        // Iterate through the assetList to find the asset we want to update
         for (HashMap<String, String> asset : assetList) {
-            //found the asset we want to update
+            // found the asset we want to update
             if (asset.get("assetId").equals(assetId)) {
                 System.out.println("Updating asset status");
                 asset.put("assetStatus", status);
@@ -335,22 +333,23 @@ public class DALNDatabaseClient {
         mapper.delete(mapper.load(Post.class, postId));
     }
 
-    /**GET FUNCTIONS
-     * The following functions access the table in the DB and returns posts.
-     * **/
+    /**
+     * GET FUNCTIONS The following functions access the table in the DB and returns
+     * posts.
+     **/
     public Post getPost(String tableName, String postId) {
         updateTableName(tableName);
         return mapper.load(Post.class, postId);
     }
 
-    //from main daln table
+    // from main daln table
     public List<Post> getAllPosts() {
 
         updateTableName("DALN-Posts");
         return mapper.scan(Post.class, new DynamoDBScanExpression());
     }
 
-    //from main daln table
+    // from main daln table
     public List<Post> getPostsFromDaysAgoUntilNow(int daysAgo) {
         updateTableName("DALN-Posts");
 
@@ -374,7 +373,7 @@ public class DALNDatabaseClient {
         return mapper.scan(Post.class, scanExpression);
     }
 
-    //from main daln table
+    // from main daln table
     public List<Post> getRandomSet(int size) {
         updateTableName("DALN-Posts");
 
@@ -400,7 +399,7 @@ public class DALNDatabaseClient {
         return randomPosts;
     }
 
-    //set to delete page scan
+    // set to delete page scan
     public List<Post> getPageScan(int pageSize, int page) {
         updateTableName("DALN-Posts");
 
@@ -444,7 +443,7 @@ public class DALNDatabaseClient {
                 .withExpressionAttributeValues(eav);
 
         List<Post> scanResults = mapper.scan(Post.class, scanExpression);
-        if (scanResults.size() == 0) //post was not found (doesn't exist)
+        if (scanResults.size() == 0) // post was not found (doesn't exist)
             return null;
         else
             post = scanResults.get(0);
@@ -458,20 +457,21 @@ public class DALNDatabaseClient {
         eav.put(":v1", new AttributeValue().withN("0"));
         eav.put(":v2", new AttributeValue().withN("1"));
 
-        //find posts that are not approved and not all the files are uploaded (mainly new posts)
+        // find posts that are not approved and not all the files are uploaded (mainly
+        // new posts)
         DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
                 .withFilterExpression("areAllFilesUploaded = :v1 and isPostNotApproved = :v2")
                 .withExpressionAttributeValues(eav);
         List<Post> scanResult = mapper.scan(Post.class, scanExpression);
-        //look at every post and determine if all the files are uploaded for that post.
-        //if yes, then change the value of areallFilesUploaded
+        // look at every post and determine if all the files are uploaded for that post.
+        // if yes, then change the value of areallFilesUploaded
         for (Post post : scanResult) {
             List<HashMap<String, String>> assetList = post.getAssetList();
             if (assetList.size() != totalNumberOfFiles) {
                 if (assetList == null || assetList.size() == 0) {
                     System.out.println("No files have been uploaded yet");
                 }
-                //not all files are uploaded, figure out how many are
+                // not all files are uploaded, figure out how many are
                 for (HashMap<String, String> asset : assetList) {
                     System.out.println(asset.get("assetName") + " has been uploaded.");
                 }
@@ -482,11 +482,12 @@ public class DALNDatabaseClient {
         }
     }
 
-    /**SEARCH FUNCTIONS
-     * The following functions utilize Amazon CloudSearch either return posts based on the query or update the search engine.
-     * **/
+    /**
+     * SEARCH FUNCTIONS The following functions utilize Amazon CloudSearch either
+     * return posts based on the query or update the search engine.
+     **/
 
-    //Search returning the hits
+    // Search returning the hits
     public Hits search(String query) throws ParseException {
         updateTableName("DALN-Posts");
         SearchRequest searchRequest = new SearchRequest();
@@ -496,30 +497,28 @@ public class DALNDatabaseClient {
 
         SearchResult searchResult = searchClient.search(searchRequest);
         Hits searchHits = searchResult.getHits();
-        /*List<Hit> listOfHits = searchHits.getHit();
-        
-        JSONObject fullSearchResponse = new JSONObject();
-        fullSearchResponse.put("found", searchHits.getFound());
-        fullSearchResponse.put("start", searchHits.getStart());
-        
-        org.json.simple.JSONArray arrayOfPosts = new org.json.simple.JSONArray();
-        
-        ArrayList<Post> listOfPosts = new ArrayList<>();
-        
-        for(Hit result : listOfHits)
-        {
-            Post post = new Post();
-            post.setPostId(result.getId());
-            listOfPosts.add(post);
-        }
-        
-        arrayOfPosts.addAll(mapper.batchLoad(listOfPosts).get("DALN-Posts"));
-        fullSearchResponse.put("posts", arrayOfPosts);*/
+        /*
+         * List<Hit> listOfHits = searchHits.getHit();
+         * 
+         * JSONObject fullSearchResponse = new JSONObject();
+         * fullSearchResponse.put("found", searchHits.getFound());
+         * fullSearchResponse.put("start", searchHits.getStart());
+         * 
+         * org.json.simple.JSONArray arrayOfPosts = new org.json.simple.JSONArray();
+         * 
+         * ArrayList<Post> listOfPosts = new ArrayList<>();
+         * 
+         * for(Hit result : listOfHits) { Post post = new Post();
+         * post.setPostId(result.getId()); listOfPosts.add(post); }
+         * 
+         * arrayOfPosts.addAll(mapper.batchLoad(listOfPosts).get("DALN-Posts"));
+         * fullSearchResponse.put("posts", arrayOfPosts);
+         */
 
         return searchHits;
     }
 
-    //Search returning the hits
+    // Search returning the hits
     public Hits search(String query, long pageSize, long hitStart) throws ParseException {
         updateTableName("DALN-Posts");
 
@@ -536,7 +535,7 @@ public class DALNDatabaseClient {
         return searchHits;
     }
 
-    //Sorted search with pagination
+    // Sorted search with pagination
     public Hits search(String query, long pageSize, long hitStart, String fieldToSortBy, String order)
             throws ParseException {
         updateTableName("DALN-Posts");
@@ -552,16 +551,16 @@ public class DALNDatabaseClient {
         SearchResult searchResult = searchClient.search(searchRequest);
         Hits searchHits = searchResult.getHits();
         return searchHits;
-        //List<Hit> hitList = searchHits.getHit();
+        // List<Hit> hitList = searchHits.getHit();
 
-        //for(Hit hit : hitList)
-        //{
-        //   String postID = hit.getId();
-        //   posts.add(mapper.load(Post.class, postID));
-        //}
+        // for(Hit hit : hitList)
+        // {
+        // String postID = hit.getId();
+        // posts.add(mapper.load(Post.class, postID));
+        // }
     }
 
-    //Return the number of documents in search engine
+    // Return the number of documents in search engine
     public long getSearchEngineSize() throws ParseException {
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setQuery("matchall");
@@ -580,23 +579,21 @@ public class DALNDatabaseClient {
         searchRequest.setReturn("_no_fields");
 
         SearchResult searchResult = searchClient.search(searchRequest);
-        if (searchResult.getHits().getHit().isEmpty()) //no results found
+        if (searchResult.getHits().getHit().isEmpty()) // no results found
             return false;
         else
             return true;
         /*
-        List<Post> allPosts = mapper.scan(Post.class, new DynamoDBScanExpression());
-        for(Post post : allPosts)
-            if(post.getAssetList() != null)
-                for(HashMap<String, String> asset : post.getAssetList())
-                    if(newUUID.equals(asset.get("Asset ID")))
-                        return true;
-        return false;
-        */
+         * List<Post> allPosts = mapper.scan(Post.class, new DynamoDBScanExpression());
+         * for(Post post : allPosts) if(post.getAssetList() != null) for(HashMap<String,
+         * String> asset : post.getAssetList())
+         * if(newUUID.equals(asset.get("Asset ID"))) return true; return false;
+         */
     }
 
-    //Enter a new document into the search engine
-    public boolean enterPostIntoCloudSearch(String postIdToApprove, String tableName) throws IOException, ParseException {
+    // Enter a new document into the search engine
+    public boolean enterPostIntoCloudSearch(String postIdToApprove, String tableName)
+            throws IOException, ParseException {
         updateTableName(tableName);
         Post post = mapper.load(Post.class, postIdToApprove);
 
@@ -610,21 +607,18 @@ public class DALNDatabaseClient {
 
         JSONObject postAsSDF = searchDocumentManager.convertDynamoEntryToAddSDF(postIdToApprove, tableName);
 
-        if(postAsSDF != null)
-        {
+        if (postAsSDF != null) {
             searchDocumentManager.uploadSingleDocument(postAsSDF);
             post.setIsPostNotApproved(false);
             post.setAreAllFilesUploaded(true);
             mapper.save(post);
             return true;
-        }
-        else
+        } else
             return false;
-
 
     }
 
-    //Remove a document from the search engine
+    // Remove a document from the search engine
     public void removePostFromCloudSearch(String postIdToRemove, String tableName) throws IOException, ParseException {
         updateTableName(tableName);
         Post post = mapper.load(Post.class, postIdToRemove);
@@ -635,23 +629,20 @@ public class DALNDatabaseClient {
     }
 
     /*
-    
-    public List<String> queryByDate(String date)
-    {
-        date = date.substring(0, 4) + "-" + date.substring(4, 6) + "-" + date.substring(6);
-        //System.out.println(date);
-        Map<String, AttributeValue> eav = new HashMap<>();
-        eav.put(":v1",new AttributeValue().withS(date));
-    
-        DynamoDBQueryExpression queryExpression = new DynamoDBQueryExpression()
-                .withKeyConditionExpression("dateCreated=:v1")
-                .withExpressionAttributeValues(eav)
-                .withConsistentRead(false);
-    
-        QueryResultPage queryResultPage = mapper.queryPage(Post.class, queryExpression);
-    
-        return queryResultPage.getResults();
-    }
-    */
+     * 
+     * public List<String> queryByDate(String date) { date = date.substring(0, 4) +
+     * "-" + date.substring(4, 6) + "-" + date.substring(6);
+     * //System.out.println(date); Map<String, AttributeValue> eav = new
+     * HashMap<>(); eav.put(":v1",new AttributeValue().withS(date));
+     * 
+     * DynamoDBQueryExpression queryExpression = new DynamoDBQueryExpression()
+     * .withKeyConditionExpression("dateCreated=:v1")
+     * .withExpressionAttributeValues(eav) .withConsistentRead(false);
+     * 
+     * QueryResultPage queryResultPage = mapper.queryPage(Post.class,
+     * queryExpression);
+     * 
+     * return queryResultPage.getResults(); }
+     */
 
 }

@@ -2,7 +2,8 @@ package org.dalnservice.classes;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
-import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.*;
 
 import java.io.ByteArrayInputStream;
@@ -22,14 +23,13 @@ import java.util.HashMap;
  * folder in S3 or upload its metadata.
  */
 public class DALNS3Client {
-    private AmazonS3Client s3Client;
+    private AmazonS3 s3Client;
     private String postID, fileName, assetID, bucketName;
     private File file;
     private static DALNS3Client instance;
 
     private DALNS3Client() throws IOException {
-        s3Client = new AmazonS3Client();
-        s3Client.setRegion(Region.US_Standard.toAWSRegion());
+        s3Client = AmazonS3ClientBuilder.defaultClient();
     }
 
     public static DALNS3Client getInstance() throws IOException {
@@ -91,7 +91,7 @@ public class DALNS3Client {
         // String location = s3Client.getResourceUrl("daln",
         // "daln/Posts/"+postID+"/"+fileName);
         // location = location.replace("https://daln.s3.", "https://s3-us-west-1.");
-        return s3Client.getResourceUrl(bucketName, objectKey);
+        return s3Client.getUrl(bucketName, objectKey).toExternalForm();
 
         // return "https://s3-us-west-1.amazonaws.com/daln/Posts/" + dalnId + "/" +
         // fileName;

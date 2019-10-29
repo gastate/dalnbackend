@@ -5,18 +5,14 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.HttpMethod;
 import com.amazonaws.services.cloudsearchdomain.model.Hits;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.Headers;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.CopyObjectRequest;
-import com.amazonaws.services.s3.model.CopyObjectResult;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.transfer.Download;
-import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.sqs.AmazonSQS;
-import com.amazonaws.services.sqs.AmazonSQSClient;
+import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.amazonaws.services.sqs.model.*;
 import org.apache.log4j.Logger;
 import org.apache.tika.exception.TikaException;
@@ -28,7 +24,6 @@ import org.xml.sax.SAXException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -45,7 +40,6 @@ public class DALNService {
     private DALNS3Client s3Client;
     private DALNSproutVideoClient sproutVideoClient;
     private DALNSoundCloudClient soundCloudClient;
-    private DALNCloudSearchClient cloudSearchClient;
     private DALNSESClient sesClient;
     private DALNSSHClient sshClient;
 
@@ -57,7 +51,6 @@ public class DALNService {
         s3Client = DALNS3Client.getInstance();
         sproutVideoClient = new DALNSproutVideoClient();
         soundCloudClient = new DALNSoundCloudClient();
-        cloudSearchClient = new DALNCloudSearchClient();
         sesClient = new DALNSESClient();
         sshClient = DALNSSHClient.getInstance();
     }
@@ -213,7 +206,7 @@ public class DALNService {
     @Path("/asset/s3upload/{key}")
     @Produces(MediaType.TEXT_PLAIN)
     public String s3Upload(@PathParam("key") String objectKey) throws IOException {
-        AmazonS3 s3 = new AmazonS3Client();
+        AmazonS3 s3 = AmazonS3ClientBuilder.defaultClient();
         String bucketName = "daln-file-staging-area";
 
         try {
@@ -254,7 +247,7 @@ public class DALNService {
     @Path("/asset/read/{key}")
     @Produces(MediaType.TEXT_PLAIN)
     public String readAsset(@PathParam("key") String objectKey) throws IOException {
-        AmazonS3 s3 = new AmazonS3Client();
+        AmazonS3 s3 = AmazonS3ClientBuilder.defaultClient();
         String bucketName = "daln-file-staging-area";
 
         try {
@@ -296,7 +289,7 @@ public class DALNService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public String s3Upload(JSONObject input) throws IOException {
-        AmazonS3 s3 = new AmazonS3Client();
+        AmazonS3 s3 = AmazonS3ClientBuilder.defaultClient();
         String bucketName = "daln-file-staging-area";
         String objectKey = input.get("objectKey").toString();
         String contentType = input.get("contentType").toString();
@@ -355,11 +348,7 @@ public class DALNService {
     @Path("/asset/apiupload")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response assetUpload(JSONObject input) throws ParseException {
-
-        AmazonS3 s3 = new AmazonS3Client();
-
-        AmazonSQS sqs = new AmazonSQSClient();
-        sqs.setEndpoint("sqs.us-east-1.amazonaws.com");
+        AmazonSQS sqs = AmazonSQSClientBuilder.defaultClient();
 
         // Store JSONinput into variables
         String stagingAreaBucketName = input.get("stagingAreaBucketName").toString();
@@ -395,8 +384,10 @@ public class DALNService {
 
         // Compile metadata of the file being uploaded
         String assetName = objectKey;
-        String assetNameNoExtension = assetName.substring(0, assetName.lastIndexOf('.'));
-        String assetExtension = assetName.substring(assetName.lastIndexOf('.')).toLowerCase();
+        // String assetNameNoExtension = assetName.substring(0,
+        // assetName.lastIndexOf('.'));
+        // String assetExtension =
+        // assetName.substring(assetName.lastIndexOf('.')).toLowerCase();
 
         String assetType = checkFiletype(assetName);
         String assetId = UUID.randomUUID().toString();

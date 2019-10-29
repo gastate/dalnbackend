@@ -2,7 +2,6 @@ package org.dalnservice.classes;
 
 import com.amazonaws.services.simpleemail.*;
 import com.amazonaws.services.simpleemail.model.*;
-import com.amazonaws.regions.*;
 
 /**
  * Created by Shakib on 5/25/2017.
@@ -73,10 +72,7 @@ public class DALNSESClient {
             // For more information, see
             // http://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/credentials.html
 
-            AmazonSimpleEmailServiceClient client = new AmazonSimpleEmailServiceClient();
-
-            Region REGION = Region.getRegion(Regions.US_EAST_1);
-            client.setRegion(REGION);
+            AmazonSimpleEmailService client = AmazonSimpleEmailServiceClientBuilder.defaultClient();
 
             // Send the email.
             client.sendEmail(request);

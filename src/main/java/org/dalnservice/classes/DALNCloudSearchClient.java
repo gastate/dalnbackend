@@ -1,14 +1,13 @@
 package org.dalnservice.classes;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
-import com.amazonaws.services.cloudsearchdomain.AmazonCloudSearchDomainClient;
+import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.services.cloudsearchdomain.AmazonCloudSearchDomain;
+import com.amazonaws.services.cloudsearchdomain.AmazonCloudSearchDomainClientBuilder;
 import com.amazonaws.services.cloudsearchdomain.model.ContentType;
 import com.amazonaws.services.cloudsearchdomain.model.UploadDocumentsRequest;
 import com.amazonaws.services.cloudsearchdomain.model.UploadDocumentsResult;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
-import com.amazonaws.services.dynamodbv2.datamodeling.*;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.Table;
@@ -18,7 +17,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import javax.validation.constraints.Null;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,24 +27,22 @@ import java.util.*;
  */
 public class DALNCloudSearchClient {
     private DynamoDB dynamoDB;
-    private AmazonCloudSearchDomainClient cloudSearchClient;
+    private AmazonCloudSearchDomain cloudSearchClient;
 
     public DALNCloudSearchClient() throws IOException {
-        /**Authenticate clients**/
-        EnvironmentVariableCredentialsProvider creds = new EnvironmentVariableCredentialsProvider();
-        AWSCredentials awsCreds = creds.getCredentials();
+        /** Authenticate clients **/
+        AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().build();
+        dynamoDB = new DynamoDB(client);
 
-        dynamoDB = new DynamoDB(new AmazonDynamoDBClient(awsCreds));
-        AmazonDynamoDB amazonDynamoDB = new AmazonDynamoDBClient(awsCreds);
-        DynamoDBMapper mapper = new DynamoDBMapper(amazonDynamoDB);
-        cloudSearchClient = new AmazonCloudSearchDomainClient(awsCreds);
-
-        cloudSearchClient.setEndpoint(System.getenv("documentEndpoint"));
+        cloudSearchClient = AmazonCloudSearchDomainClientBuilder.standard()
+                .withEndpointConfiguration(
+                        new AwsClientBuilder.EndpointConfiguration(System.getenv("documentEndpoint"), "us-east-1"))
+                .build();
     }
 
-    /**Convert single post to SDF**/
+    /** Convert single post to SDF **/
     public JSONObject convertDynamoEntryToAddSDF(String postID, String tableName) throws ParseException, IOException {
-        //Retrieve the post
+        // Retrieve the post
         Table table = dynamoDB.getTable(tableName);
         Item post = table.getItem("PostId", postID);
 
@@ -77,13 +73,11 @@ public class DALNCloudSearchClient {
                 assetEmbedLinks.add(asset.get("assetEmbedLink").toString());
                 assetLocations.add(asset.get("assetLocation").toString());
             }
-        }
-        catch(NullPointerException e)
-        {
+        } catch (NullPointerException e) {
             failedAsset = true;
         }
 
-        //if(post.getInt("areAllFilesUploaded") == null)
+        // if(post.getInt("areAllFilesUploaded") == null)
         fields.put("areallfilesuploaded", post.getInt("areAllFilesUploaded"));
         fields.put("assetdescription", assetDescriptions);
         fields.put("assetembedlink", assetEmbedLinks);
@@ -110,7 +104,7 @@ public class DALNCloudSearchClient {
 
         postAsSDF.put("fields", fields);
 
-        if(failedAsset)
+        if (failedAsset)
             return null;
         else
             return postAsSDF;
@@ -140,51 +134,43 @@ public class DALNCloudSearchClient {
         uploadDocumentsRequest.setContentLength(contentLength);
         UploadDocumentsResult uploadDocumentsResult = cloudSearchClient.uploadDocuments(uploadDocumentsRequest);
         System.out.println("Document upload status: " + uploadDocumentsResult.getStatus());
-        if(uploadDocumentsResult.getStatus().equals("success"))
+        if (uploadDocumentsResult.getStatus().equals("success"))
             return true;
         else
             return false;
     }
 
     /*
-    public void uploadDocumentBatch() throws IOException, ParseException {
-    
-        int startingPostNumber = 6392;
-        List<Post> allPosts = mapper.scan(Post.class, new DynamoDBScanExpression().withProjectionExpression("PostId"));
-        JSONArray documentBatch = new JSONArray();
-    
-        for(int i = startingPostNumber; i < (startingPostNumber+1000); i++) //this will upload 1000 posts at a time
-        {
-            if(i==(startingPostNumber+1000)) //if it's the last post, figure out where to start from next
-                System.out.println("Start from this post on next iteration:" + allPosts.get(i+1).getPostId());
-    
-            Post post = allPosts.get(i);
-            if(post.equals(allPosts.get(allPosts.size()-1))) //if the post is the last post in entire DB
-            {
-                System.out.println(post.getPostId());
-                documentBatch.add(convertDynamoEntryToAddSDF(post.getPostId()));
-                break;
-            }
-            else
-            {
-                System.out.println(i);
-                System.out.println(post.getPostId());
-                documentBatch.add(convertDynamoEntryToAddSDF(post.getPostId()));
-            }
-        }
-    
-        //5242880 = 5mb
-        byte[] bytes = documentBatch.toJSONString().getBytes();
-        long contentLength = bytes.length;
-    
-        InputStream inputStream = new ByteArrayInputStream(bytes);
-        UploadDocumentsRequest uploadDocumentsRequest = new UploadDocumentsRequest();
-        uploadDocumentsRequest.setDocuments(inputStream);
-        uploadDocumentsRequest.setContentType(ContentType.Applicationjson);
-        uploadDocumentsRequest.setContentLength(contentLength);
-        UploadDocumentsResult uploadDocumentsResult = cloudSearchClient.uploadDocuments(uploadDocumentsRequest);
-        System.out.println(uploadDocumentsResult.getStatus());
-    }
-    
-    */
+     * public void uploadDocumentBatch() throws IOException, ParseException {
+     * 
+     * int startingPostNumber = 6392; List<Post> allPosts = mapper.scan(Post.class,
+     * new DynamoDBScanExpression().withProjectionExpression("PostId")); JSONArray
+     * documentBatch = new JSONArray();
+     * 
+     * for(int i = startingPostNumber; i < (startingPostNumber+1000); i++) //this
+     * will upload 1000 posts at a time { if(i==(startingPostNumber+1000)) //if it's
+     * the last post, figure out where to start from next
+     * System.out.println("Start from this post on next iteration:" +
+     * allPosts.get(i+1).getPostId());
+     * 
+     * Post post = allPosts.get(i); if(post.equals(allPosts.get(allPosts.size()-1)))
+     * //if the post is the last post in entire DB {
+     * System.out.println(post.getPostId());
+     * documentBatch.add(convertDynamoEntryToAddSDF(post.getPostId())); break; }
+     * else { System.out.println(i); System.out.println(post.getPostId());
+     * documentBatch.add(convertDynamoEntryToAddSDF(post.getPostId())); } }
+     * 
+     * //5242880 = 5mb byte[] bytes = documentBatch.toJSONString().getBytes(); long
+     * contentLength = bytes.length;
+     * 
+     * InputStream inputStream = new ByteArrayInputStream(bytes);
+     * UploadDocumentsRequest uploadDocumentsRequest = new UploadDocumentsRequest();
+     * uploadDocumentsRequest.setDocuments(inputStream);
+     * uploadDocumentsRequest.setContentType(ContentType.Applicationjson);
+     * uploadDocumentsRequest.setContentLength(contentLength); UploadDocumentsResult
+     * uploadDocumentsResult =
+     * cloudSearchClient.uploadDocuments(uploadDocumentsRequest);
+     * System.out.println(uploadDocumentsResult.getStatus()); }
+     * 
+     */
 }

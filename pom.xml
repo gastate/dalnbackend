@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.lambadaframework</groupId>
     <artifactId>thedaln-development</artifactId>
@@ -22,16 +21,21 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk</artifactId>
+            <version>1.11.656</version>
+        </dependency>
+        <dependency>
             <groupId>org.lambadaframework</groupId>
             <artifactId>runtime</artifactId>
             <version>0.0.6</version>
         </dependency>
 
-        <dependency>
+        <!-- <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-lambda-java-log4j</artifactId>
             <version>1.0.0</version>
-        </dependency>
+        </dependency> -->
 
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
@@ -44,15 +48,15 @@
             <artifactId>cxf-rt-rs-security-cors</artifactId>
             <version>2.6.1</version>
         </dependency>
-
+        <!-- 
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-cognitoidentity</artifactId>
             <version>1.11.127</version>
-        </dependency>
+        </dependency> -->
 
         <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-cognitoidp -->
-        <dependency>
+        <!-- <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-cognitoidp</artifactId>
             <version>1.11.127</version>
@@ -69,8 +73,7 @@
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-ses</artifactId>
             <version>1.11.133</version>
-        </dependency>
-
+        </dependency> -->
 
 
         <!--<dependency>
@@ -78,7 +81,7 @@
             <artifactId>aws-java-sdk</artifactId>
             <version>1.11.78</version>
         </dependency>-->
-
+        <!-- 
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-core</artifactId>
@@ -95,7 +98,7 @@
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-simpleworkflow</artifactId>
             <version>1.11.127</version>
-        </dependency>
+        </dependency> -->
 
         <dependency>
             <groupId>commons-logging</groupId>
@@ -189,11 +192,11 @@
             <version>4.5.3</version>
         </dependency>
 
-        <dependency>
+        <!-- <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-lambda-java-core</artifactId>
             <version>1.1.0</version>
-        </dependency>
+        </dependency> -->
 
         <dependency>
             <groupId>org.jsoup</groupId>
@@ -201,11 +204,11 @@
             <version>1.8.3</version>
         </dependency>
 
-        <dependency>
+        <!-- <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-cloudsearch</artifactId>
             <version>1.11.78</version>
-        </dependency>
+        </dependency> -->
 
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
@@ -245,11 +248,11 @@
             <artifactId>guava</artifactId>
             <version>21.0</version>
         </dependency>
-        <dependency>
+        <!-- <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-sqs</artifactId>
             <version>1.11.13</version>
-        </dependency>
+        </dependency> -->
 
         <dependency>
             <groupId>org.apache.tika</groupId>
