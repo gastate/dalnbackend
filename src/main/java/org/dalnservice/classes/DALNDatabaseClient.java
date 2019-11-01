@@ -1,9 +1,15 @@
 package org.dalnservice.classes;
 
-/**
- * Created by Shakib on 2/8/2017.
- */
-import com.amazonaws.client.builder.AwsClientBuilder;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration;
 import com.amazonaws.services.cloudsearchdomain.AmazonCloudSearchDomain;
 import com.amazonaws.services.cloudsearchdomain.AmazonCloudSearchDomainClientBuilder;
 import com.amazonaws.services.cloudsearchdomain.model.Hits;
@@ -11,15 +17,15 @@ import com.amazonaws.services.cloudsearchdomain.model.SearchRequest;
 import com.amazonaws.services.cloudsearchdomain.model.SearchResult;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
-import com.amazonaws.services.dynamodbv2.datamodeling.*;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
+import com.amazonaws.services.dynamodbv2.datamodeling.ScanResultPage;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
-
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * Created by Shakib on 8/4/2016.
@@ -38,6 +44,7 @@ public class DALNDatabaseClient {
             creatorYearOfBirth, coverageSpatial, coveragePeriod, coverageRegion, coverageStateProvince,
             coverageNationality, language, subject;
     private boolean isPostNotApproved;
+    private boolean isPostRejected;
 
     public DALNDatabaseClient() throws IOException {
         /** Authenticate clients and mapper **/
@@ -50,8 +57,7 @@ public class DALNDatabaseClient {
         // table = dynamoDB.getTable("DALN-Posts-Dev");
 
         searchClient = AmazonCloudSearchDomainClientBuilder.standard()
-                .withEndpointConfiguration(
-                        new AwsClientBuilder.EndpointConfiguration(System.getenv("searchEndpoint"), "us-east-1"))
+                .withEndpointConfiguration(new EndpointConfiguration(System.getenv("searchEndpoint"), "us-east-1"))
                 .build();
         searchDocumentManager = new DALNCloudSearchClient();
     }
@@ -68,37 +74,43 @@ public class DALNDatabaseClient {
         mapper = new DynamoDBMapper(dynamoDBClient, mapperConfig);
     }
 
-    private void initializeCurrentPostAttributes(Post post) {
+    private void initializeCurrentPostAttributes(Post post, boolean isUpdate) {
         // If the post attribute is null, then create a new string/arraylist, else get
         // the current value
-        title = (post.getTitle() == null) ? "" : post.getTitle();
-        email = (post.getEmail() == null) ? "" : post.getEmail();
-        license = (post.getLicense() == null) ? "" : post.getLicense();
-        description = (post.getDescription() == null) ? "" : post.getDescription();
-        hiddenDescription = (post.getHiddenDescription() == null) ? "" : post.getHiddenDescription();
-        dateCreated = (post.getDateCreated() == null) ? "" : post.getDateCreated();
-        rightsRelease = (post.getRightsRelease() == null) ? "" : post.getRightsRelease();
-        rightsConsent = (post.getRightsConsent() == null) ? "" : post.getRightsConsent();
+        title = (post.getTitle() == null || isUpdate) ? "" : post.getTitle();
+        email = (post.getEmail() == null || isUpdate) ? "" : post.getEmail();
+        license = (post.getLicense() == null || isUpdate) ? "" : post.getLicense();
+        description = (post.getDescription() == null || isUpdate) ? "" : post.getDescription();
+        hiddenDescription = (post.getHiddenDescription() == null || isUpdate) ? "" : post.getHiddenDescription();
+        dateCreated = (post.getDateCreated() == null || isUpdate) ? "" : post.getDateCreated();
+        rightsRelease = (post.getRightsRelease() == null || isUpdate) ? "" : post.getRightsRelease();
+        rightsConsent = (post.getRightsConsent() == null || isUpdate) ? "" : post.getRightsConsent();
+
         isPostNotApproved = post.getIsPostNotApproved();
-        contributorAuthor = (post.getContributorAuthor() == null) ? new ArrayList<String>()
+        isPostRejected = post.getIsPostRejected();
+        contributorAuthor = (post.getContributorAuthor() == null || isUpdate) ? new ArrayList<String>()
                 : post.getContributorAuthor();
-        contributorInterviewer = (post.getContributorInterviewer() == null) ? new ArrayList<String>()
+        contributorInterviewer = (post.getContributorInterviewer() == null || isUpdate) ? new ArrayList<String>()
                 : post.getContributorInterviewer();
-        creatorGender = (post.getCreatorGender() == null) ? new ArrayList<String>() : post.getCreatorGender();
-        creatorRaceEthnicity = (post.getCreatorRaceEthnicity() == null) ? new ArrayList<String>()
+        creatorGender = (post.getCreatorGender() == null || isUpdate) ? new ArrayList<String>()
+                : post.getCreatorGender();
+        creatorRaceEthnicity = (post.getCreatorRaceEthnicity() == null || isUpdate) ? new ArrayList<String>()
                 : post.getCreatorRaceEthnicity();
-        creatorClass = (post.getCreatorClass() == null) ? new ArrayList<String>() : post.getCreatorClass();
-        creatorYearOfBirth = (post.getCreatorYearOfBirth() == null) ? new ArrayList<String>()
+        creatorClass = (post.getCreatorClass() == null || isUpdate) ? new ArrayList<String>() : post.getCreatorClass();
+        creatorYearOfBirth = (post.getCreatorYearOfBirth() == null || isUpdate) ? new ArrayList<String>()
                 : post.getCreatorYearOfBirth();
-        coverageSpatial = (post.getCoverageSpatial() == null) ? new ArrayList<String>() : post.getCoverageSpatial();
-        coveragePeriod = (post.getCoveragePeriod() == null) ? new ArrayList<String>() : post.getCoveragePeriod();
-        coverageRegion = (post.getCoverageRegion() == null) ? new ArrayList<String>() : post.getCoverageRegion();
-        coverageStateProvince = (post.getCoverageStateProvince() == null) ? new ArrayList<String>()
+        coverageSpatial = (post.getCoverageSpatial() == null || isUpdate) ? new ArrayList<String>()
+                : post.getCoverageSpatial();
+        coveragePeriod = (post.getCoveragePeriod() == null || isUpdate) ? new ArrayList<String>()
+                : post.getCoveragePeriod();
+        coverageRegion = (post.getCoverageRegion() == null || isUpdate) ? new ArrayList<String>()
+                : post.getCoverageRegion();
+        coverageStateProvince = (post.getCoverageStateProvince() == null || isUpdate) ? new ArrayList<String>()
                 : post.getCoverageStateProvince();
-        coverageNationality = (post.getCoverageNationality() == null) ? new ArrayList<String>()
+        coverageNationality = (post.getCoverageNationality() == null || isUpdate) ? new ArrayList<String>()
                 : post.getCoverageNationality();
-        language = (post.getLanguage() == null) ? new ArrayList<String>() : post.getLanguage();
-        subject = (post.getSubject() == null) ? new ArrayList<String>() : post.getSubject();
+        language = (post.getLanguage() == null || isUpdate) ? new ArrayList<String>() : post.getLanguage();
+        subject = (post.getSubject() == null || isUpdate) ? new ArrayList<String>() : post.getSubject();
 
     }
 
@@ -158,6 +170,7 @@ public class DALNDatabaseClient {
         post.setEmail(email);
         post.setLicense(license);
         post.setIsPostNotApproved(true);
+        post.setIsPostRejected(false);
         post.setAreAllFilesUploaded(false);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
@@ -171,43 +184,43 @@ public class DALNDatabaseClient {
         return post.getPostId(); // return the UUID generated from the insertion into DB
     }
 
-    public void updatePost(String tableName, String postID, JSONObject input) {
+    public void updatePost(String tableName, String postID, JSONObject input, boolean isUpdate) {
         updateTableName(tableName);
         Post post = mapper.load(Post.class, postID);
-        initializeCurrentPostAttributes(post);
+        initializeCurrentPostAttributes(post, isUpdate);
 
         for (Object key : input.keySet()) {
             Object value = input.get(key);
             if (value == null || value.equals(""))
                 continue;
 
-            if (key.equals("contributorAuthor"))
+            if (key.equals("contributorAuthor")) {
                 contributorAuthor.addAll((ArrayList) value);
-            else if (key.equals("contributorInterviewer"))
+            } else if (key.equals("contributorInterviewer")) {
                 contributorInterviewer.addAll((ArrayList) value);
-            else if (key.equals("creatorGender"))
+            } else if (key.equals("creatorGender")) {
                 creatorGender.addAll((ArrayList) value);
-            else if (key.equals("creatorRaceEthnicity"))
+            } else if (key.equals("creatorRaceEthnicity")) {
                 creatorRaceEthnicity.addAll((ArrayList) value);
-            else if (key.equals("creatorClass"))
+            } else if (key.equals("creatorClass")) {
                 creatorClass.addAll((ArrayList) value);
-            else if (key.equals("creatorYearOfBirth"))
+            } else if (key.equals("creatorYearOfBirth")) {
                 creatorYearOfBirth.addAll((ArrayList) value);
-            else if (key.equals("coverageSpatial"))
+            } else if (key.equals("coverageSpatial")) {
                 coverageSpatial.addAll((ArrayList) value);
-            else if (key.equals("coveragePeriod"))
+            } else if (key.equals("coveragePeriod")) {
                 coveragePeriod.addAll((ArrayList) value);
-            else if (key.equals("coverageRegion"))
+            } else if (key.equals("coverageRegion")) {
                 coverageRegion.addAll((ArrayList) value);
-            else if (key.equals("coverageStateProvince"))
+            } else if (key.equals("coverageStateProvince")) {
                 coverageStateProvince.addAll((ArrayList) value);
-            else if (key.equals("coverageNationality"))
+            } else if (key.equals("coverageNationality")) {
                 coverageNationality.addAll((ArrayList) value);
-            else if (key.equals("language"))
+            } else if (key.equals("language")) {
                 language.addAll((ArrayList) value);
-            else if (key.equals("subject"))
+            } else if (key.equals("subject")) {
                 subject.addAll((ArrayList) value);
-            else if (key.equals("title"))
+            } else if (key.equals("title"))
                 title = value.toString();
             else if (key.equals("email"))
                 email = value.toString();
@@ -240,6 +253,7 @@ public class DALNDatabaseClient {
         post.setEmail(email);
         post.setLicense(license);
         post.setIsPostNotApproved(isPostNotApproved);
+        post.setIsPostRejected(isPostRejected);
         post.setDescription(description);
         post.setHiddenDescription(hiddenDescription);
         post.setDateCreated(dateCreated);
@@ -259,6 +273,21 @@ public class DALNDatabaseClient {
         post.setLanguage(language);
         post.setSubject(subject);
 
+        mapper.save(post);
+    }
+
+    public void rejectPost(String tableName, String postId) {
+        updateTableName(tableName);
+        Post post = mapper.load(Post.class, postId);
+        post.setIsPostRejected(true);
+        mapper.save(post);
+    }
+
+    // "unreject" = turn a rejected narrative back to waiting for approval
+    public void unrejectPost(String tableName, String postId) {
+        updateTableName(tableName);
+        Post post = mapper.load(Post.class, postId);
+        post.setIsPostRejected(false);
         mapper.save(post);
     }
 
@@ -427,8 +456,29 @@ public class DALNDatabaseClient {
         Map<String, AttributeValue> eav = new HashMap<>();
         eav.put(":v1", new AttributeValue().withN("1"));
 
+        // fetch all the posts with isPostNotApproved=true
         DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
                 .withFilterExpression("isPostNotApproved = :v1").withExpressionAttributeValues(eav);
+        List<Post> scanResult = mapper.scan(Post.class, scanExpression);
+
+        // this is a list of posts with isPostRejected=false OR isPostRejected is not
+        // even set
+        List<Post> res = new ArrayList<>();
+        for (Post p : scanResult) {
+            if (!p.getIsPostRejected())
+                res.add(p);
+        }
+
+        return res;
+    }
+
+    public List<Post> getRejectedPosts(String tableName) {
+        updateTableName(tableName);
+        Map<String, AttributeValue> eav = new HashMap<>();
+        eav.put(":v1", new AttributeValue().withN("1"));
+
+        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
+                .withFilterExpression("isPostRejected = :v1").withExpressionAttributeValues(eav);
         List<Post> scanResult = mapper.scan(Post.class, scanExpression);
 
         return scanResult;
@@ -492,7 +542,7 @@ public class DALNDatabaseClient {
         updateTableName("DALN-Posts");
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setQuery(query);
-        searchRequest.setQueryOptions("    {    \"defaultOperator\":\"or\"}");
+        searchRequest.setQueryOptions("    {    \"defaultOperator\":\"and\"}");
         searchRequest.setReturn("_all_fields");
 
         SearchResult searchResult = searchClient.search(searchRequest);
@@ -526,7 +576,7 @@ public class DALNDatabaseClient {
         searchRequest.setQuery(query);
         searchRequest.setReturn("_all_fields");
         searchRequest.setSize(pageSize);
-        searchRequest.setQueryOptions("    {    \"defaultOperator\":\"or\"}");
+        searchRequest.setQueryOptions("    {    \"defaultOperator\":\"and\"}");
         searchRequest.setStart(hitStart);
 
         SearchResult searchResult = searchClient.search(searchRequest);
@@ -542,7 +592,7 @@ public class DALNDatabaseClient {
 
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setQuery(query);
-        searchRequest.setQueryOptions("    {    \"defaultOperator\":\"or\"}");
+        searchRequest.setQueryOptions("    {    \"defaultOperator\":\"and\"}");
         searchRequest.setReturn("_all_fields");
         searchRequest.setSize(pageSize);
         searchRequest.setStart(hitStart);
@@ -610,6 +660,7 @@ public class DALNDatabaseClient {
         if (postAsSDF != null) {
             searchDocumentManager.uploadSingleDocument(postAsSDF);
             post.setIsPostNotApproved(false);
+            post.setIsPostRejected(false);
             post.setAreAllFilesUploaded(true);
             mapper.save(post);
             return true;

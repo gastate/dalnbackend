@@ -1,5 +1,22 @@
 package org.dalnservice.controller;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.HttpMethod;
@@ -14,9 +31,18 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.amazonaws.services.sqs.model.*;
+
 import org.apache.log4j.Logger;
 import org.apache.tika.exception.TikaException;
-import org.dalnservice.classes.*;
+import org.dalnservice.classes.DALNCloudSearchClient;
+import org.dalnservice.classes.DALNDatabaseClient;
+import org.dalnservice.classes.DALNS3Client;
+import org.dalnservice.classes.DALNSESClient;
+import org.dalnservice.classes.DALNSSHClient;
+import org.dalnservice.classes.DALNSoundCloudClient;
+import org.dalnservice.classes.DALNSproutVideoClient;
+import org.dalnservice.classes.DocumentReader;
+import org.dalnservice.classes.Post;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.xml.sax.SAXException;
@@ -179,7 +205,7 @@ public class DALNService {
         }
 
         try {
-            databaseClient.updatePost(tableName, postId, input);
+            databaseClient.updatePost(tableName, postId, input, false);
         } catch (Exception e) {
             logger.error("update post error");
             e.printStackTrace();
@@ -187,20 +213,6 @@ public class DALNService {
 
         return postId;
     }
-
-    // @POST
-    // @Path("/posts/update")
-    // @Consumes(MediaType.APPLICATION_JSON)
-    public Response updatePost(JSONObject input) {
-        String tableName = input.get("tableName").toString();
-        String postId = input.get("PostId").toString();
-
-        databaseClient.updatePost(tableName, postId, input);
-
-        return Response.status(201).entity("Post updated").build();
-    }
-
-    /** /asset/ **/
 
     @GET
     @Path("/asset/s3upload/{key}")
@@ -527,11 +539,48 @@ public class DALNService {
     }
 
     @POST
+    @Path("/admin/updatePost")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updatePost(JSONObject input) {
+
+        String tableName = input.get("tableName").toString();
+        String postId = input.get("postId").toString();
+
+        databaseClient.updatePost(tableName, postId, input, true);
+
+        return Response.status(201).entity("Post updated").build();
+    }
+
+    @POST
     @Path("/admin/remove")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response deletePostFromSearch(JSONObject input) throws IOException, ParseException {
         databaseClient.removePostFromCloudSearch(input.get("postId").toString(), input.get("tableName").toString());
         return Response.status(200).entity("Post removed from search engine").build();
+    }
+
+    @POST
+    @Path("/admin/reject")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response reject(JSONObject input) throws IOException, ParseException {
+        String tableName = input.get("tableName").toString();
+        String postId = input.get("postId").toString();
+
+        databaseClient.rejectPost(tableName, postId);
+        System.out.println("admin reject endpoint is called!");
+        return Response.status(200).entity("Post rejected").build();
+    }
+
+    @POST
+    @Path("/admin/unreject")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response unreject(JSONObject input) throws IOException, ParseException {
+        String tableName = input.get("tableName").toString();
+        String postId = input.get("postId").toString();
+
+        databaseClient.unrejectPost(tableName, postId);
+
+        return Response.status(200).entity("Post is now waiting for approval").build();
     }
 
     @POST
@@ -610,6 +659,13 @@ public class DALNService {
     @Consumes(MediaType.APPLICATION_JSON)
     public List<Post> getUnnapprovedPosts(JSONObject input) {
         return databaseClient.getUnapprovedPosts(input.get("tableName").toString());
+    }
+
+    @POST
+    @Path("/admin/rejected")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public List<Post> getRejectedPosts(JSONObject input) {
+        return databaseClient.getRejectedPosts(input.get("tableName").toString());
     }
 
     // submitted, approved, rejected, awaiting
