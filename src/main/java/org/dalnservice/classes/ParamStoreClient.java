@@ -12,21 +12,21 @@ import com.amazonaws.services.simplesystemsmanagement.model.GetParametersResult;
 import com.amazonaws.services.simplesystemsmanagement.model.Parameter;
 
 public class ParamStoreClient {
-    public String getSproutVideoApiKey() throws IOException {
+    public String getSproudVideoApiKey() throws IOException {
 
-        String sproutVideoApiKey = "";
+        String sproudVideoApiKey = "";
         try {
             AWSSimpleSystemsManagement simpleSystemsManagementClient = AWSSimpleSystemsManagementClientBuilder
                     .standard().build();
             GetParameterRequest parameterRequest = new GetParameterRequest();
-            parameterRequest.withName("/daln/SproutVideoApiKey").setWithDecryption(true);
+            parameterRequest.withName("/daln/SproudVideoApiKey").setWithDecryption(true);
             GetParameterResult parameterResult = simpleSystemsManagementClient.getParameter(parameterRequest);
 
-            sproutVideoApiKey = parameterResult.getParameter().getValue();
+            sproudVideoApiKey = parameterResult.getParameter().getValue();
         } catch (Exception e) {
             System.out.println("Exception: " + e);
         }
-        return sproutVideoApiKey;
+        return sproudVideoApiKey;
     }
 
     public HashMap<String, String> getSoundCloudClientInfo() throws IOException {

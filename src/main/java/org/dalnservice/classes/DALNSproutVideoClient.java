@@ -38,18 +38,18 @@ public class DALNSproutVideoClient {
     private CloseableHttpClient httpClient;
     private HttpPost uploadFile;
     private HttpGet getFile;
-    private String sproutVideoApiKey = "";
+    private String sproudVideoApiKey = "";
 
     public DALNSproutVideoClient() throws IOException {
         ParamStoreClient param = new ParamStoreClient();
-        sproutVideoApiKey = param.getSproutVideoApiKey();
+        sproudVideoApiKey = param.getSproudVideoApiKey();
         /** Connect to SproutVideo **/
         httpClient = HttpClients.createDefault();
         uploadFile = new HttpPost("https://api.sproutvideo.com/v1/videos");
-        uploadFile.addHeader("SproutVideo-Api-Key", sproutVideoApiKey);
+        uploadFile.addHeader("SproutVideo-Api-Key", sproudVideoApiKey);
         // getFile = new
         // HttpGet("https://api.sproutvideo.com/v1/videos?order_by=created_at&order_dir=desc");
-        // getFile.addHeader("SproutVideo-Api-Key", System.getenv("SproutVideoApiKey"));
+        // getFile.addHeader("SproutVideo-Api-Key", System.getenv("SproudVideoApiKey"));
 
     }
 
@@ -89,7 +89,7 @@ public class DALNSproutVideoClient {
 
     public boolean deleteVideo(String assetId) {
         HttpGet getFileByTag = new HttpGet("https://api.sproutvideo.com/v1/videos?tag_name=" + assetId);
-        getFileByTag.addHeader("SproutVideo-Api-Key", sproutVideoApiKey);
+        getFileByTag.addHeader("SproutVideo-Api-Key", sproudVideoApiKey);
 
         String videoId = "";
         CloseableHttpResponse getResponse = null;
@@ -111,7 +111,7 @@ public class DALNSproutVideoClient {
             }
             System.out.println("video id:" + videoId);
             HttpDelete deleteFile = new HttpDelete("https://api.sproutvideo.com/v1/videos/" + videoId);
-            deleteFile.addHeader("SproutVideo-Api-Key", sproutVideoApiKey);
+            deleteFile.addHeader("SproutVideo-Api-Key", sproudVideoApiKey);
 
             httpClient.execute(deleteFile);
             return true;
@@ -129,7 +129,7 @@ public class DALNSproutVideoClient {
 
         String[] videoLocations = new String[2];
         HttpGet getFileByTag = new HttpGet("https://api.sproutvideo.com/v1/videos?tag_name=" + assetId);
-        getFileByTag.addHeader("SproutVideo-Api-Key", sproutVideoApiKey);
+        getFileByTag.addHeader("SproutVideo-Api-Key", sproudVideoApiKey);
 
         String videoId = "";
         CloseableHttpResponse getResponse = null;
