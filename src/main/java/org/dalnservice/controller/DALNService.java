@@ -219,7 +219,7 @@ public class DALNService {
     @Produces(MediaType.TEXT_PLAIN)
     public String s3Upload(@PathParam("key") String objectKey) throws IOException {
         AmazonS3 s3 = AmazonS3ClientBuilder.defaultClient();
-        String bucketName = "daln-file-staging-area";
+        String bucketName = "daln-file-staging-area-sb";
 
         try {
             System.out.println("Generating pre-signed URL.");
@@ -260,7 +260,7 @@ public class DALNService {
     @Produces(MediaType.TEXT_PLAIN)
     public String readAsset(@PathParam("key") String objectKey) throws IOException {
         AmazonS3 s3 = AmazonS3ClientBuilder.defaultClient();
-        String bucketName = "daln-file-staging-area";
+        String bucketName = "daln-file-staging-area-sb";
 
         try {
             // Stream an object from S3 to Tika to interpret a chunk of text
@@ -302,7 +302,7 @@ public class DALNService {
     @Produces(MediaType.TEXT_PLAIN)
     public String s3Upload(JSONObject input) throws IOException {
         AmazonS3 s3 = AmazonS3ClientBuilder.defaultClient();
-        String bucketName = "daln-file-staging-area";
+        String bucketName = "daln-file-staging-area-sb";
         String objectKey = input.get("objectKey").toString();
         String contentType = input.get("contentType").toString();
 

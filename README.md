@@ -180,7 +180,7 @@ Title: Get a Single Post (with Form Parameter)
 | **URL**        | /asset/apiupload |
 | **Data Params** |`{ `<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`stagingAreaBucketName:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`finalBucketName:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`tableName:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`key:[string],`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`PostId:[string],` <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`queueName:[string],`               <br>`}`|
 | **Description**| Enter the details for a file you want to upload an associate with a post. This file (which should already exist in the staging area bucket) will be sent as a message to the queue which is processed by an independent worker.|
-| **Example** |`{ `<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"stagingAreaBucketName":"daln-file-staging-area",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"finalBucketName":"daln-development",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"tableName":"DALN-Posts-Dev",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"key":"myfile.txt",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"PostId":"d7fea027-152f-43da-a0d3-dd476c7164e5",` <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"queueName":"DALNFileUploadQueueDev",`               <br>`}`|
+| **Example** |`{ `<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"stagingAreaBucketName":"daln-file-staging-area-sb",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"finalBucketName":"daln-development",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"tableName":"DALN-Posts-Dev",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"key":"myfile.txt",`<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"PostId":"d7fea027-152f-43da-a0d3-dd476c7164e5",` <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`"queueName":"DALNFileUploadQueueDev",`               <br>`}`|
 
 | **Title**      | Get Unapproved Posts |
 | :---------:    | ------  |
