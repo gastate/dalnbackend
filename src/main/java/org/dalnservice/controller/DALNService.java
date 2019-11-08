@@ -358,7 +358,7 @@ public class DALNService {
         String bucketName = System.getenv("bucketname");
         String objectKey = input.get("objectKey").toString();
         String contentType = input.get("contentType").toString();
-
+        System.out.println("bucket name:" + bucketName);
         /*
          * if(contentType.contains("audio")) { new Thread(() -> { try {
          * 
