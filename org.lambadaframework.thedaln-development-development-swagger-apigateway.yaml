@@ -45,10 +45,14 @@ paths:
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
@@ -63,6 +67,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -164,10 +170,14 @@ paths:
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
@@ -182,6 +192,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -283,10 +295,14 @@ paths:
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
@@ -301,6 +317,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -402,10 +420,14 @@ paths:
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
@@ -420,6 +442,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -521,10 +545,14 @@ paths:
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
@@ -539,6 +567,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -640,10 +670,14 @@ paths:
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
@@ -658,6 +692,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -759,10 +795,14 @@ paths:
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
@@ -777,6 +817,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -878,10 +920,14 @@ paths:
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
@@ -896,6 +942,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -997,10 +1045,14 @@ paths:
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
@@ -1015,6 +1067,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -1115,10 +1169,14 @@ paths:
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
@@ -1133,6 +1191,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -1237,10 +1297,14 @@ paths:
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
@@ -1255,6 +1319,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -1361,10 +1427,14 @@ paths:
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
@@ -1379,6 +1449,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -1480,10 +1552,14 @@ paths:
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
@@ -1498,6 +1574,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -1599,10 +1677,14 @@ paths:
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
@@ -1617,6 +1699,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -1716,10 +1800,14 @@ paths:
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
@@ -1734,6 +1822,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -1833,10 +1923,14 @@ paths:
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
@@ -1851,6 +1945,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -1950,10 +2046,14 @@ paths:
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
@@ -1968,6 +2068,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -2072,10 +2174,14 @@ paths:
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
@@ -2090,6 +2196,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -2188,10 +2296,14 @@ paths:
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
@@ -2204,6 +2316,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -2279,10 +2393,14 @@ paths:
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
@@ -2297,6 +2415,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -2403,10 +2523,14 @@ paths:
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
@@ -2421,6 +2545,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -2527,10 +2653,14 @@ paths:
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
@@ -2545,6 +2675,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -2646,10 +2778,14 @@ paths:
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
@@ -2664,6 +2800,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -2768,10 +2906,14 @@ paths:
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
@@ -2786,6 +2928,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -2900,10 +3044,14 @@ paths:
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
@@ -2918,6 +3066,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -3042,10 +3192,14 @@ paths:
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
@@ -3060,6 +3214,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -3174,10 +3330,14 @@ paths:
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
@@ -3192,6 +3352,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
