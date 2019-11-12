@@ -43,6 +43,7 @@ import org.dalnservice.classes.DALNSoundCloudClient;
 import org.dalnservice.classes.DALNSproutVideoClient;
 import org.dalnservice.classes.DocumentReader;
 import org.dalnservice.classes.Post;
+import org.dalnservice.classes.PresignedUrl;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.xml.sax.SAXException;
@@ -352,8 +353,8 @@ public class DALNService {
     @POST
     @Path("/asset/s3AdminUpload")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
-    public String s3AdminUpload(JSONObject input) throws IOException {
+    @Produces(MediaType.APPLICATION_JSON)
+    public PresignedUrl s3AdminUpload(JSONObject input) throws IOException {
         AmazonS3 s3 = AmazonS3ClientBuilder.defaultClient();
         String bucketName = System.getenv("bucketname");
         String objectKey = input.get("objectKey").toString();
@@ -383,7 +384,7 @@ public class DALNService {
             URL url = s3.generatePresignedUrl(generatePresignedUrlRequest);
 
             logger.debug("Pre-Signed URL = " + url.toString());
-            return url.toString();
+            return new PresignedUrl(url.toString());
         } catch (AmazonServiceException exception) {
             logger.debug("Caught an AmazonServiceException,  " + "which means your request made it "
                     + "to Amazon S3, but was rejected with an error response " + "for some reason.");
@@ -398,7 +399,7 @@ public class DALNService {
                     + "such as not being able to access the network.");
             logger.debug("Error Message: " + ace.getMessage());
         }
-        return "Pre-signed URL not generated";
+        return null;
 
     }
 
