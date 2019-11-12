@@ -32,8 +32,8 @@ public class DALNSSHClient {
     private DALNS3Client s3Client;
 
     private static DALNSSHClient instance;
-    private static final String DEV_BUCKET = "daln-development";
-    private static final String PROD_BUCKET = "daln-prod";
+    private static final String DEV_BUCKET = "daln-development-sb";
+    private static final String PROD_BUCKET = "daln-prod-sb";
     private static final String DEV_SERVICE_NAME = "DALNUploadServiceDev";
     private static final String PROD_SERVICE_NAME = "DALNUploadServiceProd";
 

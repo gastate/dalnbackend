@@ -3,17 +3,17 @@ swagger: "2.0"
 info:
   version: "2018-04-17T13:37:59Z"
   title: "org.lambadaframework.thedaln-production"
-host: "iu2lnr6wyc.execute-api.us-east-1.amazonaws.com"
+host: "w7b01d4a3g.execute-api.us-east-1.amazonaws.com"
 basePath: "/production"
 schemes:
-- "https"
+  - "https"
 paths:
   /admin/approve:
     post:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -24,33 +24,53 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
+      security:
+        - Daln: []
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-production-production-LambdaFunction-12KP9WZYWQ3E:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
             statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           default:
@@ -61,6 +81,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -84,7 +106,8 @@ paths:
             responseTemplates:
               application/json: "$input.json('$.entity')"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -97,9 +120,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -121,131 +144,15 @@ paths:
               method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
               method.response.header.Access-Control-Allow-Origin: "'*'"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         passthroughBehavior: "when_no_match"
         type: "mock"
   /admin/updatePost:
-      post:
-        consumes:
-        - "application/json"
-        produces:
-        - "application/json"
-        responses:
-          200:
-            description: "200 response"
-            headers:
-              Access-Control-Allow-Origin:
-                type: "string"
-          201:
-            description: "201 response"
-          400:
-            description: "400 response"
-          301:
-            description: "301 response"
-          202:
-            description: "202 response"
-          500:
-            description: "500 response"
-          401:
-            description: "401 response"
-          302:
-            description: "302 response"
-          403:
-            description: "403 response"
-          404:
-            description: "404 response"
-        x-amazon-apigateway-integration:
-          uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-production-production-LambdaFunction-12KP9WZYWQ3E:0-0-6/invocations"
-          responses:
-            403.*:
-              statusCode: "403"
-              responseTemplates:
-                application/json: "$input.json('$.entity')"
-            500.*:
-              statusCode: "500"
-              responseTemplates:
-                application/json: "$input.json('$.entity')"
-            401.*:
-              statusCode: "401"
-              responseTemplates:
-                application/json: "$input.json('$.entity')"
-            default:
-              statusCode: "200"
-              responseParameters:
-                method.response.header.Access-Control-Allow-Origin: "'*'"
-              responseTemplates:
-                application/json: "$input.json('$.entity')"
-            400.*:
-              statusCode: "400"
-              responseTemplates:
-                application/json: "$input.json('$.entity')"
-            302.*:
-              statusCode: "302"
-              responseTemplates:
-                application/json: "$input.json('$.entity')"
-            301.*:
-              statusCode: "301"
-              responseTemplates:
-                application/json: "$input.json('$.entity')"
-            404.*:
-              statusCode: "404"
-              responseTemplates:
-                application/json: "$input.json('$.entity')"
-            202.*:
-              statusCode: "202"
-              responseTemplates:
-                application/json: "$input.json('$.entity')"
-            201.*:
-              statusCode: "201"
-              responseTemplates:
-                application/json: "$input.json('$.entity')"
-          passthroughBehavior: "never"
-          httpMethod: "POST"
-          requestTemplates:
-            application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
-              \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
-              ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
-              \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
-              \        \"$elem\": {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
-              \        \"$innerElem\": \"$util.urlDecode($input.params().get($elem).get($innerElem))\"\
-              #if($foreach.hasNext),#end\n      #end\n        }#if($foreach.hasNext),#end\n\
-              \      #end\n}"
-          type: "aws"
-      options:
-        consumes:
-        - "application/json"
-        produces:
-        - "application/json"
-        responses:
-          200:
-            description: "200 response"
-            schema:
-              $ref: "#/definitions/Empty"
-            headers:
-              Access-Control-Allow-Origin:
-                type: "string"
-              Access-Control-Allow-Methods:
-                type: "string"
-              Access-Control-Allow-Headers:
-                type: "string"
-        x-amazon-apigateway-integration:
-              responses:
-                default:
-                  statusCode: "200"
-                  responseParameters:
-                    method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
-                    method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-                    method.response.header.Access-Control-Allow-Origin: "'*'"
-              passthroughBehavior: "when_no_match"
-              requestTemplates:
-                application/json: "{\"statusCode\": 200}"
-              type: "mock"
-  /admin/delete:
     post:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -256,33 +163,53 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
+      security:
+        - Daln: []
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-production-production-LambdaFunction-12KP9WZYWQ3E:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
             statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           default:
@@ -293,6 +220,147 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "$input.json('$.entity')"
+          302.*:
+            statusCode: "302"
+            responseTemplates:
+              application/json: "$input.json('$.entity')"
+          301.*:
+            statusCode: "301"
+            responseTemplates:
+              application/json: "$input.json('$.entity')"
+          404.*:
+            statusCode: "404"
+            responseTemplates:
+              application/json: "$input.json('$.entity')"
+          202.*:
+            statusCode: "202"
+            responseTemplates:
+              application/json: "$input.json('$.entity')"
+          201.*:
+            statusCode: "201"
+            responseTemplates:
+              application/json: "$input.json('$.entity')"
+        passthroughBehavior: "never"
+        httpMethod: "POST"
+        requestTemplates:
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
+            \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
+            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
+            \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
+            \        \"$elem\": {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
+            \        \"$innerElem\": \"$util.urlDecode($input.params().get($elem).get($innerElem))\"\
+            #if($foreach.hasNext),#end\n      #end\n        }#if($foreach.hasNext),#end\n\
+            \      #end\n}"
+        type: "aws"
+    options:
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "200 response"
+          schema:
+            $ref: "#/definitions/Empty"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Headers:
+              type: "string"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        passthroughBehavior: "when_no_match"
+        requestTemplates:
+          application/json: '{"statusCode": 200}'
+        type: "mock"
+  /admin/delete:
+    post:
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+        201:
+          description: "201 response"
+        400:
+          description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+        301:
+          description: "301 response"
+        202:
+          description: "202 response"
+        500:
+          description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+        401:
+          description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+        302:
+          description: "302 response"
+        403:
+          description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+        404:
+          description: "404 response"
+      security:
+        - Daln: []
+      x-amazon-apigateway-integration:
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
+        responses:
+          403.*:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "$input.json('$.entity')"
+          500.*:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "$input.json('$.entity')"
+          401.*:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "$input.json('$.entity')"
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "$input.json('$.entity')"
+          400.*:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -316,7 +384,8 @@ paths:
             responseTemplates:
               application/json: "$input.json('$.entity')"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -329,9 +398,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -353,15 +422,15 @@ paths:
               method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
               method.response.header.Access-Control-Allow-Origin: "'*'"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         passthroughBehavior: "when_no_match"
         type: "mock"
   /admin/email:
     post:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -372,33 +441,53 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
+      security:
+        - Daln: []
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-production-production-LambdaFunction-12KP9WZYWQ3E:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
             statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           default:
@@ -409,6 +498,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -432,7 +523,8 @@ paths:
             responseTemplates:
               application/json: "$input.json('$.entity')"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -445,9 +537,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -469,15 +561,15 @@ paths:
               method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
               method.response.header.Access-Control-Allow-Origin: "'*'"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         passthroughBehavior: "when_no_match"
         type: "mock"
   /admin/remove:
     post:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -488,33 +580,53 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
+      security:
+        - Daln: []
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-production-production-LambdaFunction-12KP9WZYWQ3E:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
             statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           default:
@@ -525,6 +637,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -548,7 +662,8 @@ paths:
             responseTemplates:
               application/json: "$input.json('$.entity')"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -561,9 +676,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -585,15 +700,15 @@ paths:
               method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
               method.response.header.Access-Control-Allow-Origin: "'*'"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         passthroughBehavior: "when_no_match"
         type: "mock"
   /admin/rejected:
     post:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -604,33 +719,53 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
+      security:
+        - Daln: []
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-production-production-LambdaFunction-12KP9WZYWQ3E:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
             statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           default:
@@ -641,6 +776,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -666,7 +803,8 @@ paths:
         passthroughBehavior: "never"
         httpMethod: "POST"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -677,9 +815,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -702,14 +840,14 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         passthroughBehavior: "when_no_match"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         type: "mock"
   /admin/unapproved:
     post:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -720,33 +858,53 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
+      security:
+        - Daln: []
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-production-production-LambdaFunction-12KP9WZYWQ3E:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
             statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           default:
@@ -757,6 +915,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -780,7 +940,8 @@ paths:
             responseTemplates:
               application/json: "$input.json('$.entity')"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -793,9 +954,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -817,15 +978,15 @@ paths:
               method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
               method.response.header.Access-Control-Allow-Origin: "'*'"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         passthroughBehavior: "when_no_match"
         type: "mock"
   /admin/reject:
     post:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -836,33 +997,53 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
+      security:
+        - Daln: []
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-production-production-LambdaFunction-12KP9WZYWQ3E:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
             statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           default:
@@ -873,6 +1054,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -898,7 +1081,8 @@ paths:
         passthroughBehavior: "never"
         httpMethod: "POST"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -909,9 +1093,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -934,14 +1118,14 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         passthroughBehavior: "when_no_match"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         type: "mock"
   /admin/unreject:
     post:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -952,33 +1136,53 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
+      security:
+        - Daln: []
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-production-production-LambdaFunction-12KP9WZYWQ3E:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
             statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           default:
@@ -989,6 +1193,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -1014,7 +1220,8 @@ paths:
         passthroughBehavior: "never"
         httpMethod: "POST"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -1025,9 +1232,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -1050,9 +1257,147 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         passthroughBehavior: "when_no_match"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         type: "mock"
-  /admin/executeec2/{stage}/{command}:
+
+  /asset/apiupload:
+    post:
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+        201:
+          description: "201 response"
+        400:
+          description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+        301:
+          description: "301 response"
+        202:
+          description: "202 response"
+        500:
+          description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+        401:
+          description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+        302:
+          description: "302 response"
+        403:
+          description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+        404:
+          description: "404 response"
+      x-amazon-apigateway-integration:
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
+        responses:
+          403.*:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "$input.json('$.entity')"
+          500.*:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "$input.json('$.entity')"
+          401.*:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "$input.json('$.entity')"
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "$input.json('$.entity')"
+          400.*:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "$input.json('$.entity')"
+          302.*:
+            statusCode: "302"
+            responseTemplates:
+              application/json: "$input.json('$.entity')"
+          301.*:
+            statusCode: "301"
+            responseTemplates:
+              application/json: "$input.json('$.entity')"
+          404.*:
+            statusCode: "404"
+            responseTemplates:
+              application/json: "$input.json('$.entity')"
+          202.*:
+            statusCode: "202"
+            responseTemplates:
+              application/json: "$input.json('$.entity')"
+          201.*:
+            statusCode: "201"
+            responseTemplates:
+              application/json: "$input.json('$.entity')"
+        requestTemplates:
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
+            \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
+            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
+            \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
+            \        \"$elem\": {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
+            \        \"$innerElem\": \"$util.urlDecode($input.params().get($elem).get($innerElem))\"\
+            #if($foreach.hasNext),#end\n      #end\n        }#if($foreach.hasNext),#end\n\
+            \      #end\n}"
+        passthroughBehavior: "never"
+        httpMethod: "POST"
+        type: "aws"
+    options:
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "200 response"
+          schema:
+            $ref: "#/definitions/Empty"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Headers:
+              type: "string"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: '{"statusCode": 200}'
+        passthroughBehavior: "when_no_match"
+        type: "mock"
+  /asset/read/{key}:
     get:
       consumes:
         - "application/json"
@@ -1069,106 +1414,55 @@ paths:
           headers:
             Access-Control-Allow-Origin:
               type: "string"
-        500:
-          description: "500 Service Error"
-      x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-production-production-LambdaFunction-12KP9WZYWQ3E:0-0-6/invocations"
-        responses:
-          default:
-            statusCode: "200"
-            responseParameters:
-              method.response.header.Access-Control-Allow-Origin: "'*'"
-            responseTemplates:
-              application/json: "$input.json('$.entity')"
-          500.*:
-            statusCode: "500"
-            responseTemplates:
-              application/json: "$input.json('$.entity')"
-        requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
-                    \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
-                    ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
-                    \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
-                    \        \"$elem\": {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
-                    \        \"$innerElem\": \"$util.urlDecode($input.params().get($elem).get($innerElem))\"\
-                    #if($foreach.hasNext),#end\n      #end\n        }#if($foreach.hasNext),#end\n\
-                    \      #end\n}"
-        passthroughBehavior: "never"
-        httpMethod: "POST"
-        type: "aws"
-    options:
-      consumes:
-        - "application/json"
-      produces:
-        - "application/json"
-      responses:
-        200:
-          description: "200 response"
-          schema:
-            $ref: "#/definitions/Empty"
-          headers:
-            Access-Control-Allow-Origin:
-              type: "string"
-            Access-Control-Allow-Methods:
-              type: "string"
-            Access-Control-Allow-Headers:
-              type: "string"
-      x-amazon-apigateway-integration:
-        responses:
-          default:
-            statusCode: "200"
-            responseParameters:
-              method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
-              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-              method.response.header.Access-Control-Allow-Origin: "'*'"
-        requestTemplates:
-          application/json: "{\"statusCode\": 200}"
-        passthroughBehavior: "when_no_match"
-        type: "mock"
-
-  /asset/apiupload:
-    post:
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "200 response"
-          headers:
-            Access-Control-Allow-Origin:
-              type: "string"
         201:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-production-production-LambdaFunction-12KP9WZYWQ3E:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
             statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           default:
@@ -1179,127 +1473,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
-            responseTemplates:
-              application/json: "$input.json('$.entity')"
-          302.*:
-            statusCode: "302"
-            responseTemplates:
-              application/json: "$input.json('$.entity')"
-          301.*:
-            statusCode: "301"
-            responseTemplates:
-              application/json: "$input.json('$.entity')"
-          404.*:
-            statusCode: "404"
-            responseTemplates:
-              application/json: "$input.json('$.entity')"
-          202.*:
-            statusCode: "202"
-            responseTemplates:
-              application/json: "$input.json('$.entity')"
-          201.*:
-            statusCode: "201"
-            responseTemplates:
-              application/json: "$input.json('$.entity')"
-        requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
-            \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
-            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
-            \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
-            \        \"$elem\": {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
-            \        \"$innerElem\": \"$util.urlDecode($input.params().get($elem).get($innerElem))\"\
-            #if($foreach.hasNext),#end\n      #end\n        }#if($foreach.hasNext),#end\n\
-            \      #end\n}"
-        passthroughBehavior: "never"
-        httpMethod: "POST"
-        type: "aws"
-    options:
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "200 response"
-          schema:
-            $ref: "#/definitions/Empty"
-          headers:
-            Access-Control-Allow-Origin:
-              type: "string"
-            Access-Control-Allow-Methods:
-              type: "string"
-            Access-Control-Allow-Headers:
-              type: "string"
-      x-amazon-apigateway-integration:
-        responses:
-          default:
-            statusCode: "200"
-            responseParameters:
-              method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
-              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-              method.response.header.Access-Control-Allow-Origin: "'*'"
-        requestTemplates:
-          application/json: "{\"statusCode\": 200}"
-        passthroughBehavior: "when_no_match"
-        type: "mock"
-  /asset/read/{key}:
-    get:
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "key"
-        in: "path"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "200 response"
-          headers:
-            Access-Control-Allow-Origin:
-              type: "string"
-        201:
-          description: "201 response"
-        400:
-          description: "400 response"
-        301:
-          description: "301 response"
-        202:
-          description: "202 response"
-        500:
-          description: "500 response"
-        401:
-          description: "401 response"
-        302:
-          description: "302 response"
-        403:
-          description: "403 response"
-        404:
-          description: "404 response"
-      x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-production-production-LambdaFunction-12KP9WZYWQ3E:0-0-6/invocations"
-        responses:
-          403.*:
-            statusCode: "403"
-            responseTemplates:
-              application/json: "$input.json('$.entity')"
-          500.*:
-            statusCode: "500"
-            responseTemplates:
-              application/json: "$input.json('$.entity')"
-          401.*:
-            statusCode: "401"
-            responseTemplates:
-              application/json: "$input.json('$.entity')"
-          default:
-            statusCode: "200"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
-            responseTemplates:
-              application/json: "$input.json('$.entity')"
-          400.*:
-            statusCode: "400"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -1325,7 +1500,8 @@ paths:
         requestParameters:
           integration.request.path.key: "method.request.path.key"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -1338,9 +1514,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -1362,20 +1538,20 @@ paths:
               method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
               method.response.header.Access-Control-Allow-Origin: "'*'"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         passthroughBehavior: "when_no_match"
         type: "mock"
   /asset/s3upload/{key}:
     get:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "key"
-        in: "path"
-        required: true
-        type: "string"
+        - name: "key"
+          in: "path"
+          required: true
+          type: "string"
       responses:
         200:
           description: "200 response"
@@ -1386,33 +1562,51 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-production-production-LambdaFunction-12KP9WZYWQ3E:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
             statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           default:
@@ -1423,6 +1617,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -1448,7 +1644,8 @@ paths:
         requestParameters:
           integration.request.path.key: "method.request.path.key"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -1461,9 +1658,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -1485,15 +1682,154 @@ paths:
               method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
               method.response.header.Access-Control-Allow-Origin: "'*'"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
+        passthroughBehavior: "when_no_match"
+        type: "mock"
+  /asset/s3AdminUpload:
+    post:
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+        201:
+          description: "201 response"
+        400:
+          description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+        301:
+          description: "301 response"
+        202:
+          description: "202 response"
+        500:
+          description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+        401:
+          description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+        302:
+          description: "302 response"
+        403:
+          description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+        404:
+          description: "404 response"
+      security:
+        - Daln: []
+      x-amazon-apigateway-integration:
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
+        responses:
+          403.*:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "$input.json('$.entity')"
+          500.*:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "$input.json('$.entity')"
+          401.*:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "$input.json('$.entity')"
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "$input.json('$.entity')"
+          400.*:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: "$input.json('$.entity')"
+          302.*:
+            statusCode: "302"
+            responseTemplates:
+              application/json: "$input.json('$.entity')"
+          301.*:
+            statusCode: "301"
+            responseTemplates:
+              application/json: "$input.json('$.entity')"
+          404.*:
+            statusCode: "404"
+            responseTemplates:
+              application/json: "$input.json('$.entity')"
+          202.*:
+            statusCode: "202"
+            responseTemplates:
+              application/json: "$input.json('$.entity')"
+          201.*:
+            statusCode: "201"
+            responseTemplates:
+              application/json: "$input.json('$.entity')"
+        requestTemplates:
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
+            \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
+            ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
+            \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
+            \        \"$elem\": {\n            #foreach($innerElem in $input.params().get($elem).keySet())\n\
+            \        \"$innerElem\": \"$util.urlDecode($input.params().get($elem).get($innerElem))\"\
+            #if($foreach.hasNext),#end\n      #end\n        }#if($foreach.hasNext),#end\n\
+            \      #end\n}"
+        passthroughBehavior: "never"
+        httpMethod: "POST"
+        type: "aws"
+    options:
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "200 response"
+          schema:
+            $ref: "#/definitions/Empty"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Headers:
+              type: "string"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: '{"statusCode": 200}'
         passthroughBehavior: "when_no_match"
         type: "mock"
   /asset/s3uploader:
     post:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -1504,33 +1840,51 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-production-production-LambdaFunction-12KP9WZYWQ3E:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
             statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           default:
@@ -1541,6 +1895,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -1564,7 +1920,8 @@ paths:
             responseTemplates:
               application/json: "$input.json('$.entity')"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -1577,9 +1934,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -1601,15 +1958,15 @@ paths:
               method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
               method.response.header.Access-Control-Allow-Origin: "'*'"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         passthroughBehavior: "when_no_match"
         type: "mock"
   /asset/test:
     post:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -1620,33 +1977,51 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-production-production-LambdaFunction-12KP9WZYWQ3E:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
             statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           default:
@@ -1657,6 +2032,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -1680,7 +2057,8 @@ paths:
             responseTemplates:
               application/json: "$input.json('$.entity')"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -1693,9 +2071,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -1717,15 +2095,15 @@ paths:
               method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
               method.response.header.Access-Control-Allow-Origin: "'*'"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         passthroughBehavior: "when_no_match"
         type: "mock"
   /posts/all:
     get:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -1736,33 +2114,51 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-production-production-LambdaFunction-12KP9WZYWQ3E:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
             statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           default:
@@ -1773,6 +2169,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -1796,7 +2194,8 @@ paths:
             responseTemplates:
               application/json: "$input.json('$.entity')"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -1809,9 +2208,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -1833,15 +2232,15 @@ paths:
               method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
               method.response.header.Access-Control-Allow-Origin: "'*'"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         passthroughBehavior: "when_no_match"
         type: "mock"
   /posts/create:
     post:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -1852,33 +2251,51 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-production-production-LambdaFunction-12KP9WZYWQ3E:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
             statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           default:
@@ -1889,6 +2306,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -1912,7 +2331,8 @@ paths:
             responseTemplates:
               application/json: "$input.json('$.entity')"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -1925,9 +2345,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -1949,20 +2369,20 @@ paths:
               method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
               method.response.header.Access-Control-Allow-Origin: "'*'"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         passthroughBehavior: "when_no_match"
         type: "mock"
   /posts/dalnold/{dalnId}:
     get:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "dalnId"
-        in: "path"
-        required: true
-        type: "string"
+        - name: "dalnId"
+          in: "path"
+          required: true
+          type: "string"
       responses:
         200:
           description: "200 response"
@@ -1973,33 +2393,51 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-production-production-LambdaFunction-12KP9WZYWQ3E:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
             statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           default:
@@ -2010,6 +2448,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -2035,7 +2475,8 @@ paths:
         requestParameters:
           integration.request.path.dalnId: "method.request.path.dalnId"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -2048,9 +2489,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -2072,15 +2513,15 @@ paths:
               method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
               method.response.header.Access-Control-Allow-Origin: "'*'"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         passthroughBehavior: "when_no_match"
         type: "mock"
   /posts/get:
     post:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -2088,33 +2529,51 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-production-production-LambdaFunction-12KP9WZYWQ3E:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
             statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           default:
@@ -2123,6 +2582,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -2146,7 +2607,8 @@ paths:
             responseTemplates:
               application/json: "$input.json('$.entity')"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -2160,14 +2622,14 @@ paths:
   /posts/get/{postId}:
     get:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "postId"
-        in: "path"
-        required: true
-        type: "string"
+        - name: "postId"
+          in: "path"
+          required: true
+          type: "string"
       responses:
         200:
           description: "200 response"
@@ -2178,33 +2640,51 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-production-production-LambdaFunction-12KP9WZYWQ3E:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
             statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           default:
@@ -2215,6 +2695,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -2240,7 +2722,8 @@ paths:
         requestParameters:
           integration.request.path.postId: "method.request.path.postId"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -2253,9 +2736,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -2277,20 +2760,20 @@ paths:
               method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
               method.response.header.Access-Control-Allow-Origin: "'*'"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         passthroughBehavior: "when_no_match"
         type: "mock"
   /posts/getdev/{postId}:
     get:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "postId"
-        in: "path"
-        required: true
-        type: "string"
+        - name: "postId"
+          in: "path"
+          required: true
+          type: "string"
       responses:
         200:
           description: "200 response"
@@ -2301,33 +2784,51 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-production-production-LambdaFunction-12KP9WZYWQ3E:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
             statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           default:
@@ -2338,6 +2839,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -2363,7 +2866,8 @@ paths:
         requestParameters:
           integration.request.path.postId: "method.request.path.postId"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -2376,9 +2880,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -2400,20 +2904,20 @@ paths:
               method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
               method.response.header.Access-Control-Allow-Origin: "'*'"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         passthroughBehavior: "when_no_match"
         type: "mock"
   /posts/random/{size}:
     get:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "size"
-        in: "path"
-        required: true
-        type: "string"
+        - name: "size"
+          in: "path"
+          required: true
+          type: "string"
       responses:
         200:
           description: "200 response"
@@ -2424,33 +2928,51 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-production-production-LambdaFunction-12KP9WZYWQ3E:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
             statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           default:
@@ -2461,6 +2983,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -2486,7 +3010,8 @@ paths:
         requestParameters:
           integration.request.path.size: "method.request.path.size"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -2499,9 +3024,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -2523,15 +3048,15 @@ paths:
               method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
               method.response.header.Access-Control-Allow-Origin: "'*'"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         passthroughBehavior: "when_no_match"
         type: "mock"
   /posts/search-engine-size:
     get:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -2542,33 +3067,51 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-production-production-LambdaFunction-12KP9WZYWQ3E:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
             statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           default:
@@ -2579,6 +3122,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -2602,7 +3147,8 @@ paths:
             responseTemplates:
               application/json: "$input.json('$.entity')"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -2615,9 +3161,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -2639,20 +3185,20 @@ paths:
               method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
               method.response.header.Access-Control-Allow-Origin: "'*'"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         passthroughBehavior: "when_no_match"
         type: "mock"
   /posts/search/{query}:
     get:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "query"
-        in: "path"
-        required: true
-        type: "string"
+        - name: "query"
+          in: "path"
+          required: true
+          type: "string"
       responses:
         200:
           description: "200 response"
@@ -2663,33 +3209,51 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-production-production-LambdaFunction-12KP9WZYWQ3E:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
             statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           default:
@@ -2700,6 +3264,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -2725,7 +3291,8 @@ paths:
         requestParameters:
           integration.request.path.query: "method.request.path.query"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -2738,9 +3305,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -2762,28 +3329,28 @@ paths:
               method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
               method.response.header.Access-Control-Allow-Origin: "'*'"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         passthroughBehavior: "when_no_match"
         type: "mock"
   /posts/search/{query}/{pageSize}/{start}:
     get:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "query"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "start"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "pageSize"
-        in: "path"
-        required: true
-        type: "string"
+        - name: "query"
+          in: "path"
+          required: true
+          type: "string"
+        - name: "start"
+          in: "path"
+          required: true
+          type: "string"
+        - name: "pageSize"
+          in: "path"
+          required: true
+          type: "string"
       responses:
         200:
           description: "200 response"
@@ -2794,33 +3361,51 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-production-production-LambdaFunction-12KP9WZYWQ3E:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
             statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           default:
@@ -2831,6 +3416,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -2858,7 +3445,8 @@ paths:
           integration.request.path.pageSize: "method.request.path.pageSize"
           integration.request.path.query: "method.request.path.query"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -2871,9 +3459,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -2895,36 +3483,36 @@ paths:
               method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
               method.response.header.Access-Control-Allow-Origin: "'*'"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         passthroughBehavior: "when_no_match"
         type: "mock"
   /posts/search/{query}/{pageSize}/{start}/{field}/{order}:
     get:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "query"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "start"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "field"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "order"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "pageSize"
-        in: "path"
-        required: true
-        type: "string"
+        - name: "query"
+          in: "path"
+          required: true
+          type: "string"
+        - name: "start"
+          in: "path"
+          required: true
+          type: "string"
+        - name: "field"
+          in: "path"
+          required: true
+          type: "string"
+        - name: "order"
+          in: "path"
+          required: true
+          type: "string"
+        - name: "pageSize"
+          in: "path"
+          required: true
+          type: "string"
       responses:
         200:
           description: "200 response"
@@ -2935,33 +3523,51 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-production-production-LambdaFunction-12KP9WZYWQ3E:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
             statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           default:
@@ -2972,6 +3578,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -3001,7 +3609,8 @@ paths:
           integration.request.path.field: "method.request.path.field"
           integration.request.path.query: "method.request.path.query"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -3014,9 +3623,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -3038,24 +3647,24 @@ paths:
               method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
               method.response.header.Access-Control-Allow-Origin: "'*'"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         passthroughBehavior: "when_no_match"
         type: "mock"
   /posts/size/{pageSize}/page/{page}:
     get:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       parameters:
-      - name: "page"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "pageSize"
-        in: "path"
-        required: true
-        type: "string"
+        - name: "page"
+          in: "path"
+          required: true
+          type: "string"
+        - name: "pageSize"
+          in: "path"
+          required: true
+          type: "string"
       responses:
         200:
           description: "200 response"
@@ -3066,33 +3675,51 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
-        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:772476502243:function:thedaln-production-production-LambdaFunction-12KP9WZYWQ3E:0-0-6/invocations"
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
           403.*:
             statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           500.*:
             statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           401.*:
             statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           default:
@@ -3103,6 +3730,8 @@ paths:
               application/json: "$input.json('$.entity')"
           400.*:
             statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
             responseTemplates:
               application/json: "$input.json('$.entity')"
           302.*:
@@ -3129,7 +3758,8 @@ paths:
           integration.request.path.page: "method.request.path.page"
           integration.request.path.pageSize: "method.request.path.pageSize"
         requestTemplates:
-          application/json: "{\n  \"package\": \"org.dalnservice.controller\",\n \
+          application/json:
+            "{\n  \"package\": \"org.dalnservice.controller\",\n \
             \ \"pathtemplate\": \"$context.resourcePath\",\n  \"method\": \"$context.httpMethod\"\
             ,\n  \"requestbody\": \"$util.escapeJavaScript($input.json('$')).replaceAll(\"\
             \\\\'\",\"'\"))\",\n      #foreach($elem in $input.params().keySet())\n\
@@ -3142,9 +3772,9 @@ paths:
         type: "aws"
     options:
       consumes:
-      - "application/json"
+        - "application/json"
       produces:
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "200 response"
@@ -3166,9 +3796,19 @@ paths:
               method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
               method.response.header.Access-Control-Allow-Origin: "'*'"
         requestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
         passthroughBehavior: "when_no_match"
         type: "mock"
+securityDefinitions:
+  Daln:
+    type: "apiKey"
+    name: "Authorization"
+    in: "header"
+    x-amazon-apigateway-authtype: "cognito_user_pools"
+    x-amazon-apigateway-authorizer:
+      providerARNs:
+        - "arn:aws:cognito-idp:us-east-1:616103791264:userpool/us-east-1_QBch6OsYW"
+      type: "cognito_user_pools"
 definitions:
   Empty:
     type: "object"
