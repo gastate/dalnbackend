@@ -24,18 +24,30 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       security:
@@ -151,18 +163,30 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       security:
@@ -278,18 +302,30 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       security:
@@ -405,18 +441,30 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       security:
@@ -532,18 +580,30 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       security:
@@ -659,18 +719,30 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       security:
@@ -786,18 +858,30 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       security:
@@ -913,18 +997,30 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       security:
@@ -1040,18 +1136,30 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       security:
@@ -1168,18 +1276,30 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
@@ -1298,18 +1418,30 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
@@ -1430,18 +1562,30 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
@@ -1557,18 +1701,30 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       security:
@@ -1684,18 +1840,30 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
@@ -1809,18 +1977,30 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
@@ -1934,18 +2114,30 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
@@ -2059,18 +2251,30 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
@@ -2189,18 +2393,30 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
@@ -2313,18 +2529,30 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
@@ -2412,18 +2640,30 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
@@ -2544,18 +2784,30 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
@@ -2676,18 +2928,30 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
@@ -2803,18 +3067,30 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
@@ -2933,18 +3209,30 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
@@ -3073,18 +3361,30 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
@@ -3223,18 +3523,30 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
@@ -3363,18 +3675,30 @@ paths:
           description: "201 response"
         400:
           description: "400 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         301:
           description: "301 response"
         202:
           description: "202 response"
         500:
           description: "500 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         401:
           description: "401 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         302:
           description: "302 response"
         403:
           description: "403 response"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
         404:
           description: "404 response"
       x-amazon-apigateway-integration:
