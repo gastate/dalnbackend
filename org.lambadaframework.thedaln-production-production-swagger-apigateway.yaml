@@ -38,6 +38,8 @@ paths:
           description: "403 response"
         404:
           description: "404 response"
+      security:
+        - Daln: []
       x-amazon-apigateway-integration:
         uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
@@ -155,6 +157,8 @@ paths:
           description: "403 response"
         404:
           description: "404 response"
+      security:
+        - Daln: []
       x-amazon-apigateway-integration:
         uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
@@ -272,6 +276,8 @@ paths:
           description: "403 response"
         404:
           description: "404 response"
+      security:
+        - Daln: []
       x-amazon-apigateway-integration:
         uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
@@ -389,6 +395,8 @@ paths:
           description: "403 response"
         404:
           description: "404 response"
+      security:
+        - Daln: []
       x-amazon-apigateway-integration:
         uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
@@ -506,6 +514,8 @@ paths:
           description: "403 response"
         404:
           description: "404 response"
+      security:
+        - Daln: []
       x-amazon-apigateway-integration:
         uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
@@ -623,6 +633,8 @@ paths:
           description: "403 response"
         404:
           description: "404 response"
+      security:
+        - Daln: []
       x-amazon-apigateway-integration:
         uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
@@ -740,6 +752,8 @@ paths:
           description: "403 response"
         404:
           description: "404 response"
+      security:
+        - Daln: []
       x-amazon-apigateway-integration:
         uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
@@ -857,6 +871,8 @@ paths:
           description: "403 response"
         404:
           description: "404 response"
+      security:
+        - Daln: []
       x-amazon-apigateway-integration:
         uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
@@ -974,6 +990,8 @@ paths:
           description: "403 response"
         404:
           description: "404 response"
+      security:
+        - Daln: []
       x-amazon-apigateway-integration:
         uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
@@ -1457,6 +1475,8 @@ paths:
           description: "403 response"
         404:
           description: "404 response"
+      security:
+        - Daln: []
       x-amazon-apigateway-integration:
         uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:616103791264:function:thedaln-production-production-LambdaFunction-XSVLT0Y5IFPO:0-0-6/invocations"
         responses:
@@ -3239,6 +3259,16 @@ paths:
           application/json: '{"statusCode": 200}'
         passthroughBehavior: "when_no_match"
         type: "mock"
+securityDefinitions:
+  Daln:
+    type: "apiKey"
+    name: "Authorization"
+    in: "header"
+    x-amazon-apigateway-authtype: "cognito_user_pools"
+    x-amazon-apigateway-authorizer:
+      providerARNs:
+        - "arn:aws:cognito-idp:us-east-1:616103791264:userpool/us-east-1_QBch6OsYW"
+      type: "cognito_user_pools"
 definitions:
   Empty:
     type: "object"
