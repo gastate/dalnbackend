@@ -1,9 +1,8 @@
 package org.dalnservice.classes;
 
-
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.Table;
@@ -28,12 +27,12 @@ import java.util.HashMap;
 /**
  * Created by Shakib on 7/18/2016.
  *
- * This class handles the task of uploading an audio to SoundCloud and retrieving its download location.
- * The constructor extracts all needed values from the HashMap and places them into variables. The values
- * will be used as inputs for the upload.
+ * This class handles the task of uploading an audio to SoundCloud and
+ * retrieving its download location. The constructor extracts all needed values
+ * from the HashMap and places them into variables. The values will be used as
+ * inputs for the upload.
  */
-public class DALNSoundCloudClient
-{
+public class DALNSoundCloudClient {
 
     private String fullTitle;
     private String assetID;
@@ -46,40 +45,40 @@ public class DALNSoundCloudClient
     private String uri;
 
     public DALNSoundCloudClient() throws IOException {
-        EnvironmentVariableCredentialsProvider creds = new EnvironmentVariableCredentialsProvider();
-        AWSCredentials awsCreds = creds.getCredentials();
-
-        dynamoDB = new DynamoDB(new AmazonDynamoDBClient(awsCreds));
+        AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().build();
+        dynamoDB = new DynamoDB(client);
         Table table = dynamoDB.getTable("DALN-Keys");
         Item key = table.getItem("key", "SoundCloudAccessToken");
         String tokenString = key.get("value").toString();
         Token token = new Token(tokenString, null, "non-expiring");
-        //uploadFileResponse = new JSONObject();
+        // uploadFileResponse = new JSONObject();
         permalinkUrl = null;
         uri = null;
-
-        wrapper = new ApiWrapper(System.getenv("SoundCloudClientID"), System.getenv("SoundCloudClientSecret"), null, token);
+        ParamStoreClient params = new ParamStoreClient();
+        HashMap<String, String> info = params.getSoundCloudClientInfo();
+        wrapper = new ApiWrapper(info.get("SoundCloudClientID"), info.get("SoundCloudClientSecret"), null, token);
         System.out.println("SoundCloud connection successful");
 
-        //Connect to SoundCloud
-        /*boolean isSoundCloudConnected;
-        do {
-            isSoundCloudConnected = connectToSoundCloud();
-            if(!isSoundCloudConnected)
-                System.out.println("SoundCloud connection failed. Retrying..." );
-            else
-                System.out.println("SoundCloud connection successful.");
-        }
-        while(!isSoundCloudConnected);*/
+        // Connect to SoundCloud
+        /*
+         * boolean isSoundCloudConnected; do { isSoundCloudConnected =
+         * connectToSoundCloud(); if(!isSoundCloudConnected)
+         * System.out.println("SoundCloud connection failed. Retrying..." ); else
+         * System.out.println("SoundCloud connection successful."); }
+         * while(!isSoundCloudConnected);
+         */
     }
 
-    public boolean generateSoundCloudToken()
-    {
+    public boolean generateSoundCloudToken() {
         Table table = dynamoDB.getTable("DALN-Keys");
-        ApiWrapper wrapper = new ApiWrapper(System.getenv("SoundCloudClientID"), System.getenv("SoundCloudClientSecret"), null, null);
+
         Token token = null;
         try {
-            token = wrapper.login(System.getenv("SoundCloudUser"), System.getenv("SoundCloudPassword"));
+            ParamStoreClient params = new ParamStoreClient();
+            HashMap<String, String> info = params.getSoundCloudClientInfo();
+            ApiWrapper wrapper = new ApiWrapper(info.get("SoundCloudClientID"), info.get("SoundCloudClientSecret"),
+                    null, null);
+            token = wrapper.login(info.get("SoundCloudUser"), info.get("SoundCloudPassword"));
         } catch (IOException e) {
             return false;
         }
@@ -90,28 +89,19 @@ public class DALNSoundCloudClient
         return true;
     }
 
-    /*public boolean connectToSoundCloud() throws IOException {
-        //Connect to SoundCloud
-
-        soundcloud = new SoundCloud(
-                System.getenv("SoundCloudClientID"),
-                System.getenv("SoundCloudClientSecret"));
-
-        soundcloud.login(
-                System.getenv("SoundCloudUser"),
-                System.getenv("SoundCloudPassword")
-        );
-
-        try {
-            if (soundcloud.getMe().toString() == null)
-                return false;
-        }
-        catch(NullPointerException e)
-        {
-            return false;
-        }
-        return true;
-    }*/
+    /*
+     * public boolean connectToSoundCloud() throws IOException { //Connect to
+     * SoundCloud
+     * 
+     * soundcloud = new SoundCloud( System.getenv("SoundCloudClientID"),
+     * System.getenv("SoundCloudClientSecret"));
+     * 
+     * soundcloud.login( System.getenv("SoundCloudUser"),
+     * System.getenv("SoundCloudPassword") );
+     * 
+     * try { if (soundcloud.getMe().toString() == null) return false; }
+     * catch(NullPointerException e) { return false; } return true; }
+     */
 
     public void initializeAndUpload(HashMap<String, String> assetDetails, File file) throws IOException {
 
@@ -130,16 +120,12 @@ public class DALNSoundCloudClient
         uploadSound(file);
     }
 
-
-
     private void uploadSound(File file) throws IOException {
 
         System.out.println("Uploading " + file);
         try {
-            HttpResponse resp = wrapper.post(Request.to(Endpoints.TRACKS)
-                    .add(Params.Track.TITLE, fullTitle)
-                    .add(Params.Track.TAG_LIST, assetID)
-                    .withFile(Params.Track.ASSET_DATA, file)
+            HttpResponse resp = wrapper.post(Request.to(Endpoints.TRACKS).add(Params.Track.TITLE, fullTitle)
+                    .add(Params.Track.TAG_LIST, assetID).withFile(Params.Track.ASSET_DATA, file)
                     // you can add more parameters here, e.g.
                     // .withFile(Params.Track.ARTWORK_DATA, file)) /* to add artwork */
 
@@ -149,7 +135,7 @@ public class DALNSoundCloudClient
             if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED) {
                 System.out.println("\n201 Created " + resp.getFirstHeader("Location").getValue());
                 // dump the representation of the new track
-                //System.out.println("\n" + Http.getJSON(resp).toString(4));
+                // System.out.println("\n" + Http.getJSON(resp).toString(4));
 
                 String jsonString = Http.getJSON(resp).toString(4);
                 JSONParser parser = new JSONParser();
@@ -171,53 +157,43 @@ public class DALNSoundCloudClient
         }
 
         /*
-        try {
-            Track newTrack = new Track(fullTitle, file.getCanonicalPath());
-            newTrack.setTagList(assetID);
-            track = soundcloud.postTrack(newTrack);
-            System.out.println("track id:" + track.getId());
-
-        } catch (NullPointerException | IOException e) {
-            e.printStackTrace();
-        }*/
+         * try { Track newTrack = new Track(fullTitle, file.getCanonicalPath());
+         * newTrack.setTagList(assetID); track = soundcloud.postTrack(newTrack);
+         * System.out.println("track id:" + track.getId());
+         * 
+         * } catch (NullPointerException | IOException e) { e.printStackTrace(); }
+         */
 
     }
 
     public boolean deleteSound(String trackId) throws IOException {
-        HttpResponse response = wrapper.delete(
-                Request.to("/tracks/"+trackId));
-
+        HttpResponse response = wrapper.delete(Request.to("/tracks/" + trackId));
 
         if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
             return true;
-        }
-        else if(response.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND)
-        {
+        } else if (response.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
             System.out.println("Sound not found or may have already been deleted");
             return true;
         }
         return false;
     }
 
-    public String[] getSoundLocation()
-    {
+    public String[] getSoundLocation() {
         String[] soundLocations = new String[2];
-        //soundLocations[0] = uploadFileResponse.getString("permalink_url");
-        /*String trackId = uri.substring(uri.lastIndexOf('/'));
-        try {
-            HttpResponse getResponse = wrapper.get(Request.to("/tracks/" + trackId ));
-            System.out.println("\n" + Http.formatJSON(Http.getString(getResponse)));
-            //for(Header header : getResponse.getAllHeaders())
-              //  System.out.println("Header: " + header.getName() + ":" + header.getValue());
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Could not find track");
-            soundLocations[0] = null;
-        }*/
+        // soundLocations[0] = uploadFileResponse.getString("permalink_url");
+        /*
+         * String trackId = uri.substring(uri.lastIndexOf('/')); try { HttpResponse
+         * getResponse = wrapper.get(Request.to("/tracks/" + trackId ));
+         * System.out.println("\n" + Http.formatJSON(Http.getString(getResponse)));
+         * //for(Header header : getResponse.getAllHeaders()) //
+         * System.out.println("Header: " + header.getName() + ":" + header.getValue());
+         * } catch (IOException e) { e.printStackTrace();
+         * System.out.println("Could not find track"); soundLocations[0] = null; }
+         */
 
         soundLocations[0] = permalinkUrl;
         System.out.println("Sound location 0: " + soundLocations[0]);
-        //soundLocations[1] = uploadFileResponse.getString("uri");
+        // soundLocations[1] = uploadFileResponse.getString("uri");
         soundLocations[1] = uri;
         System.out.println("Sound location 1: " + soundLocations[1]);
 
