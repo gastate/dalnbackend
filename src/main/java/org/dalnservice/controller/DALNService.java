@@ -784,7 +784,7 @@ public class DALNService {
             case ".mp3":
             case ".wav":
             case ".m4a":
-                return "Audio";
+                //return "Audio";
             case ".mp4":
             case ".mov":
             case ".avi":
